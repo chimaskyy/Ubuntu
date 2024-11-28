@@ -23,13 +23,20 @@ import Accessories from "./pages/Product/Accessories";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
 import CheckoutPage from "./pages/Checkout";
+import {monitorAuthState} from "./reducers/userSlice";
+import {useDispatch} from "react-redux";
+import {useEffect} from "react";
 
 function App() {
   const location = useLocation(); // Get the current route
-
+  const dispatch = useDispatch();
   // Check if the current route starts with "/admin"
   const isAdminRoute = location.pathname.startsWith("/admin");
 
+  useEffect(() => {
+    dispatch(monitorAuthState());
+  }
+  , [dispatch]);
   return (
     <>
       {/* Render CategoryNav only if not on an Admin route */}
