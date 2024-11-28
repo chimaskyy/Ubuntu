@@ -14,23 +14,28 @@ const categories = [
     items: ["Latest Arrivals", "Trending Now", "Bestsellers"],
   },
   {
-    name: "Men",
+    name: "MEN",
     items: ["Shirts", "Pants", "Accessories", "Undies"],
   },
   {
-    name: "Women",
-    items: ["Dresses", "Tops", "Pants", "Accessories"],
+    name: "KIDS",
+    items: ["Boys", "Girls"],
   },
-  //   {
-  //     name: "Kids",
-  //     items: ["Boys", "Girls", "Babies", "School Uniforms"],
-  //   },
   {
-    name: "Accessories",
+    name: "FOOTINGS",
+    items: ["Men's Shoes", "Women's Shoes"],
+  },
+  {
+    name: "ACCESSORIES",
     items: ["Caps", "Sticks", "Hats", "Fans", "Belts"],
   },
+
   {
-    name: "Shoes",
+    name: "UNISEX SHORTS",
+    items: ["Men's Shoes", "Women's Shoes"],
+  },
+  {
+    name: "HIS & HERS",
     items: ["Men's Shoes", "Women's Shoes"],
   },
 ];
@@ -43,7 +48,7 @@ export function CategoryNav() {
           <NavigationMenuList className="-ml-24 flex justify-center space-x-2 py-2 text-sm">
             {categories.map((category) => (
               <NavigationMenuItem key={category.name}>
-                <NavigationMenuTrigger className="text-sm font-medium">
+                <NavigationMenuTrigger className="text-sm uppercase font-medium">
                   {category.name}
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
@@ -54,6 +59,7 @@ export function CategoryNav() {
                           className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
                           href="/"
                         >
+                          <div></div>
                           <div className="mb-2 mt-4 text-lg font-medium">
                             Featured Collection
                           </div>
@@ -72,7 +78,7 @@ export function CategoryNav() {
                               .replace(" ", "-")}`}
                             className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
                           >
-                            <div className="text-sm font-medium leading-none">
+                            <div className="text-sm  font-medium leading-none">
                               {item}
                             </div>
                           </a>
@@ -88,4 +94,5 @@ export function CategoryNav() {
       </div>
     </nav>
   );
+  // -ml-24 flex justify-center space-x-2 py-2 text-sm
 }

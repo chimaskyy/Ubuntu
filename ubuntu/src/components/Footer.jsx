@@ -1,10 +1,10 @@
-import { MapPin, Phone, Mail} from "lucide-react";
+import { MapPin, Phone, Mail } from "lucide-react";
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
 
 function Footer() {
   return (
     <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center text-2xl font-bold text-white mb-4">
@@ -16,11 +16,9 @@ function Footer() {
                   height={80}
                 />
               </a>
-              <span className="ml-4 font-mono">UbuntuElite</span>
+              <span className="ml-2 font-mono">UbuntuElite</span>
             </div>
-            <p className="text-white font-mono text-xl">
-              TRADITIONALLY ROOTED FOREVER ELITE
-            </p>
+
             <p className="text-sm">
               Bringing authentic African fashion to the world with modern style
               and traditional beauty.
@@ -101,3 +99,8 @@ function Footer() {
 }
 
 export default Footer;
+
+//
+
+// <button className="bg-transparent group text-white px-6 py-2 rounded-full border-2 font-medium hover:scale-105">
+//

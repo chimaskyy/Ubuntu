@@ -1,10 +1,22 @@
 // import { useState, useEffect } from "react";
 // import { Button } from "@/components/ui/button";
 import { Hero } from "@/components/Hero";
+import  FeaturedCategories from "../components/FeaturedCategory";
+import TrendingProducts from "../components/Trending";
+import NewArrivals from "../components/NewArival";
+// import Category2 from "../components/Category2"
+import AboutSection from "../components/About";
 export default function RotatingHero() {
   return (
-    <Hero/>
-  )
+    <>
+      <Hero />
+      <AboutSection />
+      <FeaturedCategories />
+      <TrendingProducts />
+      {/* <Category2/> */}
+      <NewArrivals />
+    </>
+  );
 
 };
 
