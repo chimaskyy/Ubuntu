@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
-
+import logo from "../assets/logo.jpg";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -64,11 +64,12 @@ export default function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const { user } = useSelector((state) => state.user);
+  const {items} = useSelector((state) => state.cart)
   console.log("loggedin user:", user);
 
   return (
     <header className="border-b pt-4 sticky top-0 z-50 w-full bg-white">
-      <div className="container lg:mx-auto lg:px-4">
+      <div className="container lg:mx-auto lg:px-4 max-w-7xl mx-auto">
         <div className="flex items-center justify-between h-16">
           <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
             <SheetTrigger asChild>
@@ -127,12 +128,7 @@ export default function Header() {
           </Sheet>
 
           <a href="/" className="flex-shrink-0">
-            <img
-              src="https://scontent.flos5-3.fna.fbcdn.net/v/t39.30808-6/369696228_2053136978364665_5390676064914487004_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHqn7-2da7hlbPK4_Z7oiJYkYh0yVdKtGmRiHTJV0q0aTLV27I7tn8hQL2VJ9dMxsxqXi1jgKNkQOTOG67rhvHT&_nc_ohc=1z6KvXMxS90Q7kNvgH-vyjX&_nc_zt=23&_nc_ht=scontent.flos5-3.fna&_nc_gid=AFWMdGNmo_xQ28TcJ6QEY33&oh=00_AYB4CLPxl_JlZOEet5fr1psNueXrwbkWKNkTxuiAAB2aEQ&oe=67413503"
-              alt="Logo"
-              width={50}
-              height={50}
-            />
+            <img src={logo} alt="Logo" width={50} height={50} />
           </a>
 
           <div className="hidden lg:flex flex-1 max-w-xl mx-8">
@@ -149,20 +145,20 @@ export default function Header() {
           <div className="flex items-center pr-6 space-x-8">
             {user ? (
               <Link to="/profile">
-              <button size="icon" className="lg:inline-flex">
-                <User className="h-5 w-5" />
-                <span className="sr-only">Account</span>
-              </button>
-            </Link>
+                <button size="icon" className="lg:inline-flex">
+                  <User className="h-5 w-5" />
+                  <span className="sr-only">Account</span>
+                </button>
+              </Link>
             ) : (
               <Link to="/sign-up">
-              <button size="icon" className="lg:inline-flex">
-                <User className="h-5 w-5" />
-                <span className="sr-only">Account</span>
-              </button>
-            </Link>
+                <button size="icon" className="lg:inline-flex">
+                  <User className="h-5 w-5" />
+                  <span className="sr-only">Account</span>
+                </button>
+              </Link>
             )}
-            
+
             <button size="icon">
               <Heart className="h-5 w-5" />
               <span className="sr-only">Wishlist</span>
@@ -171,7 +167,7 @@ export default function Header() {
               <button size="icon" className="relative">
                 <ShoppingCart className="h-8 w-8" />
                 <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  0
+                  {items.length}
                 </span>
                 <span className="sr-only">Cart</span>
               </button>
@@ -192,12 +188,12 @@ export default function Header() {
       </div>
 
       <nav className="border-t">
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-4 max-w-7xl mx-auto lg:px-6">
           <NavigationMenu className="hidden lg:flex justify-center">
             <NavigationMenuList className="ml-36 mt-4 flex justify-center space-x-2 py-2 text-sm">
               {categories.map((category) => (
                 <NavigationMenuItem key={category.name}>
-                  <NavigationMenuTrigger className="text-sm uppercase">
+                  <NavigationMenuTrigger className="text-xs uppercase">
                     {category.name}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>

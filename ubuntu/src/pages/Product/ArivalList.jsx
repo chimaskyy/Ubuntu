@@ -1,5 +1,4 @@
 import { Heart } from "lucide-react";
-import cloth from "../../assets/cloth1.jpg";
 // import Link from "next/link";
 import {
   Select,
@@ -15,30 +14,31 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import A from "../../assets/pinkkyyy.jpg"
 
 const products = [
   {
     id: 1,
     name: "Bell Sleeve Dress",
-    image: cloth,
+    image: A,
     price: "199.99",
   },
   {
     id: 2,
     name: "Head Wrap",
-    image: cloth,
+    image: A,
     price: "49.99",
   },
   {
     id: 3,
     name: "African Print Jacket",
-    image: cloth,
+    image: A,
     price: "249.99",
   },
   {
     id: 4,
     name: "Evening Dress",
-    image: cloth,
+    image: A,
     price: "$299.99",
   },
 ];
@@ -116,7 +116,7 @@ export default function ProductsPage() {
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="h-full w-full pbject-cover"
+                  className="h-full w-full object-cover"
                   width={400}
                   height={600}
                 />
