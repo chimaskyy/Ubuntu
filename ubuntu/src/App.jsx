@@ -54,7 +54,7 @@ function App() {
         <Route path="/undies" element={<Undies />} />
         <Route path="/footings" element={<Footings />} />
         <Route path="/his-hers" element={<HisHers />} />
-        <Route path="/product-page" element={<ProductPage />} />
+        <Route path="/product-page/:id" element={<ProductPage />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/admin/*" element={<Admin />} />

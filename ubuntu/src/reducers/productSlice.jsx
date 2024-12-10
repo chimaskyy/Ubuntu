@@ -9,6 +9,7 @@ import {
   deleteDoc,
   query,
   where,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase"; // Adjust paths to your configuration
 import axios from "axios";
@@ -86,6 +87,23 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+export const fetchProductById = createAsyncThunk(
+  "products/fetchProductById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const productRef = doc(db, "products", id);
+      const productSnap = await getDoc(productRef);
+      if (productSnap.exists()) {
+        return { id: productSnap.id, ...productSnap.data() };
+      } else {
+        return rejectWithValue("Product not found");
+      }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 
 export const editProduct = createAsyncThunk(
   'prooducts/editProduct',
@@ -117,6 +135,7 @@ const productSlice = createSlice({
   name: "products",
   initialState: {
     products: [],
+    product: null,
     loading: false,
     error: null,
   },
@@ -141,6 +160,17 @@ const productSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = "failed";
+        state.error = action.payload;
+      })
+      .addCase(fetchProductById.pending, (state) => {
+        state.loading = "loading";
+      })
+      .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.loading = "succeeded";
+        state.product = action.payload;
+      })
+      .addCase(fetchProductById.rejected, (state, action) => {
         state.loading = "failed";
         state.error = action.payload;
       })

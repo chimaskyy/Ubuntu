@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import  { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductById } from "@/reducers/productSlice";
 import { Heart, Share2, ShoppingCart, Minus, Plus } from "lucide-react";
 
 function ProductPage() {
+  const {id} = useParams()
+  const dispatch = useDispatch();
+  const { product, loading, error } = useSelector((state) => state.products);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-
-  const product = {
-    name: "Premium Ankara Dress",
-    price: 159.99,
-    description:
-      "Handcrafted premium Ankara dress featuring vibrant African prints. Made with 100% cotton fabric sourced from local artisans.",
-    images: [
-      "https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1544441891-bb6eabed6934?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1544441892-794166f1e3be?auto=format&fit=crop&w=800&q=80",
-    ],
+ 
+  const productSpec = {
     specifications: {
       Material: "100% Cotton",
       Style: "African Print",
@@ -23,6 +20,22 @@ function ProductPage() {
     },
   };
 
+  useEffect(() => {
+    if (!product || product.id !== id) {
+      dispatch(fetchProductById(id));
+    }
+  }
+  , [dispatch, product, id]);
+  // if (loading) {
+  //   return <p>Loading...</p>;
+  // }
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+  if(!product) {
+    return <p>Product not found</p>
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -30,13 +43,13 @@ function ProductPage() {
         <div>
           <div className="relative h-[600px] rounded-lg overflow-hidden mb-4">
             <img
-              src={product.images[selectedImage]}
+              src={product.imageUrls[selectedImage]}
               alt={product.name}
               className="w-full h-full object-cover"
             />
           </div>
           <div className="grid grid-cols-3 gap-4">
-            {product.images.map((image, index) => (
+            {product.imageUrls.map((image, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(index)}
@@ -46,7 +59,7 @@ function ProductPage() {
               >
                 <img
                   src={image}
-                  alt=""
+                  alt={`Product image ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
               </button>
@@ -101,12 +114,14 @@ function ProductPage() {
           <div className="border-t pt-8">
             <h2 className="text-xl font-bold mb-4">Specifications</h2>
             <dl className="grid grid-cols-1 gap-4">
-              {Object.entries(product.specifications).map(([key, value]) => (
-                <div key={key} className="flex">
-                  <dt className="font-medium w-24">{key}:</dt>
-                  <dd className="text-gray-600">{value}</dd>
-                </div>
-              ))}
+              {Object.entries(productSpec.specifications).map(
+                ([key, value]) => (
+                  <div key={key} className="flex">
+                    <dt className="font-medium w-24">{key}:</dt>
+                    <dd className="text-gray-600">{value}</dd>
+                  </div>
+                )
+              )}
             </dl>
           </div>
         </div>
