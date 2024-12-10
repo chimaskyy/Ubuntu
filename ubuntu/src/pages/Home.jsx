@@ -6,6 +6,7 @@ import TrendingProducts from "../components/Trending";
 import NewArrivals from "../components/NewArival";
 // import Category2 from "../components/Category2"
 import AboutSection from "../components/About";
+import InstagramFeatures from "@/components/InstaView";
 export default function RotatingHero() {
   return (
     <>
@@ -15,6 +16,7 @@ export default function RotatingHero() {
       <TrendingProducts />
       {/* <Category2/> */}
       <NewArrivals />
+      <InstagramFeatures />
     </>
   );
 

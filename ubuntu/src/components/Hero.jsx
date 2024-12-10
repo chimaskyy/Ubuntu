@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import cover from "../assets/cover.jpg"
+import cover from "../assets/cover.jpg";
 
 export function Hero() {
   return (
@@ -20,7 +20,7 @@ export function Hero() {
               TRADITIONALLY ROOTED, FOREVER ELITE
             </p>
           </div>
-          <div className=" mt-12  w-full flex flex-col lg:flex-row justify-between items-start space-y-8 lg:space-y-0 lg:mt-24">
+          <div className=" mt-12 w-full flex flex-col lg:flex-row justify-between items-start space-y-8 lg:space-y-0 lg:mt-24">
             <div className="lg:block max-w-xs sm:max-w-xs">
               <p className="text-lg sm:text-sm leading-relaxed text-white/80">
                 Discover our collection of authentic African designs. Bringing
@@ -29,7 +29,7 @@ export function Hero() {
               </p>
             </div>
             <div></div>
-            <div className="flex lg:ml-6">
+            <div className="flex lg:-ml-96">
               <Link
                 to="/new-arival"
                 a

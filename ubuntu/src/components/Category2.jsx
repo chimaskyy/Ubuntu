@@ -41,7 +41,7 @@ export default function Component() {
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-white text-2xl md:text-3xl font-bold tracking-wider">
+              <span className="text-white text-2xl md:text-3xl font-bold tracking-wider ">
                 {category.name}
               </span>
             </div>

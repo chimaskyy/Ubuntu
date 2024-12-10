@@ -1,4 +1,4 @@
-import { auth, googleProvider } from "../config/firebase";
+import { auth, googleProvider, db } from "../config/firebase";
 import {
   signInWithPopup,
   signOut,
@@ -7,6 +7,7 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import {doc, setDoc, getDoc} from "firebase/firestore";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Google Authentication
@@ -16,7 +17,17 @@ export const authenticateWithGoogle = createAsyncThunk(
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const user = userCredential.user;
-      const displayName = user.displayName || "Google User";
+      const displayName = user.displayName || "";
+
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        uid: user.uid,
+        name: displayName,
+        email: user.email,
+        phone: user.phoneNumber || null,
+        photoURL: user.photoURL || null,
+        createdAt: new Date().toISOString(),
+      });
       console.log("Authenticated user:", user);
       return { ...user, displayName };
     } catch (error) {
@@ -29,16 +40,29 @@ export const authenticateWithGoogle = createAsyncThunk(
 // Email/Password Sign-Up
 export const signUpWithEmail = createAsyncThunk(
   "user/signUpWithEmail",
-  async ({ email, password, username }, thunkAPI) => {
+  async ({ email, password, name, phone, photo }, thunkAPI) => {
     try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
         password
       );
-      await updateProfile(userCredential.user, { displayName: username });
+      await updateProfile(userCredential.user, { displayName: name });
+      
+      const user = userCredential.user;
+
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        uid: user.uid,
+        name: name,
+        email: user.email,
+        phone: phone || null,
+        photoURL: photo || null,
+        createdAt:new Date().toISOString(),
+      });
+
       console.log("Signed up user:", userCredential.user);
-      return { ...userCredential.user, displayName: username };
+      return { ...user, displayName: name, phone, photoURL: photo };
     } catch (error) {
       console.error("Sign-Up Error:", error);
       return thunkAPI.rejectWithValue(error.message || "Sign-Up failed.");
@@ -147,10 +171,18 @@ export default userSlice.reducer;
 
 // Monitor Auth State
 export const monitorAuthState = () => (dispatch) => {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
       const displayName = user.displayName || "";
-      dispatch(setUser({ ...user, displayName }));
+      const userDocRef = doc(db, "users", user.uid);
+
+      const userSnap = await getDoc(userDocRef);
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        dispatch(setUser({ ...user, ...userData, displayName }));
+      } else {
+        dispatch(setUser({ ...user, displayName }));
+      }
     } else {
       dispatch(setUser(null));
     }

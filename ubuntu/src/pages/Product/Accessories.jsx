@@ -48,13 +48,16 @@ export default function ProductsPage() {
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-4">
-            NEW ARRIVALS OF MODERN AFRICAN PRINT CLOTHING
+          <h1 className="text-2xl font-bold uppercase text-gray-900 sm:text-3xl mb-4">
+            African Print Accessories
           </h1>
-          <p className="text-gray-600 text-sm max-w-3xl mx-auto">
-            Be a trendsetter in our latest modern African clothing arrivals!
-            Enjoy vibrant collections where contemporary fashion meets
-            traditional African prints. Shop the latest trends.
+          <p className="text-gray-600 text-xs max-w-3xl mx-auto">
+            Ubuntu accessories are the perfect addition to your wardrobe!
+            Add bold African print accessories to all your outfits with our selection of
+            bags and wallets, print head wears,
+           and more!. Our collection features unique
+            African print accessories that add a touch of cultural flair to any
+            ensemble. Shop our full selection below.
           </p>
         </div>
 

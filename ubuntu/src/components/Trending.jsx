@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/card";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import foto from "../assets/pinkkyyy.jpg";
-import {useSelector, useDispatch} from "react-redux"
-import {addToCart, removeFromCart} from "@/reducers/cartSlice"
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart, removeFromCart } from "@/reducers/cartSlice";
 import toast from "react-hot-toast";
 
 const products = [
@@ -51,22 +51,22 @@ const products = [
 
 export default function Component() {
   const scrollContainerRef = useRef(null);
-  const {user} = useSelector((state) => state.user);
-  const {items} = useSelector((state) => state.cart)
-  const dispatch = useDispatch()
+  const { user } = useSelector((state) => state.user);
+  const { items } = useSelector((state) => state.cart);
+  const dispatch = useDispatch();
 
   const handleAddToCart = (product) => {
-    if(user) {
-      dispatch(addToCart(product))
-      toast.success(`${product.name} added to cart`)
+    if (user) {
+      dispatch(addToCart(product));
+      toast.success(`${product.name} added to cart`);
     } else {
-      toast.error("Please login to add items to card")
+      toast.error("Please login to add items to card");
     }
-  }
-   const handleRemoveFromCart = (productId) => {
-     dispatch(removeFromCart({ id: productId }));
-     toast.success("Item reomoved from cart")
-   };
+  };
+  const handleRemoveFromCart = (productId) => {
+    dispatch(removeFromCart({ id: productId }));
+    toast.success("Item reomoved from cart");
+  };
 
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
@@ -87,7 +87,7 @@ export default function Component() {
             <Button
               variant="outline"
               size="icon"
-              className="hidden absolute left-4 top-1/2 transform -translate-y-1/2 z-10 lg:block"
+              className="hidden md:block absolute left-4 top-1/2 transform -translate-y-1/2 z-10 lg:block"
               onClick={() => scroll("left")}
               aria-label="Scroll left"
             >
@@ -169,7 +169,7 @@ export default function Component() {
             <Button
               variant="outline"
               size="icon"
-              className="hidden absolute right-6 top-1/2 transform -translate-y-1/2 z-10 lg:block"
+              className="hidden md:block absolute right-6 top-1/2 transform -translate-y-1/2 z-10 lg:block"
               onClick={() => scroll("right")}
               aria-label="Scroll right"
             >

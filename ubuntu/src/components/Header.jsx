@@ -13,14 +13,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import logo from "../assets/logo.jpg";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
   Collapsible,
@@ -31,15 +23,11 @@ import { Link } from "react-router-dom";
 
 const categories = [
   {
-    name: "New In",
-    items: ["Latest Arrivals", "Trending Now", "Bestsellers"],
-  },
-  {
     name: "MEN",
     items: ["Shirts", "Pants", "Accessories", "Undies"],
   },
   {
-    name: "Kids",
+    name: "KIDS",
     items: ["Boys", "Girls"],
   },
   {
@@ -47,7 +35,7 @@ const categories = [
     items: ["Men's Shoes", "Women's Shoes"],
   },
   {
-    name: "Accessories",
+    name: "ACCESSORIES",
     items: ["Caps", "Sticks", "Hats", "Fans", "Belts"],
   },
   {
@@ -64,7 +52,7 @@ export default function Header() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const { user } = useSelector((state) => state.user);
-  const {items} = useSelector((state) => state.cart)
+  const { items } = useSelector((state) => state.cart);
   console.log("loggedin user:", user);
 
   return (
@@ -187,54 +175,17 @@ export default function Header() {
         </div>
       </div>
 
-      <nav className="border-t">
+      <nav className="idden lg:block bg-white shadow-sm ">
         <div className="container mx-auto px-4 max-w-7xl mx-auto lg:px-6">
-          <NavigationMenu className="hidden lg:flex justify-center">
-            <NavigationMenuList className="ml-36 mt-4 flex justify-center space-x-2 py-2 text-sm">
+          <Link className="hidden lg:flex justify-center">
+            <ul className="flex justify-center space-x-16 py-4 -ml-16 mt-4 text-xs ">
               {categories.map((category) => (
-                <NavigationMenuItem key={category.name}>
-                  <NavigationMenuTrigger className="text-xs uppercase">
-                    {category.name}
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent>
-                    <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                      <li className="row-span-3">
-                        <NavigationMenuLink asChild>
-                          <a
-                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                            href="/"
-                          >
-                            <div className="mb-2 mt-4 text-lg font-medium">
-                              Featured Collection
-                            </div>
-                            <p className="text-sm leading-tight text-muted-foreground">
-                              Discover our latest styles for {category.name}
-                            </p>
-                          </a>
-                        </NavigationMenuLink>
-                      </li>
-                      {category.items.map((item) => (
-                        <li key={item}>
-                          <NavigationMenuLink asChild>
-                            <a
-                              href={`/${category.name.toLowerCase()}/${item
-                                .toLowerCase()
-                                .replace(" ", "-")}`}
-                              className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                            >
-                              <div className="text-sm font-medium leading-none">
-                                {item}
-                              </div>
-                            </a>
-                          </NavigationMenuLink>
-                        </li>
-                      ))}
-                    </ul>
-                  </NavigationMenuContent>
-                </NavigationMenuItem>
+                <li className="hover:text-gray-900 hover:scale-105" key={category.name}>
+                  {category.name}
+                </li>
               ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+            </ul>
+          </Link>
         </div>
       </nav>
     </header>

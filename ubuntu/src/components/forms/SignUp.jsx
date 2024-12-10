@@ -162,7 +162,9 @@ const SignUp = () => {
   const [form, setForm] = useState({
     email: "",
     password: "",
-    username: "",
+    name: "",
+    phone:"",
+    photo:"",
   });
   const [isLogin, setIsLogin] = useState(false);
  useEffect(() => {
@@ -178,13 +180,16 @@ const SignUp = () => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (isLogin) {
-      dispatch(loginWithEmail({ email: form.email, password: form.password }));
+      dispatch(loginWithEmail({ email: form.email, password: form.password,  }));
     } else {
       dispatch(
         signUpWithEmail({
           email: form.email,
           password: form.password,
-          username: form.username,
+          name: form.name,
+          phone: form.phone,
+          photo: form.photo,
+
         })
       );
     }
@@ -204,16 +209,16 @@ const SignUp = () => {
            <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
              {!isLogin && (
                <div className="pt-4">
-                 <label htmlFor="username" className="sr-only">
-                   Username
+                 <label htmlFor="name" className="sr-only">
+                   Name
                  </label>
                  <input
-                   id="username"
-                   name="username"
+                   id="name"
+                   name="name"
                    type="text"
-                   value={form.username}
+                   value={form.name}
                    onChange={handleChange}
-                   autoComplete="username"
+                   autoComplete="name"
                    required={!isLogin}
                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                    placeholder="Name"
@@ -234,6 +239,22 @@ const SignUp = () => {
                  required
                  className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                  placeholder="Email address"
+               />
+             </div>
+             <div className="pt-4">
+               <label htmlFor="email-address" className="sr-only">
+                 Phone Number
+               </label>
+               <input
+                 id="phone-number"
+                 name="phone"
+                 type="phone"
+                 value={form.phone}
+                 onChange={handleChange}
+                 autoComplete="phone"
+                 required
+                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                 placeholder="Phone Number"
                />
              </div>
              <div className="relative pt-4">

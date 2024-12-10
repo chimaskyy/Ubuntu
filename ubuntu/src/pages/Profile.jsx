@@ -77,7 +77,7 @@ export default function ProfilePage() {
                 <div className="flex flex-col items-center">
                   <Avatar className="h-24 w-24">
                     <AvatarImage
-                      src="/placeholder.svg?height=96&width=96"
+                      src={user.photoURL}
                       alt="Profile picture"
                     />
                     <AvatarFallback>
@@ -203,7 +203,7 @@ export default function ProfilePage() {
                         <Input
                           id="phone"
                           type="tel"
-                          defaultValue="+1 234 567 890"
+                          defaultValue={user.phone}
                           disabled={!isEditing}
                         />
                       </div>

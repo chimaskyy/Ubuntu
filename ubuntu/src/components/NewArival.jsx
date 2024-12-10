@@ -1,47 +1,22 @@
 import { Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import foto from "../assets/pinkkyyy.jpg"
-
-const products = [
-  {
-    id: 1,
-    name: "Ankara Maxi Dress",
-    price: "129.99",
-    image: foto,
-    quantity: 10,
-  },
-  {
-    id: 2,
-    name: "African Print Blazer",
-    price: "149.99",
-    image: foto,
-    quantity: 10,
-  },
-  {
-    id: 3,
-    name: "Kente Cloth Bag",
-    price: "79.99",
-    image: foto,
-    quantity: 10,
-  },
-  {
-    id: 4,
-    name: "Tribal Pattern Scarf",
-    price: "39.99",
-    image: foto,
-    quantity: 10,
-  },
-  {
-    id: 5,
-    name: "Tribal Pattern Scarf",
-    price: "39.99",
-    image: foto,
-    quantity: 10,
-  },
-];
+import foto from "../assets/pinkkyyy.jpg";
+import { fetchProducts } from "@/reducers/productSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 export function NewArrivals() {
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.products);
+
+  useEffect(() => {
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+      console.log("products", products);
+    }
+  }, [dispatch, products.length]);
   return (
     <section className="py-16">
       <div className="container max-w-7xl mx-auto lg:px-6  px-4 md:px-6">
@@ -51,7 +26,7 @@ export function NewArrivals() {
             <div key={product.id} className="group">
               <div className="relative overflow-hidden">
                 <img
-                  src={product.image}
+                  src={product.imageUrls?.[0] || ""}
                   alt={product.name}
                   className="h-full w-full object-cover"
                   width={400}
@@ -91,9 +66,12 @@ export function NewArrivals() {
           <Button
             asChild
             size="lg"
-            className="bg-black text-white hover:bg-gray-900"
+            className="bg-black text-white hover:bg-gray-900 transform transition-transform hover:scale-105"
           >
-            <Link href="/new-arrivals">SHOP NEW ARRIVALS</Link>
+            <Link href="/new-arrivals">
+              SHOP NEW ARRIVALS
+              <ArrowRight className="w-10 h-10 transition-transform group-hover:translate-x-2" />
+            </Link>
           </Button>
         </div>
       </div>
