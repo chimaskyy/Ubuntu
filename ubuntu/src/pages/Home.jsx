@@ -10,13 +10,17 @@ import InstagramFeatures from "@/components/InstaView";
 export default function RotatingHero() {
   return (
     <>
-      <Hero />
-      <AboutSection />
-      <FeaturedCategories />
-      <TrendingProducts />
-      {/* <Category2/> */}
-      <NewArrivals />
-      <InstagramFeatures />
+      {/* <body className="bg-red-500 sm:bg-indigo-400 md:bg-orange-500 lg:bg-yellow-500 xl:bg-sky-500"> */}
+        <main>
+          <Hero />
+          <AboutSection />
+          <FeaturedCategories />
+          <TrendingProducts />
+          {/* <Category2/> */}
+          <NewArrivals />
+          <InstagramFeatures />
+        </main>
+      {/* </body> */}
     </>
   );
 

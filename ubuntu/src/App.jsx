@@ -8,6 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import SignUp from "./components/forms/SignUp";
+import Login from "./components/forms/Login";
 import Profile from "./pages/Profile";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
@@ -24,44 +25,64 @@ import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
 import CheckoutPage from "./pages/Checkout";
 import {monitorAuthState} from "./reducers/userSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
+import { fetchCart } from "./reducers/cartSlice";
+import WithAdminAuth from "../src/hooks/WithAdminAuth";
+import AuthWrapper from "./utils/AuthWrapper";
 
 function App() {
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
+  const userId = useSelector((state) => state.user.uid);
   // Check if the current route starts with "/admin"
   const isAdminRoute = location.pathname.startsWith("/admin");
 
   useEffect(() => {
-    dispatch(monitorAuthState());
+    const unsubscribe = dispatch(monitorAuthState());
+    return () => unsubscribe; // Cleanup subscription
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchCart(userId));
   }
-  , [dispatch]);
+  , [dispatch, userId]);
+
   return (
     <>
-      {/* Render CategoryNav only if not on an Admin route */}
-      {!isAdminRoute && <Header />}
+      <AuthWrapper>
+        {/* Render CategoryNav only if not on an Admin route */}
+        {!isAdminRoute && <Header />}
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/new-arival" element={<Arival />} />
-        <Route path="/head-wear" element={<Headwear />} />
-        <Route path="/shorts" element={<UnisexShort />} />
-        <Route path="/men" element={<MenList />} />
-        <Route path="/accessories" element={<Accessories />} />
-        <Route path="/undies" element={<Undies />} />
-        <Route path="/footings" element={<Footings />} />
-        <Route path="/his-hers" element={<HisHers />} />
-        <Route path="/product-page/:id" element={<ProductPage />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<CheckoutPage />} />
-        <Route path="/admin/*" element={<Admin />} />
-        <Route path="*" element={<Navigate to="/" />} />
-      </Routes>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/new-arival" element={<Arival />} />
+          <Route path="/head-wear" element={<Headwear />} />
+          <Route path="/uni-sex" element={<UnisexShort />} />
+          <Route path="/men" element={<MenList />} />
+          <Route path="/acessories" element={<Accessories />} />
+          <Route path="/undies" element={<Undies />} />
+          <Route path="/footings" element={<Footings />} />
+          <Route path="/his-hers" element={<HisHers />} />
+          <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route
+            path="/admin/*"
+            element={
+              <WithAdminAuth>
+                <Admin />
+              </WithAdminAuth>
+            }
+          />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
 
-      <Footer />
+        {!isAdminRoute && <Footer />}
+      </AuthWrapper>
     </>
   );
 }

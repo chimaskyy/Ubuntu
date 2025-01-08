@@ -7,8 +7,9 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import {doc, setDoc, getDoc} from "firebase/firestore";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import toast from "react-hot-toast";
 
 // Google Authentication
 export const authenticateWithGoogle = createAsyncThunk(
@@ -17,7 +18,13 @@ export const authenticateWithGoogle = createAsyncThunk(
     try {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const user = userCredential.user;
-      const displayName = user.displayName || "";
+      const displayName = user.displayName
+        ? user.displayName.split(" ")[0]
+        : "User";
+        console.log("User's first name:", displayName);
+
+        toast.success(`Welcome, ${displayName}!`);
+      const userRole = ["user"];
 
       const userRef = doc(db, "users", user.uid);
       await setDoc(userRef, {
@@ -26,12 +33,13 @@ export const authenticateWithGoogle = createAsyncThunk(
         email: user.email,
         phone: user.phoneNumber || null,
         photoURL: user.photoURL || null,
+        role: userRole,
         createdAt: new Date().toISOString(),
       });
-      console.log("Authenticated user:", user);
+
       return { ...user, displayName };
     } catch (error) {
-      console.error("Google Authentication Error:", error);
+      console.error("Google Sign-In Error:", error);
       return thunkAPI.rejectWithValue("Google sign-in failed.");
     }
   }
@@ -48,9 +56,9 @@ export const signUpWithEmail = createAsyncThunk(
         password
       );
       await updateProfile(userCredential.user, { displayName: name });
-      
-      const user = userCredential.user;
 
+      const user = userCredential.user;
+      const userRole = ["user"];
       const userRef = doc(db, "users", user.uid);
       await setDoc(userRef, {
         uid: user.uid,
@@ -58,13 +66,12 @@ export const signUpWithEmail = createAsyncThunk(
         email: user.email,
         phone: phone || null,
         photoURL: photo || null,
-        createdAt:new Date().toISOString(),
+        role: userRole,
+        createdAt: new Date().toISOString(),
       });
 
-      console.log("Signed up user:", userCredential.user);
       return { ...user, displayName: name, phone, photoURL: photo };
     } catch (error) {
-      console.error("Sign-Up Error:", error);
       return thunkAPI.rejectWithValue(error.message || "Sign-Up failed.");
     }
   }
@@ -80,10 +87,9 @@ export const loginWithEmail = createAsyncThunk(
         email,
         password
       );
-      console.log("Logged in user:", userCredential.user);
+
       return userCredential.user;
     } catch (error) {
-      console.error("Login Error:", error);
       return thunkAPI.rejectWithValue(error.message || "Login failed.");
     }
   }
@@ -95,7 +101,7 @@ export const logoutUser = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       await signOut(auth);
-      console.log("User logged out.");
+
       return null;
     } catch (error) {
       console.error("Logout Error:", error);
@@ -111,11 +117,17 @@ const userSlice = createSlice({
     user: null,
     status: null,
     error: null,
+    isLoading: true,
   },
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
+      state.isLoading = false;
     },
+    clearUser: (state) => {
+      state.user = null;
+      state.isLoading = false;
+  },
   },
   extraReducers: (builder) => {
     builder
@@ -166,25 +178,33 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, clearUser } = userSlice.actions;
 export default userSlice.reducer;
 
 // Monitor Auth State
 export const monitorAuthState = () => (dispatch) => {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const displayName = user.displayName || "";
-      const userDocRef = doc(db, "users", user.uid);
+  // Start loading state
+  dispatch(setUser({ loading: true }));
 
-      const userSnap = await getDoc(userDocRef);
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        dispatch(setUser({ ...user, ...userData, displayName }));
-      } else {
-        dispatch(setUser({ ...user, displayName }));
+  return onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        const userDocRef = doc(db, "users", user.uid);
+        const userSnap = await getDoc(userDocRef);
+
+        if (userSnap.exists()) {
+          const userData = userSnap.data();
+          dispatch(setUser({ ...user, ...userData, loading: false }));
+        } else {
+          console.error("User document not found in Firestore.");
+          dispatch(clearUser());
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        dispatch(clearUser());
       }
     } else {
-      dispatch(setUser(null));
+      dispatch(clearUser());
     }
   });
 };

@@ -1,4 +1,3 @@
-
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   doc,
@@ -41,7 +40,7 @@ export const addProduct = createAsyncThunk(
       const imageUrls = (await Promise.all(imageUploadPromises)).filter(
         (url) => url
       );
- // Wait for all uploads to complete
+      // Wait for all uploads to complete
       console.log("Uploaded images:", imageUrls);
 
       // Add product to Firestore
@@ -50,7 +49,10 @@ export const addProduct = createAsyncThunk(
         imageUrls: imageUrls || [],
         category,
       };
-      const docRef = await addDoc(collection(db, "products"), productWithImages); // Awaiting `addDoc`
+      const docRef = await addDoc(
+        collection(db, "products"),
+        productWithImages
+      ); // Awaiting `addDoc`
 
       console.log("Product added to Firestore:", productWithImages);
       console.log("Document written with ID: ", docRef.id);
@@ -62,21 +64,21 @@ export const addProduct = createAsyncThunk(
   }
 );
 
-
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
   async (category = "", thunkAPI) => {
     try {
-      const q =
-        category === ""
-          ? getDocs(collection(db, "products"))
-          : getDocs(
-              query(
-                collection(db, "products"),
-                where("category", "==", category)
-              )
-            );
-      const products = (await q).docs.map((doc) => ({
+      let querySnapshot;
+
+      if (category) {
+        querySnapshot = await getDocs(
+          query(collection(db, "products"), where("category", "==", category))
+        );
+      } else {
+        querySnapshot = await getDocs(collection(db, "products"));
+      }
+
+      const products = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -104,19 +106,18 @@ export const fetchProductById = createAsyncThunk(
   }
 );
 
-
 export const editProduct = createAsyncThunk(
-  'prooducts/editProduct',
-  async ({id, updateData}, {rejectWithValue}) =>{
-    try{
-      const productRef = doc(db, 'products', id);
-      await setDoc(productRef, updateData, {merge: true});
-      return {id, updateData}
-    } catch (error){
+  "prooducts/editProduct",
+  async ({ id, updateData }, { rejectWithValue }) => {
+    try {
+      const productRef = doc(db, "products", id);
+      await setDoc(productRef, updateData, { merge: true });
+      return { id, updateData };
+    } catch (error) {
       return rejectWithValue(error.message);
     }
   }
-)
+);
 
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
@@ -142,54 +143,57 @@ const productSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(addProduct.pending, (state) => {
-        state.loading = "loading";
+        state.loading = true;
       })
       .addCase(addProduct.fulfilled, (state, action) => {
-        state.loading = "success";
+        state.loading = false;
         state.products.push(action.payload); // Add new product to the state
       })
       .addCase(addProduct.rejected, (state, action) => {
-        state.loading = "failed";
+        state.loading = false;
         state.error = action.payload;
       })
       .addCase(fetchProducts.pending, (state) => {
-        state.loading = "loading";
+        state.loading = true;
+        state.error = null;
       })
       .addCase(fetchProducts.fulfilled, (state, action) => {
-        state.loading = "succeeded";
+        state.loading = false;
         state.products = action.payload;
+        state.error = null;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
-        state.loading = "failed";
+        state.loading = false;
         state.error = action.payload;
       })
       .addCase(fetchProductById.pending, (state) => {
-        state.loading = "loading";
+        state.loading = true;
       })
       .addCase(fetchProductById.fulfilled, (state, action) => {
-        state.loading = "succeeded";
+        state.loading = false;
         state.product = action.payload;
+        state.error = null;
       })
       .addCase(fetchProductById.rejected, (state, action) => {
-        state.loading = "failed";
+        state.loading = false;
         state.error = action.payload;
       })
       .addCase(editProduct.fulfilled, (state, action) => {
         const index = state.products.findIndex(
           (product) => product.id === action.payload.id
-        )
+        );
         if (index !== -1) {
           state.products[index] = {
-            ...state.products[index], 
-            ...action.payload.updateData
-          }
+            ...state.products[index],
+            ...action.payload.updateData,
+          };
         }
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.products = state.products.filter(
           (products) => products.id !== action.payload
         );
-      })
+      });
   },
 });
 

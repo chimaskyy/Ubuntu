@@ -1,16 +1,16 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "@/reducers/productSlice";
 import { Heart, Share2, ShoppingCart, Minus, Plus } from "lucide-react";
 
 function ProductPage() {
-  const {id} = useParams()
+  const { id } = useParams();
   const dispatch = useDispatch();
   const { product, loading, error } = useSelector((state) => state.products);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
- 
+
   const productSpec = {
     specifications: {
       Material: "100% Cotton",
@@ -24,20 +24,19 @@ function ProductPage() {
     if (!product || product.id !== id) {
       dispatch(fetchProductById(id));
     }
+  }, [dispatch, product, id]);
+  if (loading) {
+    return <p>Loading...</p>;
   }
-  , [dispatch, product, id]);
-  // if (loading) {
-  //   return <p>Loading...</p>;
-  // }
   if (error) {
     return <p>Error: {error}</p>;
   }
-  if(!product) {
-    return <p>Product not found</p>
+  if (!product) {
+    return <p>Product not found</p>;
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 lg:mx-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Product Images */}
         <div>

@@ -15,8 +15,8 @@ export default function AboutSection() {
               controls
               loop
               muted
-              src={videoSrc}
-              // src="https://cdn.pixabay.com/video/2021/07/14/81496-576306063_tiny.mp4"
+              // src={videoSrc}
+              src="https://cdn.pixabay.com/video/2021/07/14/81496-576306063_tiny.mp4"
               aria-label="Brand Story Video"
             />
           </div>

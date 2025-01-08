@@ -1,16 +1,52 @@
 import { Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import foto from "../assets/pinkkyyy.jpg";
 import { fetchProducts } from "@/reducers/productSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ArrowRight } from "lucide-react";
-
+import {
+  
+  removeFromCartAndSave,
+  addToCartAndSave,
+} from "@/reducers/cartSlice";
+import toast, { Toaster } from "react-hot-toast";
+import { fetchCart } from "../reducers/cartSlice";
 export function NewArrivals() {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.products);
+  const { user } = useSelector((state) => state.user);
+  const { items } = useSelector((state) => state.cart);
+  
+useEffect(() => {
+  if (user && !items.length) {
+    // Fetch only if the cart is not already loaded
+    dispatch(fetchCart(user.uid));
+  }
+}, [user, dispatch, items.length]);
 
+ const handleAddToCart = (product) => {
+   if (!product?.price) {
+     toast.error("Product data is invalid.");
+     console.error("Invalid product:", product);
+     return;
+   }
+   if (user) {
+     dispatch(addToCartAndSave(user.uid, product));
+     toast.success(`${product.name} added to cart`);
+   } else {
+     toast.error("Please login to add items to the cart.");
+   }
+ };
+
+  const handleremoveFromCartAndSave = (productId) => {
+     if (!user) {
+       toast.error("Please log in to modify your cart.");
+       return;
+     }
+    dispatch(removeFromCartAndSave(user.uid, productId));
+    toast.success("Item reomoved from cart");
+  };
   useEffect(() => {
     if (products.length === 0) {
       dispatch(fetchProducts());
@@ -19,14 +55,15 @@ export function NewArrivals() {
   }, [dispatch, products.length]);
   return (
     <section className="py-16">
+      <Toaster />
       <div className="container max-w-7xl mx-auto lg:px-6  px-4 md:px-6">
         <h2 className="text-3xl font-bold text-left mb-12">New Arrivals</h2>
-        
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <div key={product.id} className="group">
               <div className="relative overflow-hidden">
-                <Link to={`/product-page/${product.id}`}>
+                <Link to={`/product/${product.id}`}>
                   <img
                     src={product.imageUrls?.[0] || ""}
                     alt={product.name}
@@ -39,11 +76,12 @@ export function NewArrivals() {
                     aria-label={`Add ${product.name} to wishlist`}
                   >
                     <Heart className="h-5 w-5" />
+                    <span className="sr-only">Add to wishlist</span>
                   </button>
                 </Link>
               </div>
               <div className="pt-4">
-                <Link to={`/product-page/${product.uid}`} className="block">
+                <Link to={`/product/${product.uid}`} className="block">
                   <h3 className="text-sm font-medium leading-tight tracking-tight text-gray-900 line-clamp-2 group-hover:underline">
                     {product.name}
                   </h3>
@@ -53,14 +91,37 @@ export function NewArrivals() {
                 <p className="text-base font-semibold text-gray-900">
                   ₦{product.price}
                 </p>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-2"
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                  Add to Cart
-                </Button>
+                {user ? (
+                  items.some((item) => item.id === product.id) ? ( // Check if the product is already in the cart
+                    <Button
+                      onClick={() => handleremoveFromCartAndSave(product.id)}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Remove from Cart
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleAddToCart(product)}
+                      variant="outline"
+                      size="sm"
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                      Add to Cart
+                    </Button>
+                  )
+                ) : (
+                  <Button
+                    onClick={() =>
+                      toast.error("Please login to add items to the cart.")
+                    }
+                    variant="outline"
+                    size="sm"
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                    Add to Cart
+                  </Button>
+                )}
               </div>
             </div>
           ))}

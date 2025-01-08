@@ -13,8 +13,13 @@ import {
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import foto from "../assets/pinkkyyy.jpg";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart, removeFromCart } from "@/reducers/cartSlice";
+import {
+  addToCart,
+  removeFromCart,
+  addToCartAndSave,
+} from "@/reducers/cartSlice";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const products = [
   {
@@ -57,7 +62,7 @@ export default function Component() {
 
   const handleAddToCart = (product) => {
     if (user) {
-      dispatch(addToCart(product));
+      dispatch(addToCartAndSave(product));
       toast.success(`${product.name} added to cart`);
     } else {
       toast.error("Please login to add items to card");
@@ -105,8 +110,8 @@ export default function Component() {
                   style={{ scrollSnapAlign: "start" }}
                 >
                   <CardHeader className="border-b p-0">
-                    <a
-                      href={`/products/${product.id}`}
+                    <Link
+                      to={`/product/${product.id}`}
                       className="block overflow-hidden"
                     >
                       <img
@@ -116,7 +121,7 @@ export default function Component() {
                         width={250}
                         height={333}
                       />
-                    </a>
+                    </Link>
                   </CardHeader>
                   <CardContent className="p-4">
                     <a href={`/products/${product.id}`}>
@@ -162,7 +167,7 @@ export default function Component() {
                         </Button>
                       )}
                     </div>
-                  </CardFooter>
+                  </CardFooter> 
                 </Card>
               ))}
             </div>

@@ -52,7 +52,7 @@ function InstagramFeatures() {
     {
       icon: Box,
       title: "Free Shipping",
-      description: "Free shipping for order above $150",
+      description: "Free shipping outside Nigeria for order above $200 ",
     },
     {
       icon: BadgeDollarSign,

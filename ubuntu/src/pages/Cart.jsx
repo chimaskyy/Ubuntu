@@ -4,11 +4,13 @@ import { Minus, Plus, Trash2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  incrementItem,
-  decrementItem,
-  removeFromCart,
-  clearCart,
+  removeFromCartAndSave,
+  decrementItemAndSave,
+  incrementItemAndSave,
+  clearCartAndSave,
+  fetchCart
 } from "@/reducers/cartSlice";
+import { useEffect } from "react";
 
 export default function CartPage() {
   const dispatch = useDispatch();
@@ -18,23 +20,31 @@ export default function CartPage() {
     (acc, item) => acc + parseFloat(item.price) * item.quantity,
     0
   );
+  
   const shipping = 10;
   const total = subtotal + shipping;
 
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchCart(user.id));
+    }
+  }, [user, dispatch]);
+
+
   const handleIncrease = (itemId) => {
-    dispatch(incrementItem({ id: itemId }));
+    dispatch(incrementItemAndSave(user.uid, itemId ));
   };
 
   const handleDecrease = (itemId) => {
-    dispatch(decrementItem({ id: itemId }));
+    dispatch(decrementItemAndSave(user.uid, itemId));
   };
 
   const handleRemove = (itemId) => {
-    dispatch(removeFromCart({ id: itemId }));
+    dispatch(removeFromCartAndSave(user.uid, itemId));
   };
 
   const handleClearCart = () => {
-    dispatch(clearCart());
+    dispatch(clearCartAndSave(user.uid));
   };
 
   return (

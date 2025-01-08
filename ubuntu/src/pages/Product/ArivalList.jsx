@@ -1,4 +1,4 @@
-import { Heart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 // import Link from "next/link";
 import {
   Select,
@@ -14,36 +14,61 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import A from "../../assets/pinkkyyy.jpg"
-
-const products = [
-  {
-    id: 1,
-    name: "Bell Sleeve Dress",
-    image: A,
-    price: "199.99",
-  },
-  {
-    id: 2,
-    name: "Head Wrap",
-    image: A,
-    price: "49.99",
-  },
-  {
-    id: 3,
-    name: "African Print Jacket",
-    image: A,
-    price: "249.99",
-  },
-  {
-    id: 4,
-    name: "Evening Dress",
-    image: A,
-    price: "$299.99",
-  },
-];
+import A from "../../assets/pinkkyyy.jpg";
+import { fetchProducts } from "@/reducers/productSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
+import {
+  addToCartAndSave,
+  fetchCart,
+  removeFromCartAndSave,
+} from "@/reducers/cartSlice";
+import { Link } from "react-router-dom";
 
 export default function ProductsPage() {
+  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector((state) => state.products);
+  const { user } = useSelector((state) => state.user);
+  const { items } = useSelector((state) => state.cart);
+
+  useEffect(() => {
+    if (user && !items.length) {
+      // Fetch only if the cart is not already loaded
+      dispatch(fetchCart(user.uid));
+    }
+  }, [user, dispatch, items.length]);
+
+  const handleAddToCart = (product) => {
+    if (!product?.price) {
+      toast.error("Product data is invalid.");
+      console.error("Invalid product:", product);
+      return;
+    }
+    if (user) {
+      dispatch(addToCartAndSave(user.uid, product));
+      toast.success(`${product.name} added to cart`);
+    } else {
+      toast.error("Please login to add items to the cart.");
+    }
+  };
+
+  const handleremoveFromCartAndSave = (productId) => {
+    if (!user) {
+      toast.error("Please log in to modify your cart.");
+      return;
+    }
+    dispatch(removeFromCartAndSave(user.uid, productId));
+    toast.success("Item reomoved from cart");
+  };
+
+  useEffect(() => {
+    if (products.length === 0) {
+      dispatch(fetchProducts());
+      console.log("products", products);
+    }
+  }, [dispatch, products.length]);
+
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -112,27 +137,29 @@ export default function ProductsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
             <div key={product.id} className="group relative">
-              <div className="relative aspect-[3/4] w-full overflow-hidden bg-gray-200">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-full w-full object-cover"
-                  width={400}
-                  height={600}
-                />
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute right-2 top-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                >
-                  <Heart className="h-4 w-4" />
-                  <span className="sr-only">Add to wishlist</span>
-                </Button>
+              <div className="relative  w-full overflow-hidden ">
+                <Link to={`/product/${product.id}`}>
+                  <img
+                    src={product.imageUrls?.[0] || ""}
+                    alt={product.name}
+                    className="h-full w-full object-cover"
+                    width={400}
+                    height={600}
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                  >
+                    <Heart className="h-4 w-4" />
+                    <span className="sr-only">Add to wishlist</span>
+                  </Button>
+                </Link>
               </div>
               <div className="mt-4">
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">
-                    <a href={`/products/${product.id}`}>
+                    <a href={`/product/${product.id}`}>
                       <span aria-hidden="true" className="absolute inset-0" />
                       {product.name}
                     </a>
@@ -142,9 +169,37 @@ export default function ProductsPage() {
                   <p className="text-base font-semibold text-gray-900">
                     ₦{product.price}
                   </p>
-                  <Button variant="outline" size="sm">
-                    Add to Cart
-                  </Button>
+                  {user ? (
+                    items.some((item) => item.id === product.id) ? ( // Check if the product is already in the cart
+                      <Button
+                        onClick={() => handleremoveFromCartAndSave(product.id)}
+                        variant="outline"
+                        size="sm"
+                      >
+                        Remove from Cart
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => handleAddToCart(product)}
+                        variant="outline"
+                        size="sm"
+                      >
+                        <ShoppingCart className="h-4 w-4" />
+                        Add to Cart
+                      </Button>
+                    )
+                  ) : (
+                    <Button
+                      onClick={() =>
+                        toast.error("Please login to add items to the cart.")
+                      }
+                      variant="outline"
+                      size="sm"
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                      Add to Cart
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>

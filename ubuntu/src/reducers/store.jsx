@@ -9,10 +9,14 @@ const store = configureStore({
         cart: cartSlice,
         products: productSlice,
     },
+    
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false,
+    }),
 });
 
-store.subscribe(() => {
-    localStorage.setItem("cart", JSON.stringify(store.getState().cart));
-});
+// store.subscribe(() => {
+//     localStorage.setItem("cart", JSON.stringify(store.getState().cart));
+// });
 
 export default store;

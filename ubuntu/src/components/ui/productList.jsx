@@ -211,7 +211,7 @@ function ProductList({ products, onEdit, onDelete }) {
       <div className="hidden md:block">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden border border-gray-200 rounded-lg">
-            <div className="max-h-[600px]">
+            <div className="">
               {" "}
               {/* Adjust height as needed */}
               <table className="min-w-full divide-y divide-gray-200">

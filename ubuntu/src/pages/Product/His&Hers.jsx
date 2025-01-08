@@ -49,7 +49,7 @@ export default function ProductsPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-4">
-            NEW ARRIVALS OF MODERN AFRICAN PRINT CLOTHING
+            SHOP UBUNTU HIS $ HERS
           </h1>
           <p className="text-gray-600 text-sm max-w-3xl mx-auto">
             Be a trendsetter in our latest modern African clothing arrivals!

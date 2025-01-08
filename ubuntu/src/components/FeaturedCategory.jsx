@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import foto from "../assets/pinkkyyy.jpg";
 
 function FeaturedCategories() {
@@ -5,18 +6,22 @@ function FeaturedCategories() {
     {
       title: "UBUNTU MEN",
       image: foto,
+      page: "/men",
     },
     {
-      title: "UBUNTU WOMEN",
+      title: "UBUNTU UNISEX",
       image: foto,
+      page: "/uni-sex",
     },
     {
       title: "UBUNTU ACESSORIES",
       image: foto,
+      page: "/acessories",
     },
     {
       title: "UBUNTU FOOTINGS",
       image: foto,
+      page: "/footings",
     },
   ];
 
@@ -30,16 +35,18 @@ function FeaturedCategories() {
               key={category.title}
               className="relative group overflow-hidden"
             >
-              <img
-                src={category.image}
-                alt={category.title}
-                className="h-full object-cover w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                <h3 className="text-white text-sm lg:text-2xl font-bold whitespace-nowrap">
-                  {category.title}
-                </h3>
-              </div>
+              <Link to={category.page}>
+                <img
+                  src={category.image}
+                  alt={category.title}
+                  className="h-full object-cover w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                  <h3 className="text-white text-sm lg:text-2xl font-bold whitespace-nowrap">
+                    {category.title}
+                  </h3>
+                </div>
+              </Link>
             </div>
           ))}
         </div>
