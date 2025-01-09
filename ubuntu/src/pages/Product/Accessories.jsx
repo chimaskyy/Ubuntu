@@ -15,8 +15,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
-const products = [
+const AllProducts = [
   {
     id: 1,
     name: "Bell Sleeve Dress",
@@ -44,6 +45,22 @@ const products = [
 ];
 
 export default function ProductsPage() {
+
+  const [products, setProducts] = useState(AllProducts);
+  
+  
+     const handleSort = (option) => {
+      const sortedProducts = [...AllProducts].sort((a, b) => {
+        const priceA = parseFloat(a.price.replace("$", ""));
+        const priceB = parseFloat(b.price.replace("$", ""));
+  
+        if (option === "low-high") return priceA - priceB;
+        if (option === "high-low") return priceB - priceA;
+  
+        return 0; // Default (no sorting)
+      });
+      setProducts(sortedProducts);
+    };
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -52,12 +69,12 @@ export default function ProductsPage() {
             shop ubuntu Accessories
           </h1>
           <p className="text-gray-600 text-xs max-w-3xl mx-auto">
-            Ubuntu accessories are the perfect addition to your wardrobe!
-            Add bold African print accessories to all your outfits with our selection of
-            bags and wallets, print head wears,
-           and more!. Our collection features unique
-            African print accessories that add a touch of cultural flair to any
-            ensemble. Shop our full selection below.
+            Ubuntu accessories are the perfect addition to your wardrobe! Add
+            bold African print accessories to all your outfits with our
+            selection of bags and wallets, print head wears, and more!. Our
+            collection features unique African print accessories that add a
+            touch of cultural flair to any ensemble. Shop our full selection
+            below.
           </p>
         </div>
 
@@ -105,8 +122,12 @@ export default function ProductsPage() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>Newest</DropdownMenuItem>
-              <DropdownMenuItem>Price: Low to High</DropdownMenuItem>
-              <DropdownMenuItem>Price: High to Low</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSort("low-high")}>
+                Price: Low to High
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSort("high-low")}>
+                Price: High to Low
+              </DropdownMenuItem>
               <DropdownMenuItem>Most Popular</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

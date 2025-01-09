@@ -15,8 +15,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 
-const products = [
+const AllProducts = [
   {
     id: 1,
     name: "Bell Sleeve Dress",
@@ -44,6 +45,22 @@ const products = [
 ];
 
 export default function HeadWear() {
+  const [products, setProducts] = useState(AllProducts);
+
+
+   const handleSort = (option) => {
+    const sortedProducts = [...AllProducts].sort((a, b) => {
+      const priceA = parseFloat(a.price.replace("$", ""));
+      const priceB = parseFloat(b.price.replace("$", ""));
+
+      if (option === "low-high") return priceA - priceB;
+      if (option === "high-low") return priceB - priceA;
+
+      return 0; // Default (no sorting)
+    });
+    setProducts(sortedProducts);
+  };
+  
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
@@ -52,9 +69,9 @@ export default function HeadWear() {
             SHOP CLASSIC TRADITIONAL HEAD WEARS
           </h1>
           <p className="text-gray-600 text-sm max-w-3xl mx-auto">
-            Shop our latest modern African head wear!
-            Enjoy vibrant collections where contemporary fashion meets
-            traditional African prints. Shop the latest trends.
+            Shop our latest modern African head wear! Enjoy vibrant collections
+            where contemporary fashion meets traditional African prints. Shop
+            the latest trends.
           </p>
         </div>
 
@@ -72,17 +89,6 @@ export default function HeadWear() {
                 <SelectItem value="xl">XL</SelectItem>
               </SelectContent>
             </Select>
-
-            <Select>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder="Price" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="low-high">Low to High</SelectItem>
-                <SelectItem value="high-low">High to Low</SelectItem>
-              </SelectContent>
-            </Select>
-
           </div>
 
           <DropdownMenu>
@@ -91,8 +97,12 @@ export default function HeadWear() {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem>Newest</DropdownMenuItem>
-              <DropdownMenuItem>Price: Low to High</DropdownMenuItem>
-              <DropdownMenuItem>Price: High to Low</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSort("low-high")}>
+                Price: Low to High
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleSort("high-low")}>
+                Price: High to Low
+              </DropdownMenuItem>
               <DropdownMenuItem>Most Popular</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

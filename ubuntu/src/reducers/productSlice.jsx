@@ -9,8 +9,9 @@ import {
   query,
   where,
   getDoc,
+  orderBy,
 } from "firebase/firestore";
-import { db } from "../config/firebase"; // Adjust paths to your configuration
+import { db } from "../config/firebase"; 
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -52,7 +53,7 @@ export const addProduct = createAsyncThunk(
       const docRef = await addDoc(
         collection(db, "products"),
         productWithImages
-      ); // Awaiting `addDoc`
+      ); 
 
       console.log("Product added to Firestore:", productWithImages);
       console.log("Document written with ID: ", docRef.id);
@@ -66,22 +67,44 @@ export const addProduct = createAsyncThunk(
 
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
-  async (category = "", thunkAPI) => {
+  async ({category = "", sortBy = ""} = {}, thunkAPI) => {
     try {
-      let querySnapshot;
 
+      const productsRef = collection(db, "products");
+      let queryRef = productsRef;
+
+      // If a category is provided, filter by category
       if (category) {
-        querySnapshot = await getDocs(
-          query(collection(db, "products"), where("category", "==", category))
-        );
-      } else {
-        querySnapshot = await getDocs(collection(db, "products"));
-      }
+        queryRef = query(queryRef, where("category", "==", category))
+      
+      }  
 
-      const products = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      //apply sorting based on the sortBy parameter
+      if (sortBy){
+        switch (sortBy) {
+          case "low-to-high":
+            queryRef = query(queryRef, orderBy("price", "asc"));
+            break;
+          case "high-to-low":
+            queryRef = query(queryRef, orderBy("price", "desc"));
+            break;
+          case "newest":
+            queryRef = query(queryRef, orderBy("createdAt", "desc"));
+            break;
+          case "oldest":
+            queryRef = query(queryRef, orderBy("createdAt", "asc"));
+            break;
+          default:
+            queryRef = query(queryRef, orderBy("createdAt", "desc"));
+        }
+      }
+  
+      // Get the products based on query
+     const querySnapshot = await getDocs(queryRef);
+     const products = querySnapshot.docs.map((doc) => ({
+       id: doc.id,
+       ...doc.data(),
+     }));
       return products;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
@@ -140,6 +163,7 @@ const productSlice = createSlice({
     loading: false,
     error: null,
   },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(addProduct.pending, (state) => {
@@ -196,5 +220,5 @@ const productSlice = createSlice({
       });
   },
 });
-
+export const { sortByPrice, sortByDateAdded, filterByCategory } = productSlice.actions;
 export default productSlice.reducer;

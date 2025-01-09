@@ -28,7 +28,6 @@ useEffect(() => {
  const handleAddToCart = (product) => {
    if (!product?.price) {
      toast.error("Product data is invalid.");
-     console.error("Invalid product:", product);
      return;
    }
    if (user) {
@@ -50,7 +49,6 @@ useEffect(() => {
   useEffect(() => {
     if (products.length === 0) {
       dispatch(fetchProducts());
-      console.log("products", products);
     }
   }, [dispatch, products.length]);
   return (

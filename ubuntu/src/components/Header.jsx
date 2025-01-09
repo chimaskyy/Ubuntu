@@ -53,7 +53,6 @@ export default function Header() {
 
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.cart);
-  console.log("loggedin user:", user);
 
   return (
     <header className="border-b pt-4 sticky top-0 z-50 w-full bg-white">

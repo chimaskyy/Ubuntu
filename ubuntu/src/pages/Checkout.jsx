@@ -21,7 +21,6 @@ export default function CheckoutPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your form submission logic here
-    console.log("Order placed with payment method:", paymentMethod);
   };
 
   return (

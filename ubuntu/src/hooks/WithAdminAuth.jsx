@@ -6,7 +6,6 @@ import {  Navigate } from "react-router-dom";
 function WithAdminAuth({ children }) {
   const { user, isLoading } = useSelector((state) => state.user);
 
-  console.log("User state in WithAdminAuth:", user);
 
   // Show a loading state while checking user data
   if (isLoading || user?.loading) return <div>Loading...</div>;

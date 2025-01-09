@@ -14,10 +14,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import A from "../../assets/pinkkyyy.jpg";
 import { fetchProducts } from "@/reducers/productSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import {
   addToCartAndSave,
@@ -28,9 +27,12 @@ import { Link } from "react-router-dom";
 
 export default function ProductsPage() {
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector((state) => state.products);
+  const { products, loading } = useSelector((state) => state.products);
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.cart);
+
+  const [category, setCategory] = useState("all");
+  const [sortBy, setSortBy] = useState("");
 
   useEffect(() => {
     if (user && !items.length) {
@@ -39,10 +41,15 @@ export default function ProductsPage() {
     }
   }, [user, dispatch, items.length]);
 
+  useEffect(() => {
+    dispatch(
+      fetchProducts({ category: category === "all" ? "" : category, sortBy })
+    );
+  }, [category, sortBy, dispatch]);
+
   const handleAddToCart = (product) => {
     if (!product?.price) {
       toast.error("Product data is invalid.");
-      console.error("Invalid product:", product);
       return;
     }
     if (user) {
@@ -61,13 +68,11 @@ export default function ProductsPage() {
     dispatch(removeFromCartAndSave(user.uid, productId));
     toast.success("Item reomoved from cart");
   };
+  if (loading){
+    return <div>Loading...</div>
+  }
 
-  useEffect(() => {
-    if (products.length === 0) {
-      dispatch(fetchProducts());
-      console.log("products", products);
-    }
-  }, [dispatch, products.length]);
+  
 
   return (
     <div className="min-h-screen bg-white">
@@ -98,23 +103,16 @@ export default function ProductsPage() {
               </SelectContent>
             </Select>
 
-            <Select>
-              <SelectTrigger className="w-[120px]">
-                <SelectValue placeholder="Price" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="low-high">Low to High</SelectItem>
-                <SelectItem value="high-low">High to Low</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select>
+            <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
+          <div className="flex flex-wrap gap-4">
+            <Select onValueChange={(value) => setCategory(value)}>
               <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Product type" />
+                <SelectValue placeholder="Filter by category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="dresses">Dresses</SelectItem>
-                <SelectItem value="tops">Tops</SelectItem>
+                <SelectItem value="all">All</SelectItem>
+                <SelectItem value="men">Men</SelectItem>
+                <SelectItem value="footings">Footings</SelectItem>
                 <SelectItem value="bottoms">Bottoms</SelectItem>
                 <SelectItem value="accessories">Accessories</SelectItem>
               </SelectContent>
@@ -126,12 +124,19 @@ export default function ProductsPage() {
               <Button variant="outline">Sort By</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem>Newest</DropdownMenuItem>
-              <DropdownMenuItem>Price: Low to High</DropdownMenuItem>
-              <DropdownMenuItem>Price: High to Low</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortBy("newest")}>
+                Newest
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortBy("low-to-high")}>
+                Price: Low to High
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortBy("high-to-low")}>
+                Price: High to Low
+              </DropdownMenuItem>
               <DropdownMenuItem>Most Popular</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -206,6 +211,7 @@ export default function ProductsPage() {
           ))}
         </div>
       </div>
+    </div>
     </div>
   );
 }
