@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-// import Link from "next/link";
 import {
   Search,
   Heart,
@@ -9,7 +7,7 @@ import {
   Menu,
   ChevronDown,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import logo from "../assets/logo.jpg";

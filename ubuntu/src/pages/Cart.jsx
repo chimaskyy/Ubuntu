@@ -8,31 +8,33 @@ import {
   decrementItemAndSave,
   incrementItemAndSave,
   clearCartAndSave,
-  fetchCart
+  fetchCart,
 } from "@/reducers/cartSlice";
+import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import useAuth from "@/hooks/useAuth";
 
 export default function CartPage() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { items } = useSelector((state) => state.cart);
-  const { user } = useSelector((state) => state.user);
+  const user  = useAuth();
   const subtotal = items.reduce(
     (acc, item) => acc + parseFloat(item.price) * item.quantity,
     0
   );
-  
+
   const shipping = 10;
   const total = subtotal + shipping;
 
   useEffect(() => {
-    if (user) {
-      dispatch(fetchCart(user.id));
+    if (user?.uid) {
+      dispatch(fetchCart(user.uid));
     }
-  }, [user, dispatch]);
-
+  }, [user?.uid, dispatch]);
 
   const handleIncrease = (itemId) => {
-    dispatch(incrementItemAndSave(user.uid, itemId ));
+    dispatch(incrementItemAndSave(user.uid, itemId));
   };
 
   const handleDecrease = (itemId) => {
@@ -52,7 +54,7 @@ export default function CartPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-0">
-            {user.displayName}&apos;s Cart
+            {user?.displayName}&apos;s Cart
           </h1>
           <Button
             className="bg-black text-white hover:bg-gray-800"
@@ -139,7 +141,9 @@ export default function CartPage() {
                   <span>₦{total.toFixed(2)}</span>
                 </div>
                 <Button className="w-full mt-6" asChild>
-                  <Link href="/checkout">Proceed to Checkout</Link>
+                  <Link to="/checkout" state={{ total }}>
+                    Proceed to Checkout
+                  </Link>
                 </Button>
               </div>
             </div>

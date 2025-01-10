@@ -103,11 +103,11 @@ function ProductModal({
           >
             <option value="">Select Category</option>
             <option value="fashion">Men</option>
-            <option value="groceries">Unisex Shorts</option>
-            <option value="beauty">Kids</option>
-            <option value="groceries">Accessories</option>
-            <option value="groceries">Footings</option>
-            <option value="groceries">His & Hers</option>
+            <option value="unisex_shorts">Unisex Shorts</option>
+            <option value="kids">Kids</option>
+            <option value="accessories">Accessories</option>
+            <option value="footings">Footings</option>
+            <option value="his_and_hers">His & Hers</option>
           </select>
 
           <div>

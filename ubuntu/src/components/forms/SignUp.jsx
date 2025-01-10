@@ -9,7 +9,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, status, error } = useSelector((state) => state.user);
+  const { user, status} = useSelector((state) => state.user);
 
   const [form, setForm] = useState({
     email: "",

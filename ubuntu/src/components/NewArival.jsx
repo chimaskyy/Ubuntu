@@ -14,7 +14,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { fetchCart } from "../reducers/cartSlice";
 export function NewArrivals() {
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector((state) => state.products);
+  const { products } = useSelector((state) => state.products);
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.cart);
   

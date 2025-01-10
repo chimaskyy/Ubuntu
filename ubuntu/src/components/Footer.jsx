@@ -16,7 +16,7 @@ function Footer() {
                   height={80}
                 />
               </a>
-              <span className="ml-2 font-mono">UbuntuElite</span>
+              {/* <span className="ml-2 font-mono">UbuntuElite</span> */}
             </div>
 
             <p className="text-sm">
@@ -100,7 +100,3 @@ function Footer() {
 
 export default Footer;
 
-//
-
-// <button className="bg-transparent group text-white px-6 py-2 rounded-full border-2 font-medium hover:scale-105">
-//

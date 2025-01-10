@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "react-router-dom";
-import videoSrc from "../assets/story2.mp4";
+// import videoSrc from "../assets/story2.mp4";
 
 export default function AboutSection() {
   return (
