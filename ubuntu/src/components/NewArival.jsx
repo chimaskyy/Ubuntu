@@ -48,9 +48,10 @@ useEffect(() => {
   };
   useEffect(() => {
     if (products.length === 0) {
-      dispatch(fetchProducts());
+      dispatch(fetchProducts({ category: "all" }));
     }
   }, [dispatch, products.length]);
+
   return (
     <section className="py-16">
       <Toaster />

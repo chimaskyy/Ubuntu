@@ -67,16 +67,15 @@ export const addProduct = createAsyncThunk(
 
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
-  async ({category = "", sortBy = ""} = {}, thunkAPI) => {
+  async ({category = "all", sortBy = ""} = {}, thunkAPI) => {
     try {
 
       const productsRef = collection(db, "products");
       let queryRef = productsRef;
 
       // If a category is provided, filter by category
-      if (category) {
-        queryRef = query(queryRef, where("category", "==", category))
-      
+      if (category && category !== "all") {
+        queryRef = query(queryRef, where("category", "==", category));
       }  
 
       //apply sorting based on the sortBy parameter

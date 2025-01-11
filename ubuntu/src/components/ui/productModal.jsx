@@ -102,12 +102,12 @@ function ProductModal({
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-gray-900"
           >
             <option value="">Select Category</option>
-            <option value="fashion">Men</option>
-            <option value="unisex_shorts">Unisex Shorts</option>
+            <option value="men">Men</option>
+            <option value="unisex shorts">Unisex Shorts</option>
             <option value="kids">Kids</option>
             <option value="accessories">Accessories</option>
             <option value="footings">Footings</option>
-            <option value="his_and_hers">His & Hers</option>
+            <option value="his and hers">His & Hers</option>
           </select>
 
           <div>
