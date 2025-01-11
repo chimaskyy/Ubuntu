@@ -14,14 +14,20 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { PaystackButton } from "react-paystack";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {createOrderFromCart} from "@/reducers/orderSlice";
+import { clearCartAndSave } from "@/reducers/cartSlice";
+import useAuth from "@/hooks/useAuth";
 
 export default function CheckoutPage() {
-  const user = useSelector((state) => state.user);
+  const user  = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const cartItems = useSelector((state) => state.cart.items);
   const total = location.state?.total || 0;
 
   const publicKey = "pk_test_484fd7fadd7812f81081d295a694b8fb4e697e60";
@@ -39,6 +45,28 @@ export default function CheckoutPage() {
   const [country, setCountry] = useState("");
   const [transferEvidence, setTransferEvidence] = useState(null);
 
+ const handlePaymentSuccess = async () => {
+  const shippingDetails = {
+    name,
+    address,
+    city,
+    state,
+    zip: zipCode,
+    country,
+  };
+
+  const success = await dispatch(
+    createOrderFromCart(user.uid, cartItems, total, shippingDetails)
+  );
+
+  if (success) {
+    dispatch(clearCartAndSave(user.uid));
+    toast.success("Order placed successfully!");
+    navigate("/orders");
+  }
+
+ }
+
   const componentProps = {
     email,
     amount: total * 100,
@@ -48,7 +76,7 @@ export default function CheckoutPage() {
     },
     publicKey,
     text: "Pay Now",
-    onSuccess: () => toast.success("Payment successful, order received!"),
+    onSuccess: handlePaymentSuccess,
     onClose: () => toast.error("Payment failed, please try again!"),
   };
 

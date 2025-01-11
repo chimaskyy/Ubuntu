@@ -1,127 +1,30 @@
 import { useState } from "react";
-import {
-  Search,
-  Heart,
-  User,
-  ShoppingCart,
-  Menu,
-  ChevronDown,
-} from "lucide-react";
+import { Search, Heart, User, ShoppingCart } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { useDispatch, useSelector } from "react-redux";
 import logo from "../assets/logo.jpg";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { Link } from "react-router-dom";
-
-const categories = [
-  {
-    name: "MEN",
-    items: ["Shirts", "Pants", "Accessories", "Undies"],
-  },
-  {
-    name: "KIDS",
-    items: ["Boys", "Girls"],
-  },
-  {
-    name: "FOOTINGS",
-    items: ["Men's Shoes", "Women's Shoes"],
-  },
-  {
-    name: "ACCESSORIES",
-    items: ["Caps", "Sticks", "Hats", "Fans", "Belts"],
-  },
-  {
-    name: "UNISEX SHORTS",
-    items: ["Men's Shoes", "Women's Shoes"],
-  },
-  {
-    name: "HIS & HERS",
-    items: ["Men's Shoes", "Women's Shoes"],
-  },
-];
+import CategoryNav from "./Category";
 
 export default function Header() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.cart);
 
   return (
     <header className="border-b pt-4 sticky top-0 z-50 w-full bg-white">
       <div className="container lg:mx-auto lg:px-4 max-w-7xl mx-auto">
-        <div className="flex items-center justify-between h-16">
-          <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-            <SheetTrigger asChild>
-              <button
-                type="button"
-                className="m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 lg:hidden"
-                // onClick={toggleMenu}
-                // aria-expanded={mobileMenuOpen}
-                aria-controls="mobile-menu"
-              >
-                <Menu className="h-18 w-12" />
-                <span className="sr-only">Toggle navigation menu</span>
-              </button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-[300px] sm:w-[400px] p-0">
-              <div className="h-full overflow-y-auto py-4 px-2">
-                <nav className="mt-18 flex flex-col space-y-2">
-                  <div className="flex justify-center mt-4">
-                    <a href="/" className="flex-shrink-0">
-                      <img
-                        src="https://scontent.flos5-3.fna.fbcdn.net/v/t39.30808-6/369696228_2053136978364665_5390676064914487004_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeHqn7-2da7hlbPK4_Z7oiJYkYh0yVdKtGmRiHTJV0q0aTLV27I7tn8hQL2VJ9dMxsxqXi1jgKNkQOTOG67rhvHT&_nc_ohc=1z6KvXMxS90Q7kNvgH-vyjX&_nc_zt=23&_nc_ht=scontent.flos5-3.fna&_nc_gid=AFWMdGNmo_xQ28TcJ6QEY33&oh=00_AYB4CLPxl_JlZOEet5fr1psNueXrwbkWKNkTxuiAAB2aEQ&oe=67413503"
-                        alt="Logo"
-                        width={100}
-                        height={100}
-                      />
-                    </a>
-                  </div>
-                  {categories.map((category) => (
-                    <Collapsible key={category.name}>
-                      <CollapsibleTrigger className="mt-6 flex items-center justify-between w-full p-2 text-left font-medium hover:bg-accent hover:text-accent-foreground rounded-md">
-                        {category.name}
-                        <ChevronDown className="h-4 w-4" />
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className="pl-4">
-                        <ul className="space-y-2 py-2">
-                          {category.items.map((item) => (
-                            <li key={item}>
-                              <a
-                                href={`/${category.name.toLowerCase()}/${item
-                                  .toLowerCase()
-                                  .replace(" ", "-")}`}
-                                className="block py-1 px-2 rounded hover:bg-accent hover:text-accent-foreground"
-                                onClick={() => setIsSidebarOpen(false)}
-                              >
-                                {item}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </CollapsibleContent>
-                    </Collapsible>
-                  ))}
-                </nav>
-              </div>
-            </SheetContent>
-          </Sheet>
-
-          <a href="/" className="flex-shrink-0">
+        <div className="flex items-center justify-between h-16 mx-4">
+          <Link href="/" className="flex-shrink-0">
             <img src={logo} alt="Logo" width={50} height={50} />
-          </a>
+          </Link>
 
-          <div className="hidden lg:flex flex-1 max-w-xl mx-8">
-            <div className="relative w-full">
+          <div className="flex justify-center mt-4  px-4 pb-4">
+            <div className="relative hidden lg:block">
               <Input
                 type="search"
-                placeholder="Search for products..."
-                className="w-full pl-10"
+                placeholder="Search for products...."
+                className="w-90% pl-10"
               />
               <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
             </div>
@@ -171,20 +74,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-
-      <nav className="idden lg:block bg-white shadow-sm ">
-        <div className="container mx-auto px-4 max-w-7xl mx-auto lg:px-6">
-          <Link className="hidden lg:flex justify-center">
-            <ul className="flex justify-center space-x-16 py-4 -ml-16 mt-4 text-xs ">
-              {categories.map((category) => (
-                <li className="hover:text-gray-900 hover:scale-105" key={category.name}>
-                  {category.name}
-                </li>
-              ))}
-            </ul>
-          </Link>
-        </div>
-      </nav>
+      <CategoryNav />
     </header>
   );
 }

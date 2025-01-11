@@ -13,31 +13,29 @@ export function Hero() {
       <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center py-16">
         <div className="text-white">
           <div className="mt-8 text-center">
-            <h1 className="font-sans text-5xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white whitespace-nowrap">
+            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white whitespace-nowrap">
               UBUNTU ELITE
             </h1>
-            <p className="mt-2 text-sm text-white/80">
+            <p className="mt-2 text-sm md:text-base text-white/80">
               TRADITIONALLY ROOTED, FOREVER ELITE
             </p>
           </div>
-          <div className=" mt-12 w-full flex flex-col lg:flex-row justify-between items-start space-y-8 lg:space-y-0 lg:mt-24">
-            <div className="lg:block max-w-xs sm:max-w-xs">
-              <p className="text-lg sm:text-sm leading-relaxed text-white/80">
+          <div className="mt-12 md:mt-16 w-full flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0">
+            <div className="md:w-1/3 max-w-xs">
+              <p className="text-sm md:text-base leading-relaxed text-white/80">
                 Discover our collection of authentic African designs. Bringing
                 authentic African fashion to the world with modern style and
                 traditional beauty.
               </p>
             </div>
-            <div></div>
-            <div className="flex lg:-ml-96">
+            <div className="md:w-1/3 flex justify-center md:pt-8 md:pl-12">
               <Link
                 to="/new-arival"
-                a
-                className="group inline-flex items-center gap-2 bg-transparent text-white px-6 py-2 rounded-full border-2 font-bold transition-transform hover:scale-105"
+                className="group inline-flex items-center gap-2 bg-transparent text-white px-6 py-2 rounded-full border-2 font-bold transition-transform hover:scale-105 text-sm md:text-base"
               >
                 Start Shopping
                 <svg
-                  className="h-3 w-3 sm:h-4 sm:w-4 transition-transform group-hover:translate-x-1"
+                  className="h-3 w-3 md:h-4 md:w-4 transition-transform group-hover:translate-x-1"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -52,10 +50,10 @@ export function Hero() {
                 </svg>
               </Link>
             </div>
-            <div className="ml-4">
+            <div className="md:w-1/3 md:pt-8 text-right">
               <Link
                 to="/head-wear"
-                className="text-2xl font-sans md:text-xl lg:text-2xl font-extrabold text-white/90"
+                className="text-xl md:text-2xl lg:text-2xl font-sans font-extrabold text-white/90"
               >
                 HEAD WEAR
               </Link>

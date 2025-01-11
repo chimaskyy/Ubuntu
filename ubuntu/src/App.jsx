@@ -24,6 +24,7 @@ import Accessories from "./pages/Product/Accessories";
 import ProductPage from "./pages/ProductPage";
 import Cart from "./pages/Cart";
 import CheckoutPage from "./pages/Checkout";
+import OrdersPage from "./pages/Order";
 import {monitorAuthState} from "./reducers/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
@@ -70,6 +71,7 @@ function App() {
           <Route path="/product/:id" element={<ProductPage />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/orders" element={<OrdersPage />} />
           <Route
             path="/admin/*"
             element={
