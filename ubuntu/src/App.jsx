@@ -1,4 +1,3 @@
-import Header from "./components/Header";
 // import { CategoryNav } from "./components/Category";
 import {
   BrowserRouter as Router,
@@ -7,24 +6,27 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import SignUp from "./components/forms/SignUp";
-import Login from "./components/forms/Login";
-import Profile from "./pages/Profile";
-import Home from "./pages/Home";
-import Footer from "./components/Footer";
-import Admin from "./pages/Admin";
-import Arival from "./pages/Product/ArivalList";
-import Headwear from "./pages/Product/HeadWear";
-import UnisexShort from "./pages/Product/UnisexShort";
-import HisHers from "./pages/Product/His&Hers";
-import MenList from "./pages/Product/MenList";
-import Undies from "./pages/Product/MenUndies";
-import Footings from "./pages/Product/Footings";
-import Accessories from "./pages/Product/Accessories";
-import ProductPage from "./pages/ProductPage";
-import Cart from "./pages/Cart";
-import CheckoutPage from "./pages/Checkout";
-import OrdersPage from "./pages/Order";
+import {Header, Footer, SignUp, Login  } from "./components";
+import {
+  Accessories,
+  ArivalList,
+  Footings,
+  HeadWear,
+  Couple,
+  Men,
+  Undies,
+  UnisexShorts,
+  Kids
+} from "./pages/Product";
+import {
+  Admin,
+  CartPage,
+  CheckoutPage,
+  HomePage,
+  OrdersPage,
+  ProductPage,
+  ProfilePage,
+} from "./pages";
 import {monitorAuthState} from "./reducers/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
@@ -56,20 +58,21 @@ function App() {
         {!isAdminRoute && <Header />}
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/new-arival" element={<Arival />} />
-          <Route path="/head-wear" element={<Headwear />} />
-          <Route path="/uni-sex" element={<UnisexShort />} />
-          <Route path="/men" element={<MenList />} />
-          <Route path="/acessories" element={<Accessories />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/new-arival" element={<ArivalList />} />
+          <Route path="/head-wear" element={<HeadWear />} />
+          <Route path="/unisex-shorts" element={<UnisexShorts />} />
+          <Route path="/men" element={<Men />} />
+          <Route path="/accessories" element={<Accessories />} />
           <Route path="/undies" element={<Undies />} />
+          <Route path="/kids" element={<Kids />} />
           <Route path="/footings" element={<Footings />} />
-          <Route path="/his-hers" element={<HisHers />} />
+          <Route path="/his-hers" element={<Couple />} />
           <Route path="/product/:id" element={<ProductPage />} />
-          <Route path="/cart" element={<Cart />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
           <Route

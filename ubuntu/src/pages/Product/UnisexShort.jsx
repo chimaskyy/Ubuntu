@@ -1,6 +1,6 @@
 import ProductGrid from "@/components/ProductGrid";
 
-function Undies() {
+function UnisexShorts() {
   return (
     <div>
       <ProductGrid
@@ -8,7 +8,7 @@ function Undies() {
         description=" Be a trendsetter in our latest modern African clothing arrivals!
             Enjoy vibrant collections where contemporary fashion meets
             traditional African prints. Shop the latest trends."
-        category="men"
+        category="unisex shorts"
         categories={[
           { value: "shirts", label: "Shirts" },
           { value: "pants", label: "Pants" },
@@ -19,5 +19,5 @@ function Undies() {
   );
 }
 
-export default Undies;
+export default UnisexShorts;
 

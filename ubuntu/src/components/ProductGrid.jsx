@@ -23,17 +23,17 @@ import { Link } from "react-router-dom";
 const ProductGrid = ({
   title,
   description,
-  category, // This will be the main category filter
+  category,
   showFilters = true,
   categories = [
-    { value: "all", label: "All" }, // Changed 'all' to empty string to match fetchProducts logic
+    { value: "all", label: "All" },
     { value: "men", label: "Men" },
     { value: "kids", label: "Kids" },
     { value: "footings", label: "Footings" },
     { value: "beauty", label: "Beauty" },
     { value: "accessories", label: "Accessories" },
-    {value: "unisex shorts", label: "Unisex Shorts"},
-    {value: "his & hers", label: "His & Hers"},
+    { value: "unisex shorts", label: "Unisex Shorts" },
+    { value: "his & hers", label: "His & Hers" },
   ],
 }) => {
   const dispatch = useDispatch();
@@ -50,12 +50,10 @@ const ProductGrid = ({
     }
   }, [user, dispatch, items.length]);
 
-  // Update selectedCategory when category prop changes
   useEffect(() => {
     setSelectedCategory(category || "");
   }, [category]);
 
-  // Fetch products when filters change
   useEffect(() => {
     dispatch(
       fetchProducts({
@@ -97,7 +95,7 @@ const ProductGrid = ({
         {(title || description) && (
           <div className="text-center mb-8">
             {title && (
-              <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl mb-4">
+              <h1 className="uppercase text-2xl font-bold text-gray-900 sm:text-3xl mb-4">
                 {title}
               </h1>
             )}
@@ -112,7 +110,7 @@ const ProductGrid = ({
         {showFilters && (
           <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
             <div className="flex flex-wrap gap-4">
-              {!category && ( // Only show category filter if no category is provided as prop
+              {!category && (
                 <Select
                   value={selectedCategory}
                   onValueChange={setSelectedCategory}
@@ -149,75 +147,90 @@ const ProductGrid = ({
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
-            <div key={product.id} className="group relative">
-              <div className="relative w-full overflow-hidden">
-                <Link to={`/product/${product.id}`}>
-                  <img
-                    src={product.imageUrls?.[0] || ""}
-                    alt={product.name}
-                    className="h-full w-full object-cover"
-                    width={400}
-                    height={600}
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                  >
-                    <Heart className="h-4 w-4" />
-                    <span className="sr-only">Add to wishlist</span>
-                  </Button>
-                </Link>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-sm font-medium text-gray-900">
+        {products.length === 0 ? (
+          <div className="text-center mt-12">
+            <h2 className="text-lg font-bold text-gray-900">
+              Oops! No products are available in the &quot;{selectedCategory}"
+              category at the moment.
+            </h2>
+            <p className="text-gray-600 mt-2">
+              We&lsquo;re working hard to restock this category soon. Stay tuned
+              for amazing products that you&apos;ll absolutely love!
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
+            {products.map((product) => (
+              <div key={product.id} className="group relative">
+                <div className="relative w-full overflow-hidden">
                   <Link to={`/product/${product.id}`}>
-                    <span aria-hidden="true" className="absolute inset-0" />
-                    {product.name}
+                    <img
+                      src={product.imageUrls?.[0] || ""}
+                      alt={product.name}
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      width={400}
+                      height={600}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-2 top-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                    >
+                      <Heart className="h-4 w-4" />
+                      <span className="sr-only">Add to wishlist</span>
+                    </Button>
                   </Link>
-                </h3>
-                <div className="flex items-center justify-between w-full">
-                  <p className="text-base font-semibold text-gray-900">
-                    ₦{product.price}
-                  </p>
-                  {user ? (
-                    items.some((item) => item.id === product.id) ? (
-                      <Button
-                        onClick={() => handleremoveFromCartAndSave(product.id)}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Remove from Cart
-                      </Button>
+                </div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium text-gray-900">
+                    <Link to={`/product/${product.id}`}>
+                      <span aria-hidden="true" className="absolute inset-0" />
+                      {product.name}
+                    </Link>
+                  </h3>
+                  <div className="flex items-center justify-between w-full">
+                    <p className="text-base font-semibold text-gray-900">
+                      ₦{product.price}
+                    </p>
+                    {user ? (
+                      items.some((item) => item.id === product.id) ? (
+                        <Button
+                          onClick={() =>
+                            handleremoveFromCartAndSave(product.id)
+                          }
+                          variant="outline"
+                          size="sm"
+                        >
+                          Remove from Cart
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={() => handleAddToCart(product)}
+                          variant="outline"
+                          size="sm"
+                        >
+                          <ShoppingCart className="h-4 w-4" />
+                          Add to Cart
+                        </Button>
+                      )
                     ) : (
                       <Button
-                        onClick={() => handleAddToCart(product)}
+                        onClick={() =>
+                          toast.error("Please login to add items to the cart.")
+                        }
                         variant="outline"
                         size="sm"
                       >
                         <ShoppingCart className="h-4 w-4" />
                         Add to Cart
                       </Button>
-                    )
-                  ) : (
-                    <Button
-                      onClick={() =>
-                        toast.error("Please login to add items to the cart.")
-                      }
-                      variant="outline"
-                      size="sm"
-                    >
-                      <ShoppingCart className="h-4 w-4" />
-                      Add to Cart
-                    </Button>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

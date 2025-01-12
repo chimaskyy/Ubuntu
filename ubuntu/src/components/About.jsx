@@ -1,4 +1,4 @@
-"use client";
+
 
 import { Link } from "react-router-dom";
 // import videoSrc from "../assets/story2.mp4";

@@ -108,6 +108,8 @@ function ProductModal({
             <option value="accessories">Accessories</option>
             <option value="footings">Footings</option>
             <option value="his and hers">His & Hers</option>
+            <option value="undies">Men Undies</option>
+            <option value="head wear">Head Wear</option>
           </select>
 
           <div>

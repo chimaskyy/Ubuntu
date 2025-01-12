@@ -8,7 +8,7 @@ function Undies() {
         description=" Be a trendsetter in our latest modern African clothing arrivals!
             Enjoy vibrant collections where contemporary fashion meets
             traditional African prints. Shop the latest trends."
-        category="men"
+        category="undies"
         categories={[
           { value: "shirts", label: "Shirts" },
           { value: "pants", label: "Pants" },

@@ -8,7 +8,7 @@ function HeadWear() {
         description=" Shop our latest modern African head wear! Enjoy vibrant collections
             where contemporary fashion meets traditional African prints. Shop
             the latest trends."
-        category="men"
+        category="headwear"
         categories={[
           { value: "shirts", label: "Shirts" },
           { value: "pants", label: "Pants" },

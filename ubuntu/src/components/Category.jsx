@@ -5,26 +5,32 @@ const categories = [
   {
     name: "MEN",
     items: ["Shirts", "Pants", "Accessories", "Undies"],
+    link: "/men",
   },
   {
     name: "KIDS",
     items: ["Boys", "Girls"],
+    link: "/kids",
   },
   {
     name: "FOOTINGS",
     items: ["Men's Shoes", "Women's Shoes"],
+    link: "/footings",
   },
   {
     name: "ACCESSORIES",
     items: ["Caps", "Sticks", "Hats", "Fans", "Belts"],
+    link: "/accessories",
   },
   {
     name: "UNISEX SHORTS",
     items: ["Men's Shoes", "Women's Shoes"],
+    link: "/unisex-shorts",
   },
   {
     name: "HIS & HERS",
     items: ["Men's Shoes", "Women's Shoes"],
+    link: "/his-hers",
   },
 ];
 function CategoryNav() {
@@ -35,7 +41,7 @@ function CategoryNav() {
           {categories.map((category) => (
             <Link
               key={category.name}
-              to={`/category/${category.name.toLowerCase()}`}
+              to={category.link}
               className="flex-shrink-0 px-4 py-2 bg-gray-100 rounded-full hover:bg-gray-200 text-sm whitespace-nowrap"
             >
               {category.name}
@@ -46,18 +52,19 @@ function CategoryNav() {
 
       <nav className="idden lg:block bg-white shadow-sm ">
         <div className="container mx-auto px-4 max-w-7xl mx-auto lg:px-6">
-          <Link className="hidden lg:flex justify-center">
+          <div className="hidden lg:flex justify-center">
             <ul className="flex justify-center space-x-16 py-4 -ml-16 mt-4 text-xs ">
               {categories.map((category) => (
-                <li
+                <Link
+                  to={category.link}
                   className="hover:text-gray-900 hover:scale-105"
                   key={category.name}
                 >
                   {category.name}
-                </li>
+                </Link>
               ))}
             </ul>
-          </Link>
+          </div>
         </div>
       </nav>
     </nav>

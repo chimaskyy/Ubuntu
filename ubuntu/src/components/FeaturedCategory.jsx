@@ -39,7 +39,7 @@ function FeaturedCategories() {
                 <img
                   src={category.image}
                   alt={category.title}
-                  className="h-full object-cover w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
                   <h3 className="text-white text-sm lg:text-2xl font-bold whitespace-nowrap">

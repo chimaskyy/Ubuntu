@@ -11,7 +11,7 @@ function Accessories() {
             collection features unique African print accessories that add a
             touch of cultural flair to any ensemble. Shop our full selection
             below."
-        category="men"
+        category="accessories"
         categories={[
           { value: "shirts", label: "Shirts" },
           { value: "pants", label: "Pants" },

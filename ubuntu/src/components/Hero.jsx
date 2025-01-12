@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import cover from "../assets/cover.jpg";
 
-export function Hero() {
+function Hero() {
   return (
     <div
       className="relative h-[80vh] bg-cover bg-center overflow-hidden"
@@ -50,7 +50,7 @@ export function Hero() {
                 </svg>
               </Link>
             </div>
-            <div className="md:w-1/3 md:pt-8 text-right">
+            <div className=" md:w-1/3 md:pt-8 text-right">
               <Link
                 to="/head-wear"
                 className="text-xl md:text-2xl lg:text-2xl font-sans font-extrabold text-white/90"
@@ -64,3 +64,4 @@ export function Hero() {
     </div>
   );
 }
+export default Hero;

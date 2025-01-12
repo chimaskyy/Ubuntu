@@ -1,14 +1,14 @@
 import ProductGrid from "@/components/ProductGrid";
 
-function Couple() {
+function Kids() {
   return (
     <div>
       <ProductGrid
-        title="SHOP UBUNTU HIS $ HERS"
+        title="SHOP UBUNTU FOOTINGS"
         description="Be a trendsetter in our latest modern African clothing arrivals!
             Enjoy vibrant collections where contemporary fashion meets
             traditional African prints. Shop the latest trends."
-        category="his and hers"
+        category="kids"
         categories={[
           { value: "shirts", label: "Shirts" },
           { value: "pants", label: "Pants" },
@@ -19,4 +19,4 @@ function Couple() {
   );
 }
 
-export default Couple;
+export default Kids;
