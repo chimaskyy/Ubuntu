@@ -10,7 +10,7 @@ export default function Header() {
   const { user } = useSelector((state) => state.user);
   const { products } = useSelector((state) => state.products);
   const { items } = useSelector((state) => state.cart);
-  const [productSearch, setProductSearch] = useState("");
+  const [searchValue, setsearchValue] = useState("");
   const [searchedProducts, setSearchedProducts] = useState([]);
   const [showResults, setShowResults] = useState(false);
   const searchRef = useRef(null);
@@ -30,9 +30,9 @@ export default function Header() {
 
   useEffect(() => {
     const debounce = setTimeout(() => {
-      if (productSearch.trim()) {
+      if (searchValue) {
         const search = products.filter((product) =>
-          product.name.toLowerCase().includes(productSearch.toLowerCase())
+          product.name.toLowerCase().includes(searchValue.toLowerCase())
         );
         setSearchedProducts(search);
         setShowResults(true);
@@ -43,16 +43,16 @@ export default function Header() {
     }, 300);
 
     return () => clearTimeout(debounce);
-  }, [productSearch, products]);
+  }, [searchValue, products]);
 
   const handleProductClick = (productId) => {
     setShowResults(false);
-    setProductSearch("");
+    setsearchValue("");
     navigate(`/product/${productId}`);
   };
 
   const handleSearchChange = (e) => {
-    setProductSearch(e.target.value);
+    setsearchValue(e.target.value);
   };
 
   const SearchResults = () => (
@@ -76,20 +76,29 @@ export default function Header() {
     </div>
   );
 
-  const SearchInput = () => (
-    <div className="relative" ref={searchRef}>
-      <input
-        ref={inputRef}
-        type="text"
-        className={`w-full border border-gray-300 rounded-full pl-10 pr-6 py-2 focus:outline-none`}
-        placeholder="Search products"
-        value={productSearch}
-        onChange={handleSearchChange}       
-      />
-      <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-      {showResults && <SearchResults />}
-    </div>
-  );
+  const SearchInput = () => {
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, [searchValue]);
+
+    return (
+      <div className="relative" ref={searchRef}>
+        <input
+          ref={inputRef}
+          type="text"
+          className={`w-full border border-gray-300 rounded-full pl-10 pr-6 py-2 focus:outline-none`}
+          placeholder="Search products"
+          value={searchValue}
+          onChange={handleSearchChange}
+        />
+        <Search className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+        {showResults && <SearchResults />}
+      </div>
+    );
+  };
+
 
   return (
     <header className="border-b pt-4 sticky top-0 z-50 w-full bg-white">
