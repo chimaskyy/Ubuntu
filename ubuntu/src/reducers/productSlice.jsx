@@ -111,6 +111,73 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+// Add this to your productSlice.js
+// Add this to your productSlice.js
+export const fetchTrendingProducts = createAsyncThunk(
+  "product/fetchTrendingProducts",
+  async (_, thunkAPI) => {
+    try {
+      // First, get all orders to analyze product frequency
+      const ordersRef = collection(db, "orders");
+      const ordersSnapshot = await getDocs(ordersRef);
+      console.log(
+        "Orders Snapshot:",
+        ordersSnapshot.docs.map((doc) => doc.data())
+      );
+      
+      // Create a map to track product order frequency
+      const productFrequency = new Map();
+      
+      // Count the frequency of each product in orders
+      ordersSnapshot.docs.forEach(doc => {
+        const order = doc.data();
+        order.items.forEach(item => {
+          const currentCount = productFrequency.get(item.id) || 0;
+          productFrequency.set(item.id, currentCount + item.quantity);
+        });
+      });
+      console.log(
+        "Product Frequency Map:",
+        Array.from(productFrequency.entries())
+      );
+
+      // Convert the map to an array and sort by frequency
+      const sortedProductIds = Array.from(productFrequency.entries())
+        .sort(([, a], [, b]) => b - a) // Sort by frequency descending
+        .slice(0, 2) // Get top 8 products
+        .map(([id]) => id);
+        console.log("Sorted Product IDs (Top Trending):", sortedProductIds);
+
+      // If no products found, return empty array
+     if (sortedProductIds.length === 0) {
+       console.warn("No trending products found.");
+       return [];
+     }
+
+      // Fetch the actual product details for the trending products
+      const productsRef = collection(db, "products");
+      const productsSnapshot = await getDocs(productsRef);
+
+      
+      const products = productsSnapshot.docs
+        .filter((doc) => sortedProductIds.includes(doc.id))
+        .map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+          orderCount: productFrequency.get(doc.id) || 0,
+        }));
+      console.log("Trending Products:", products);
+
+      // Sort products by their order frequency
+      return products.sort((a, b) => b.orderCount - a.orderCount);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+
+
+
 export const fetchProductById = createAsyncThunk(
   "products/fetchProductById",
   async (id, { rejectWithValue }) => {
@@ -158,6 +225,7 @@ const productSlice = createSlice({
   name: "products",
   initialState: {
     products: [],
+    trendingProducts: [],
     product: null,
     loading: false,
     error: null,
@@ -188,6 +256,20 @@ const productSlice = createSlice({
       .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(fetchTrendingProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchTrendingProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.trendingProducts = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchTrendingProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        state.trendingProducts = [];
       })
       .addCase(fetchProductById.pending, (state) => {
         state.loading = true;

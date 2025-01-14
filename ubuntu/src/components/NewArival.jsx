@@ -44,7 +44,7 @@ useEffect(() => {
        return;
      }
     dispatch(removeFromCartAndSave(user.uid, productId));
-    toast.success("Item reomoved from cart");
+    toast.success("Item removed from cart");
   };
   useEffect(() => {
     if (products.length === 0) {
@@ -61,7 +61,7 @@ useEffect(() => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product) => (
             <div key={product.id} className="group">
-              <div className="relative overflow-hidden">
+              <div className="relative w-full h-80 overflow-hidden bg-white group-hover:opacity-75">
                 <Link to={`/product/${product.id}`}>
                   <img
                     src={product.imageUrls?.[0] || ""}
@@ -81,7 +81,7 @@ useEffect(() => {
               </div>
               <div className="pt-4">
                 <Link to={`/product/${product.uid}`} className="block">
-                  <h3 className="text-sm font-medium leading-tight tracking-tight text-gray-900 line-clamp-2 group-hover:underline">
+                  <h3 className="capitalize text-sm font-medium leading-tight tracking-tight text-gray-900 line-clamp-2 group-hover:underline">
                     {product.name}
                   </h3>
                 </Link>
