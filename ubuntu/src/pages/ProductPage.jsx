@@ -114,36 +114,7 @@ function ProductPage() {
 
           <p className="text-gray-600 mb-8">{product.description}</p>
 
-          {/* Quantity Selector */}
-          <div className="flex items-center space-x-4 mb-8">
-            <span className="font-medium">Quantity:</span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleDecrease}
-                disabled={quantity <= 1}
-                aria-label="Decrease quantity"
-              >
-                <Minus className="h-4 w-4" />
-              </Button>
-              <Input
-                type="number"
-                value={quantity}
-                className="w-16 text-center"
-                readOnly
-                aria-label="Item quantity"
-              />
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={handleIncrease}
-                aria-label="Increase quantity"
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          
 
           {/* Actions */}
           <div className="flex space-x-4 mb-8">

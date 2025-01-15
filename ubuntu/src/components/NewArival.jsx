@@ -53,15 +53,18 @@ useEffect(() => {
   }, [dispatch, products.length]);
 
   return (
-    <section className="py-16">
+    <section className="container mx-auto px-2 py-16">
       <Toaster />
-      <div className="container max-w-7xl mx-auto lg:px-6  px-4 md:px-6">
-        <h2 className="text-3xl font-bold text-left mb-12">New Arrivals</h2>
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          New Arrivals
+        </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 lg:grid-cols-4">
+          {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4"> */}
           {products.map((product) => (
-            <div key={product.id} className="group">
-              <div className="relative w-full h-80 overflow-hidden bg-white group-hover:opacity-75">
+            <div key={product.id} className="relative group overflow-hidden">
+              <div className="relative w-full h-60 overflow-hidden bg-white group-hover:opacity-75">
                 <Link to={`/product/${product.id}`}>
                   <img
                     src={product.imageUrls?.[0] || ""}
@@ -87,7 +90,7 @@ useEffect(() => {
                 </Link>
               </div>
               <div className="flex items-center justify-between w-full mt-2">
-                <p className="text-base font-semibold text-gray-900">
+                <p className="text-xs font-semibold text-gray-500">
                   ₦{product.price}
                 </p>
                 {user ? (

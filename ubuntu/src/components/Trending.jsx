@@ -61,23 +61,22 @@ export default function TrendingProducts() {
   console.log("Trending Products:", trendingProducts);
 
   return (
-    <div className="py-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            Trending Products
-          </h2>
-        </div>
+    <section className="container mx-auto px-2 py-16">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          Trending Products
+        </h2>
 
         {trendingProducts?.length === 0 ? (
           <div className="text-center mt-8 text-gray-500">
             No products found. Start adding some orders!
           </div>
         ) : (
-          <div className="mt-12 grid grid-cols-2 gap-y-10 gap-x-4 sm:grid-cols-2 lg:grid-cols-4">
+          // <div className="mt-6 grid grid-cols-2 gap-y-10 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 lg:grid-cols-4">
             {trendingProducts?.map((product) => (
-              <div key={product.id} className="group relative">
-                <div className="relative w-full h-80  overflow-hidden bg-white group-hover:opacity-75">
+              <div key={product.id} className="relative group overflow-hidden">
+                <div className="relative w-full h-60  overflow-hidden bg-white group-hover:opacity-75">
                   <Link to={`/product/${product.id}`}>
                     <img
                       src={product.imageUrls?.[0]}
@@ -102,12 +101,11 @@ export default function TrendingProducts() {
                   </Link>
 
                   <div className="ml-12 text-sm text-gray-500">
-                    
                     {product.orderCount} sold{" "}
                   </div>
                 </div>
                 <div className="flex items-center justify-between w-full mt-2">
-                  <p className="text-base font-semibold text-gray-900">
+                  <p className="text-xs font-semibold text-gray-500">
                     ₦{product.price}
                   </p>
                   {user ? (
@@ -148,6 +146,6 @@ export default function TrendingProducts() {
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

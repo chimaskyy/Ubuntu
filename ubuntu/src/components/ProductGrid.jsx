@@ -30,7 +30,6 @@ const ProductGrid = ({
     { value: "men", label: "Men" },
     { value: "kids", label: "Kids" },
     { value: "footings", label: "Footings" },
-    { value: "beauty", label: "Beauty" },
     { value: "accessories", label: "Accessories" },
     { value: "unisex shorts", label: "Unisex Shorts" },
     { value: "his & hers", label: "His & Hers" },
@@ -150,8 +149,8 @@ const ProductGrid = ({
         {products.length === 0 ? (
           <div className="text-center mt-12">
             <h2 className="text-lg font-bold text-gray-900">
-              Oops! No products are available in the &quot;{selectedCategory}"
-              category at the moment.
+              Oops! No products are available in the &quot;{selectedCategory}
+              &ldquo; category at the moment.
             </h2>
             <p className="text-gray-600 mt-2">
               We&lsquo;re working hard to restock this category soon. Stay tuned
@@ -159,72 +158,76 @@ const ProductGrid = ({
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
+          <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
             {products.map((product) => (
-              <div key={product.id} className="group relative">
-                <div className="relative w-full h-80  overflow-hidden bg-white group-hover:opacity-75">
+              <div key={product.id} className="relative group overflow-hidden">
+                <div className="relative w-full h-60 overflow-hidden bg-white group-hover:opacity-75">
                   <Link to={`/product/${product.id}`}>
                     <img
                       src={product.imageUrls?.[0] || ""}
                       alt={product.name}
                       className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                       width={400}
-                      height={600}
+                      height={400}
                     />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-2 top-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                    >
-                      <Heart className="h-4 w-4" />
-                      <span className="sr-only">Add to wishlist</span>
-                    </Button>
                   </Link>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-2 top-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
+                  >
+                    <Heart className="h-4 w-4" />
+                    <span className="sr-only">Add to wishlist</span>
+                  </Button>
                 </div>
                 <div className="mt-4">
-                  <h3 className="text-sm font-medium text-gray-900">
-                    <Link to={`/product/${product.id}`}>
-                      <span aria-hidden="true" className="absolute inset-0" />
+                  <div className="flex flex-col gap-2">
+                    <Link
+                      to={`/product/${product.id}`}
+                      className="text-sm font-medium text-gray-900 hover:text-gray-700"
+                    >
                       {product.name}
                     </Link>
-                  </h3>
-                  <div className="flex items-center justify-between w-full">
-                    <p className="text-base font-semibold text-gray-900">
-                      ₦{product.price}
-                    </p>
-                    {user ? (
-                      items.some((item) => item.id === product.id) ? (
-                        <Button
-                          onClick={() =>
-                            handleremoveFromCartAndSave(product.id)
-                          }
-                          variant="outline"
-                          size="sm"
-                        >
-                          Remove from Cart
-                        </Button>
+                    <div className="flex items-center justify-between w-full">
+                      <p className="text-xs font-semibold text-gray-500">
+                        ₦{product.price}
+                      </p>
+                      {user ? (
+                        items.some((item) => item.id === product.id) ? (
+                          <Button
+                            onClick={() =>
+                              handleremoveFromCartAndSave(product.id)
+                            }
+                            variant="outline"
+                            size="sm"
+                          >
+                            Remove from Cart
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => handleAddToCart(product)}
+                            variant="outline"
+                            size="sm"
+                          >
+                            <ShoppingCart className="h-4 w-4" />
+                            Add to Cart
+                          </Button>
+                        )
                       ) : (
                         <Button
-                          onClick={() => handleAddToCart(product)}
+                          onClick={() =>
+                            toast.error(
+                              "Please login to add items to the cart."
+                            )
+                          }
                           variant="outline"
                           size="sm"
                         >
                           <ShoppingCart className="h-4 w-4" />
                           Add to Cart
                         </Button>
-                      )
-                    ) : (
-                      <Button
-                        onClick={() =>
-                          toast.error("Please login to add items to the cart.")
-                        }
-                        variant="outline"
-                        size="sm"
-                      >
-                        <ShoppingCart className="h-4 w-4" />
-                        Add to Cart
-                      </Button>
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
