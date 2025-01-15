@@ -3,6 +3,10 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "@/reducers/productSlice";
 import { Heart, Share2, ShoppingCart, Minus, Plus } from "lucide-react";
+import { addToCartAndSave, removeFromCartAndSave } from "@/reducers/cartSlice";
+import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 function ProductPage() {
   const { id } = useParams();
@@ -10,6 +14,8 @@ function ProductPage() {
   const { product, loading, error } = useSelector((state) => state.products);
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
+   const { user } = useSelector((state) => state.user);
+   const { items } = useSelector((state) => state.cart);
 
   const productSpec = {
     specifications: {
@@ -25,6 +31,39 @@ function ProductPage() {
       dispatch(fetchProductById(id));
     }
   }, [dispatch, product, id]);
+
+  const handleIncrease = () => {
+    setQuantity((prev) => prev + 1);
+  };
+
+  const handleDecrease = () => {
+    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+
+  const handleAddToCart = (product) => {
+    if (!product?.price) {
+      toast.error("Product data is invalid.");
+      return;
+    }
+    if (user) {
+      dispatch(addToCartAndSave(user.uid, product));
+      toast.success(`${product.name} added to cart`);
+    } else {
+      toast.error("Please login to add items to the cart.");
+    }
+  };
+
+  
+  const handleremoveFromCartAndSave = (productId) => {
+    if (!user) {
+      toast.error("Please log in to modify your cart.");
+      return;
+    }
+    dispatch(removeFromCartAndSave(user.uid, productId));
+    toast.success("Item removed from cart");
+  };
+
+  
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -78,29 +117,65 @@ function ProductPage() {
           {/* Quantity Selector */}
           <div className="flex items-center space-x-4 mb-8">
             <span className="font-medium">Quantity:</span>
-            <div className="flex items-center border rounded-lg">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="p-2 hover:bg-gray-100"
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleDecrease}
+                disabled={quantity <= 1}
+                aria-label="Decrease quantity"
               >
-                <Minus className="w-5 h-5" />
-              </button>
-              <span className="px-4 py-2 border-x">{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="p-2 hover:bg-gray-100"
+                <Minus className="h-4 w-4" />
+              </Button>
+              <Input
+                type="number"
+                value={quantity}
+                className="w-16 text-center"
+                readOnly
+                aria-label="Item quantity"
+              />
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleIncrease}
+                aria-label="Increase quantity"
               >
-                <Plus className="w-5 h-5" />
-              </button>
+                <Plus className="h-4 w-4" />
+              </Button>
             </div>
           </div>
 
           {/* Actions */}
           <div className="flex space-x-4 mb-8">
-            <button className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-1000 transition-colors flex items-center justify-center space-x-2">
-              <ShoppingCart className="w-5 h-5" />
-              <span>Add to Cart</span>
-            </button>
+            {user ? (
+              items.some((item) => item.id === product.id) ? ( // Check if the product is already in the cart
+                <button
+                  className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-1000 transition-colors flex items-center justify-center space-x-2"
+                  onClick={() => handleremoveFromCartAndSave(product.id)}
+                >
+                  <ShoppingCart className="w-5 h-5" />
+                  Remove from Cart
+                </button>
+              ) : (
+                <button
+                  className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-1000 transition-colors flex items-center justify-center space-x-2"
+                  onClick={() => handleAddToCart(product)}
+                >
+                  <ShoppingCart className="h-4 w-4" />
+                  Add to Cart
+                </button>
+              )
+            ) : (
+              <button
+                className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-1000 transition-colors flex items-center justify-center space-x-2"
+                onClick={() =>
+                  toast.error("Please login to add items to the cart.")
+                }
+              >
+                <ShoppingCart className="h-4 w-4" />
+                Add to Cart
+              </button>
+            )}
             <button className="p-3 border rounded-lg hover:bg-gray-100">
               <Heart className="w-5 h-5" />
             </button>
@@ -130,3 +205,8 @@ function ProductPage() {
 }
 
 export default ProductPage;
+
+<button className="flex-1 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-1000 transition-colors flex items-center justify-center space-x-2">
+  <ShoppingCart className="w-5 h-5" />
+  <span>Add to Cart</span>
+</button>;

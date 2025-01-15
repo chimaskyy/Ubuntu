@@ -1,10 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchTrendingProducts } from "@/reducers/productSlice";  
+import { fetchTrendingProducts } from "@/reducers/productSlice";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { addToCartAndSave, fetchCart, removeFromCartAndSave } from "@/reducers/cartSlice";
+import {
+  addToCartAndSave,
+  fetchCart,
+  removeFromCartAndSave,
+} from "@/reducers/cartSlice";
 import toast from "react-hot-toast";
 
 export default function TrendingProducts() {
@@ -13,8 +17,7 @@ export default function TrendingProducts() {
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.cart);
 
-
-    useEffect(() => {
+  useEffect(() => {
     if (user && !items.length) {
       // Fetch only if the cart is not already loaded
       dispatch(fetchCart(user.uid));
@@ -64,7 +67,6 @@ export default function TrendingProducts() {
           <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
             Trending Products
           </h2>
-         
         </div>
 
         {trendingProducts?.length === 0 ? (
@@ -72,7 +74,7 @@ export default function TrendingProducts() {
             No products found. Start adding some orders!
           </div>
         ) : (
-          <div className="mt-12 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-2 gap-y-10 gap-x-4 sm:grid-cols-2 lg:grid-cols-4">
             {trendingProducts?.map((product) => (
               <div key={product.id} className="group relative">
                 <div className="relative w-full h-80  overflow-hidden bg-white group-hover:opacity-75">
@@ -80,7 +82,7 @@ export default function TrendingProducts() {
                     <img
                       src={product.imageUrls?.[0]}
                       alt={product.name}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                   </Link>
                   <Button
@@ -92,18 +94,17 @@ export default function TrendingProducts() {
                   </Button>
                 </div>
 
-                <div className="pt-4 pb-2 flex justify-between"> 
+                <div className="pt-4 pb-2 flex justify-between">
                   <Link to={`/product/${product.uid}`} className="block">
                     <h3 className="capitalize text-sm font-medium leading-tight tracking-tight text-gray-900 line-clamp-2 group-hover:underline">
                       {product.name}
                     </h3>
                   </Link>
-                  
+
                   <div className="ml-12 text-sm text-gray-500">
-                    {/* Show order count even if it's 0 during development */}
-                     {product.orderCount} sold {" "}
+                    
+                    {product.orderCount} sold{" "}
                   </div>
-                 
                 </div>
                 <div className="flex items-center justify-between w-full mt-2">
                   <p className="text-base font-semibold text-gray-900">
@@ -112,11 +113,12 @@ export default function TrendingProducts() {
                   {user ? (
                     items.some((item) => item.id === product.id) ? ( // Check if the product is already in the cart
                       <Button
+                        variant="ghost"
+                        size="icon"
                         onClick={() => handleremoveFromCartAndSave(product.id)}
-                        variant="outline"
-                        size="sm"
+                        aria-label="Remove item"
                       >
-                        Remove from Cart
+                        <Trash2 className="h-6 w-6 text-red-700" />
                       </Button>
                     ) : (
                       <Button

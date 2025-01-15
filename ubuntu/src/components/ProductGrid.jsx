@@ -162,7 +162,7 @@ const ProductGrid = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
             {products.map((product) => (
               <div key={product.id} className="group relative">
-                <div className="relative w-full overflow-hidden">
+                <div className="relative w-full h-80  overflow-hidden bg-white group-hover:opacity-75">
                   <Link to={`/product/${product.id}`}>
                     <img
                       src={product.imageUrls?.[0] || ""}

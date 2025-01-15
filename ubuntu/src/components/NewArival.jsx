@@ -58,7 +58,7 @@ useEffect(() => {
       <div className="container max-w-7xl mx-auto lg:px-6  px-4 md:px-6">
         <h2 className="text-3xl font-bold text-left mb-12">New Arrivals</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {products.map((product) => (
             <div key={product.id} className="group">
               <div className="relative w-full h-80 overflow-hidden bg-white group-hover:opacity-75">
@@ -66,7 +66,7 @@ useEffect(() => {
                   <img
                     src={product.imageUrls?.[0] || ""}
                     alt={product.name}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                     width={400}
                     height={600}
                   />

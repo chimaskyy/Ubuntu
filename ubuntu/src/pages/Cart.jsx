@@ -76,7 +76,7 @@ export default function CartPage() {
                   className="flex flex-col sm:flex-row items-center gap-4 bg-white p-4 rounded-lg shadow-sm"
                 >
                   <img
-                    src={item.image}
+                    src={item.imageUrls?.[0] || ""}
                     alt={item.name}
                     width={100}
                     height={100}

@@ -108,7 +108,7 @@ export default function Header() {
             <img src={logo} alt="Logo" width={50} height={50} />
           </Link>
 
-          <div className="flex justify-center mt-4 px-4 pb-4">
+          <div className="hidden flex justify-center mt-4 px-4 pb-4 md:block lg:block">
             <div className="relative lg:block">
               <SearchInput className="sm:py-2 sm:w-72 md:py-1 md:w-80" />
             </div>
@@ -147,9 +147,9 @@ export default function Header() {
           </div>
         </div>
 
-        {/* <div className="flex justify-center mt-4 lg:hidden px-4 pb-4">
-          <SearchInput className="sm:py-2 sm:w-72 md:py-1 md:w-80" />
-        </div> */}
+        <div className="flex justify-center mt-4 lg:hidden sm:hidden md:hidden px-4 pb-4">
+          <SearchInput className="sm:py-2 sm:w-72 md:py-1 md:w-80 " />
+        </div>
       </div>
       <CategoryNav />
     </header>
