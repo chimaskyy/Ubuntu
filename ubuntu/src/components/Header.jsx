@@ -114,7 +114,7 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="flex items-center pr-6 space-x-8">
+          <div className="flex items-center pr-6 space-x-6">
             {user ? (
               <Link to="/profile">
                 <button size="icon" className="lg:inline-flex">
@@ -125,8 +125,9 @@ export default function Header() {
             ) : (
               <Link to="/sign-up">
                 <button size="icon" className="lg:inline-flex">
-                  <User className="h-5 w-5" />
-                  <span className="sr-only">Account</span>
+                  {/* <User className="h-5 w-5" /> */}
+                  <span className="text-gray-500 bg-gray-700 rounded-full p-2 text-white" >Sign Up</span>
+                  <span className="sr-only">Creat Account</span>
                 </button>
               </Link>
             )}

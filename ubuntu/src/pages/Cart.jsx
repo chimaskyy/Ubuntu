@@ -10,13 +10,11 @@ import {
   clearCartAndSave,
   fetchCart,
 } from "@/reducers/cartSlice";
-import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import useAuth from "@/hooks/useAuth";
 
 export default function CartPage() {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { items } = useSelector((state) => state.cart);
   const user  = useAuth();
   const subtotal = items.reduce(

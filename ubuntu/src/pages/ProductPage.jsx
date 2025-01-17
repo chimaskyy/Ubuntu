@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "@/reducers/productSlice";
 import {
@@ -10,28 +10,19 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { addToCartAndSave, removeFromCartAndSave } from "@/reducers/cartSlice";
-import toast from "react-hot-toast";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import toast, { Toaster } from "react-hot-toast";
 import { useSwipeable } from "react-swipeable";
 
 function ProductPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { product, loading, error } = useSelector((state) => state.products);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
    const { user } = useSelector((state) => state.user);
    const { items } = useSelector((state) => state.cart);
 
-  // const productSpec = {
-  //   specifications: {
-  //     Material: "100% Cotton",
-  //     Style: "African Print",
-  //     Care: "Hand wash cold",
-  //     Origin: "Made in Nigeria",
-  //   },
-  // };
+
 
   useEffect(() => {
     if (!product || product.id !== id) {
@@ -39,13 +30,6 @@ function ProductPage() {
     }
   }, [dispatch, product, id]);
 
-  // const handleIncrease = () => {
-  //   setQuantity((prev) => prev + 1);
-  // };
-
-  // const handleDecrease = () => {
-  //   setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  // };
 
   const nextImage = () => {
     if(product?.imageUrls) {
@@ -77,7 +61,8 @@ function ProductPage() {
       dispatch(addToCartAndSave(user.uid, product));
       toast.success(`${product.name} added to cart`);
     } else {
-      toast.error("Please login to add items to the cart.");
+      toast.error("Please sign up or login to add items to the cart.");
+      
     }
   };
 
@@ -117,6 +102,7 @@ function ProductPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 lg:mx-16">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Product Images */}
         <div className="relative" >
@@ -180,7 +166,7 @@ function ProductPage() {
                   onClick={() => handleremoveFromCartAndSave(product.id)}
                 >
                   <ShoppingCart className="w-5 h-5" />
-                  Remove from Cart
+                   {" "} Remove from Cart
                 </button>
               ) : (
                 <button
@@ -188,7 +174,7 @@ function ProductPage() {
                   onClick={() => handleAddToCart(product)}
                 >
                   <ShoppingCart className="h-4 w-4" />
-                  Add to Cart
+                  {" "} Add to Cart
                 </button>
               )
             ) : (
@@ -199,7 +185,7 @@ function ProductPage() {
                 }
               >
                 <ShoppingCart className="h-4 w-4" />
-                Add to Cart
+                {" "} Add to Cart
               </button>
             )}
             <button className="p-3 border rounded-lg hover:bg-gray-100">

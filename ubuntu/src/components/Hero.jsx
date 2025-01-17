@@ -30,7 +30,7 @@ function Hero() {
             </div>
             <div className="md:w-1/3 flex justify-center md:pt-8 md:pl-12">
               <Link
-                to="/new-arrivals"
+                to="/new-arrival"
                 className="group inline-flex items-center gap-2 bg-transparent text-white px-6 py-2 rounded-full border-2 font-bold transition-transform hover:scale-105 text-sm md:text-base"
               >
                 Start Shopping
