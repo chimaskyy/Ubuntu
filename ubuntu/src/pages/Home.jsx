@@ -5,6 +5,7 @@ import {
   Trending,
   NewArrivals,
   InstagramFeatures,
+  CatgoryNav,
 } from "../components";
 export default function HomePage() {
   return (

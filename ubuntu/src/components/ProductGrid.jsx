@@ -19,6 +19,7 @@ import {
   removeFromCartAndSave,
 } from "@/reducers/cartSlice";
 import { Link } from "react-router-dom";
+import ImageCard from "./ui/ImageCard";
 
 const ProductGrid = ({
   title,
@@ -161,16 +162,14 @@ const ProductGrid = ({
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
             {products.map((product) => (
               <div key={product.id} className="relative group overflow-hidden">
-                <div className="relative w-full h-60 overflow-hidden bg-white group-hover:opacity-75">
-                  <Link to={`/product/${product.id}`}>
-                    <img
-                      src={product.imageUrls?.[0] || ""}
-                      alt={product.name}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      width={400}
-                      height={400}
-                    />
-                  </Link>
+                <div className="5">
+                  <ImageCard
+                    image={product.imageUrls?.[0]}
+                   
+                    link={`/product/${product.id}`}
+                    
+                    className=""
+                  />
                   <Button
                     variant="ghost"
                     size="icon"

@@ -151,7 +151,6 @@ export default function Header() {
           <SearchInput className="sm:py-2 sm:w-72 md:py-1 md:w-80 " />
         </div>
       </div>
-      <CategoryNav />
     </header>
   );
 }

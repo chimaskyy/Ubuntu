@@ -1,12 +1,8 @@
 /* eslint-disable react/prop-types */
-import  { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import {fetchUserOrders} from "../reducers/orderSlice";
 import { Package, Clock, CheckCircle, AlertCircle } from "lucide-react";
-import useAuth from "@/hooks/useAuth";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-
-const OrderStatusBadge = ({ status }) => {
+function OrderStatusBadge({ status }) {
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
       case "completed":
@@ -43,21 +39,13 @@ const OrderStatusBadge = ({ status }) => {
       {status}
     </span>
   );
-};
+}
 
-const OrdersPage = () => {
-    const user = useAuth();
 
-  const dispatch = useDispatch();
-  const { orders, loading, error } = useSelector((state) => state.orders);
-
-  useEffect(() => {
-    dispatch(fetchUserOrders(user.uid));
-  }, [dispatch, user.uid]);
-
+export function OrderList({ orders, loading, error }) {
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center h-48">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
       </div>
     );
@@ -65,30 +53,26 @@ const OrdersPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
-            Error loading orders
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">{error}</p>
-        </div>
+      <div className="text-center">
+        <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
+        <h3 className="mt-2 text-sm font-medium text-gray-900">
+          Error loading orders
+        </h3>
+        <p className="mt-1 text-sm text-gray-500">{error}</p>
       </div>
     );
   }
 
   if (!orders.length) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <Package className="mx-auto h-12 w-12 text-gray-400" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">
-            No orders found
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Start shopping to create your first order!
-          </p>
-        </div>
+      <div className="text-center py-12">
+        <Package className="mx-auto h-12 w-12 text-gray-400" />
+        <h3 className="mt-2 text-sm font-medium text-gray-900">
+          No orders found
+        </h3>
+        <p className="mt-1 text-sm text-gray-500">
+          Start shopping to create your first order!
+        </p>
       </div>
     );
   }
@@ -104,15 +88,11 @@ const OrdersPage = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Your Orders</h1>
-          <p className="mt-2 text-sm text-gray-700">
-            Track and manage your orders
-          </p>
-        </div>
-
+    <Card>
+      <CardHeader>
+        <CardTitle>Your Orders</CardTitle>
+      </CardHeader>
+      <CardContent>
         <div className="space-y-6">
           {orders.map((order) => (
             <div
@@ -189,9 +169,7 @@ const OrdersPage = () => {
             </div>
           ))}
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
-};
-
-export default OrdersPage;
+}

@@ -6,7 +6,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import {Header, Footer, SignUp, Login  } from "./components";
+import {Header, Footer, CatgoryNav, SignUp, Login  } from "./components";
 import {
   Accessories,
   ArivalList,
@@ -54,15 +54,17 @@ function App() {
   return (
     <>
       <AuthWrapper>
+        <Header />
+
         {/* Render CategoryNav only if not on an Admin route */}
-        {!isAdminRoute && <Header />}
+        {!isAdminRoute && <CatgoryNav />}
 
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/new-arival" element={<ArivalList />} />
+          <Route path="/new-arrival" element={<ArivalList />} />
           <Route path="/head-wear" element={<HeadWear />} />
           <Route path="/unisex-shorts" element={<UnisexShorts />} />
           <Route path="/men" element={<Men />} />
@@ -94,6 +96,7 @@ function App() {
 
 export default function Root() {
   return (
+    
     <Router>
       <App />
     </Router>

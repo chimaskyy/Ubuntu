@@ -12,6 +12,7 @@ import {
 } from "@/reducers/cartSlice";
 import toast, { Toaster } from "react-hot-toast";
 import { fetchCart } from "../reducers/cartSlice";
+import ImageCard from "./ui/ImageCard";
 export function NewArrivals() {
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.products);
@@ -64,26 +65,23 @@ useEffect(() => {
           {/* <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4"> */}
           {products.map((product) => (
             <div key={product.id} className="relative group overflow-hidden">
-              <div className="relative w-full h-60 overflow-hidden bg-white group-hover:opacity-75">
-                <Link to={`/product/${product.id}`}>
-                  <img
-                    src={product.imageUrls?.[0] || ""}
-                    alt={product.name}
-                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    width={400}
-                    height={600}
-                  />
-                  <button
-                    className="absolute top-4 right-4 p-2 rounded-full bg-white text-gray-700 hover:text-red-500 transition-colors duration-200"
-                    aria-label={`Add ${product.name} to wishlist`}
-                  >
-                    <Heart className="h-5 w-5" />
-                    <span className="sr-only">Add to wishlist</span>
-                  </button>
-                </Link>
+              <div className="">
+                <ImageCard
+                  image={product.imageUrls?.[0]}
+                  
+                  link={`/product/${product.id}`}
+                 
+                />
+                <button
+                  className="absolute top-4 right-4 p-2 rounded-full bg-white text-gray-700 hover:text-red-500 transition-colors duration-200"
+                  aria-label={`Add ${product.name} to wishlist`}
+                >
+                  <Heart className="h-5 w-5" />
+                  <span className="sr-only">Add to wishlist</span>
+                </button>
               </div>
               <div className="pt-4">
-                <Link to={`/product/${product.uid}`} className="block">
+                <Link to={`/product/${product.id}`} className="block">
                   <h3 className="capitalize text-sm font-medium leading-tight tracking-tight text-gray-900 line-clamp-2 group-hover:underline">
                     {product.name}
                   </h3>
@@ -134,7 +132,7 @@ useEffect(() => {
             size="lg"
             className="bg-black text-white hover:bg-gray-900 transform transition-transform hover:scale-105"
           >
-            <Link to="/new-arrivals">
+            <Link to="/new-arrival">
               SHOP NEW ARRIVALS
               <ArrowRight className="w-10 h-10 transition-transform group-hover:translate-x-2" />
             </Link>

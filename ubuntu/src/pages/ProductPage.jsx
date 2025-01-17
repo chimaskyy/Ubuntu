@@ -2,11 +2,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "@/reducers/productSlice";
-import { Heart, Share2, ShoppingCart, Minus, Plus } from "lucide-react";
+import {
+  Heart,
+  Share2,
+  ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { addToCartAndSave, removeFromCartAndSave } from "@/reducers/cartSlice";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSwipeable } from "react-swipeable";
 
 function ProductPage() {
   const { id } = useParams();
@@ -17,14 +24,14 @@ function ProductPage() {
    const { user } = useSelector((state) => state.user);
    const { items } = useSelector((state) => state.cart);
 
-  const productSpec = {
-    specifications: {
-      Material: "100% Cotton",
-      Style: "African Print",
-      Care: "Hand wash cold",
-      Origin: "Made in Nigeria",
-    },
-  };
+  // const productSpec = {
+  //   specifications: {
+  //     Material: "100% Cotton",
+  //     Style: "African Print",
+  //     Care: "Hand wash cold",
+  //     Origin: "Made in Nigeria",
+  //   },
+  // };
 
   useEffect(() => {
     if (!product || product.id !== id) {
@@ -32,13 +39,34 @@ function ProductPage() {
     }
   }, [dispatch, product, id]);
 
-  const handleIncrease = () => {
-    setQuantity((prev) => prev + 1);
+  // const handleIncrease = () => {
+  //   setQuantity((prev) => prev + 1);
+  // };
+
+  // const handleDecrease = () => {
+  //   setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
+  // };
+
+  const nextImage = () => {
+    if(product?.imageUrls) {
+      setSelectedImage((prev) => (prev + 1) % product.imageUrls.length);
+    }
   };
 
-  const handleDecrease = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  };
+   const previousImage = () => {
+     if (product?.imageUrls) {
+       setSelectedImage((prev) =>
+         prev === 0 ? product.imageUrls.length - 1 : prev - 1
+       );
+     }
+   };
+
+  const handlers = useSwipeable({
+    onSwipedLeft: nextImage,
+    onSwipedRight: previousImage,
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: true,
+  });
 
   const handleAddToCart = (product) => {
     if (!product?.price) {
@@ -65,27 +93,56 @@ function ProductPage() {
 
   
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    );
   }
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
+
+ if (error) {
+   return (
+     <div className="flex items-center justify-center min-h-screen">
+       <p className="text-red-500">Error: {error}</p>
+     </div>
+   );
+ }
   if (!product) {
-    return <p>Product not found</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Product not found</p>
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto px-4 py-8 lg:mx-16">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Product Images */}
-        <div>
-          <div className="relative h-[600px] rounded-lg overflow-hidden mb-4">
+        <div className="relative" >
+          <div className="relative h-[400px] rounded-lg overflow-hidden mb-2 group" {...handlers}>
             <img
               src={product.imageUrls[selectedImage]}
               alt={product.name}
               className="w-full h-full object-cover"
             />
+            <button
+              onClick={previousImage}
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Previous image"
+            >
+              <ChevronLeft className="h-6 w-6" />
+            </button>
+
+            <button
+              onClick={nextImage}
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Next image"
+            >
+              <ChevronRight className="h-6 w-6" />
+            </button>
           </div>
+           {/* Image Thumbnails */}
           <div className="grid grid-cols-3 gap-4">
             {product.imageUrls.map((image, index) => (
               <button
@@ -107,14 +164,12 @@ function ProductPage() {
 
         {/* Product Info */}
         <div>
-          <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
+          <h1 className="text-3xl font-bold mb-4 capitalize">{product.name}</h1>
           <p className="text-2xl font-bold text-gray-900 mb-6">
-            ${product.price}
+            ₦{product.price.toLocaleString()}.00
           </p>
 
           <p className="text-gray-600 mb-8">{product.description}</p>
-
-          
 
           {/* Actions */}
           <div className="flex space-x-4 mb-8">
@@ -159,14 +214,13 @@ function ProductPage() {
           <div className="border-t pt-8">
             <h2 className="text-xl font-bold mb-4">Specifications</h2>
             <dl className="grid grid-cols-1 gap-4">
-              {Object.entries(productSpec.specifications).map(
-                ([key, value]) => (
+              {product.specifications &&
+                Object.entries(product.specifications).map(([key, value]) => (
                   <div key={key} className="flex">
                     <dt className="font-medium w-24">{key}:</dt>
                     <dd className="text-gray-600">{value}</dd>
                   </div>
-                )
-              )}
+                ))}
             </dl>
           </div>
         </div>

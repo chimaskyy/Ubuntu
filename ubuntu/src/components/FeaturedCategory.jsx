@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import foto from "../assets/pinkkyyy.jpg";
+import CategoryCard from "./ui/CategoryCard";
 
 function FeaturedCategories() {
   const categories = [
@@ -33,23 +34,7 @@ function FeaturedCategories() {
         </h2>
         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 lg:grid-cols-4">
           {categories.map((category) => (
-            <div
-              key={category.title}
-              className="relative group overflow-hidden"
-            >
-              <Link to={category.page}>
-                <img
-                  src={category.image}
-                  alt={category.title}
-                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                  <h3 className="text-white text-sm lg:text-2xl font-bold whitespace-nowrap">
-                    {category.title}
-                  </h3>
-                </div>
-              </Link>
-            </div>
+            <CategoryCard key={category.title} category={category} />
           ))}
         </div>
       </div>

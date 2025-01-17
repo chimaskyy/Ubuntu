@@ -4,6 +4,8 @@ import { fetchTrendingProducts } from "@/reducers/productSlice";
 import { Link } from "react-router-dom";
 import { ShoppingCart, Heart, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import ImageCard from "./ui/ImageCard";
+
 import {
   addToCartAndSave,
   fetchCart,
@@ -76,14 +78,14 @@ export default function TrendingProducts() {
           <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 lg:grid-cols-4">
             {trendingProducts?.map((product) => (
               <div key={product.id} className="relative group overflow-hidden">
-                <div className="relative w-full h-60  overflow-hidden bg-white group-hover:opacity-75">
-                  <Link to={`/product/${product.id}`}>
-                    <img
-                      src={product.imageUrls?.[0]}
-                      alt={product.name}
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                  </Link>
+                <div className="">
+                  <ImageCard
+                    image={product.imageUrls?.[0]}
+                    title={product.name}
+                    link={`/product/${product.id}`}
+                    overlay={false}
+                    className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
                   <Button
                     variant="ghost"
                     size="icon"
@@ -94,7 +96,7 @@ export default function TrendingProducts() {
                 </div>
 
                 <div className="pt-4 pb-2 flex justify-between">
-                  <Link to={`/product/${product.uid}`} className="block">
+                  <Link to={`/product/${product.id}`} className="block">
                     <h3 className="capitalize text-sm font-medium leading-tight tracking-tight text-gray-900 line-clamp-2 group-hover:underline">
                       {product.name}
                     </h3>
@@ -111,12 +113,11 @@ export default function TrendingProducts() {
                   {user ? (
                     items.some((item) => item.id === product.id) ? ( // Check if the product is already in the cart
                       <Button
-                        variant="ghost"
-                        size="icon"
                         onClick={() => handleremoveFromCartAndSave(product.id)}
-                        aria-label="Remove item"
+                        variant="outline"
+                        size="sm"
                       >
-                        <Trash2 className="h-6 w-6 text-red-700" />
+                        Remove from Cart
                       </Button>
                     ) : (
                       <Button
