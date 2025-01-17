@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -12,18 +11,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PaystackButton } from "react-paystack";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import {createOrderFromCart} from "@/reducers/orderSlice";
+import { createOrderFromCart } from "@/reducers/orderSlice";
 import { clearCartAndSave } from "@/reducers/cartSlice";
 import useAuth from "@/hooks/useAuth";
+import { nigerianStates } from "@/Data/Data";
 
 export default function CheckoutPage() {
-  const user  = useAuth();
+  const user = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -33,8 +32,6 @@ export default function CheckoutPage() {
   const publicKey = "pk_test_484fd7fadd7812f81081d295a694b8fb4e697e60";
 
   const [paymentMethod, setPaymentMethod] = useState("card");
-
-  // Initialize state variables with values from the Redux store
   const [email, setEmail] = useState(user?.email || "");
   const [name, setName] = useState(user?.name || "");
   const [phone, setPhone] = useState(user?.phone || "");
@@ -42,30 +39,28 @@ export default function CheckoutPage() {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
-  const [country, setCountry] = useState("");
-  const [transferEvidence, setTransferEvidence] = useState(null);
+  const [country, setCountry] = useState("Nigeria");
 
- const handlePaymentSuccess = async () => {
-  const shippingDetails = {
-    name,
-    address,
-    city,
-    state,
-    zip: zipCode,
-    country,
+  const handlePaymentSuccess = async () => {
+    const shippingDetails = {
+      name,
+      address,
+      city,
+      state,
+      zip: zipCode,
+      country,
+    };
+
+    const success = await dispatch(
+      createOrderFromCart(user.uid, cartItems, total, shippingDetails)
+    );
+
+    if (success) {
+      dispatch(clearCartAndSave(user.uid));
+      toast.success("Order placed successfully!");
+      navigate("/orders");
+    }
   };
-
-  const success = await dispatch(
-    createOrderFromCart(user.uid, cartItems, total, shippingDetails)
-  );
-
-  if (success) {
-    dispatch(clearCartAndSave(user.uid));
-    toast.success("Order placed successfully!");
-    navigate("/orders");
-  }
-
- }
 
   const componentProps = {
     email,
@@ -157,6 +152,24 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <div>
+                  <Label htmlFor="country">Country</Label>
+                  <Select
+                    onValueChange={(value) => setCountry(value)}
+                    value={country}
+                    defaultValue="Nigeria"
+                  >
+                    <SelectTrigger id="country">
+                      <SelectValue placeholder="Select country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Nigeria">Nigeria</SelectItem>
+                      <SelectItem value="Outside Nigeria">
+                        Outside Nigeria
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
                   <Label htmlFor="state">State</Label>
                   <Select
                     onValueChange={(value) => setState(value)}
@@ -166,36 +179,28 @@ export default function CheckoutPage() {
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="ca">California</SelectItem>
-                      <SelectItem value="ny">New York</SelectItem>
-                      <SelectItem value="tx">Texas</SelectItem>
+                      {country === "Nigeria" ? (
+                        nigerianStates.map((state) => (
+                          <SelectItem key={state} value={state}>
+                            {state}
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <SelectItem value="international">
+                          International Shipping
+                        </SelectItem>
+                      )}
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="zipCode">ZIP Code</Label>
+                  <Label htmlFor="zipCode">ZIP/Postal Code</Label>
                   <Input
                     id="zipCode"
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value)}
                     required
                   />
-                </div>
-                <div>
-                  <Label htmlFor="country">Country</Label>
-                  <Select
-                    onValueChange={(value) => setCountry(value)}
-                    value={country}
-                  >
-                    <SelectTrigger id="country">
-                      <SelectValue placeholder="Select country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="us">United States</SelectItem>
-                      <SelectItem value="ca">Canada</SelectItem>
-                      <SelectItem value="uk">United Kingdom</SelectItem>
-                    </SelectContent>
-                  </Select>
                 </div>
               </div>
             </div>
@@ -214,62 +219,18 @@ export default function CheckoutPage() {
               </RadioGroup>
             </div>
 
-            {/* Transfer Evidence */}
-            {/* {paymentMethod === "transfer" && (
-              <div className="space-y-4">
-                <Card>
-                  <CardContent className="pt-6">
-                    <h3 className="text-lg font-semibold mb-2">
-                      Bank Transfer Details
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Please use the following details to make your transfer:
-                    </p>
-                    <div className="mt-4 space-y-2">
-                      <p>
-                        <strong>Bank Name:</strong> Ubuntu Elite Bank
-                      </p>
-                      <p>
-                        <strong>Account Name:</strong> Ubuntu Elite Fashion Ltd
-                      </p>
-                      <p>
-                        <strong>Account Number:</strong> 1234567890
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-                <div>
-                  <Label htmlFor="transferEvidence">
-                    Upload Transfer Evidence
-                  </Label>
-                  <Input
-                    id="transferEvidence"
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={(e) =>
-                      setTransferEvidence(e.target.files[0] || null)
-                    }
-                    className="mt-1"
-                  />
-                  <p className="text-sm text-gray-500 mt-1">
-                    Please upload an image or PDF of your transfer receipt.
-                  </p>
-                </div>
-              </div>
-            )} */}
-
             {/* Order Summary */}
             <div>
               <div>Order Summary</div>
               <div className="font-semibold text-lg">
                 Total Amount:{" "}
-                <span className="text-green-600">₦{total.toFixed(2)}</span>
+                <span className="text-green-600">₦{total.toLocaleString()}.00</span>
               </div>
             </div>
 
             {/* Submit Button */}
             <PaystackButton
-              className="block w-full px-4 py-2 bg-gray-800 text-white rounded-md"
+              className="block w-full px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition-colors"
               {...componentProps}
             />
           </div>

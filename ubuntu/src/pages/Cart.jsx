@@ -82,7 +82,9 @@ export default function CartPage() {
                   />
                   <div className="flex-grow text-center sm:text-left">
                     <h3 className="font-semibold">{item.name}</h3>
-                    <p className="text-gray-600">₦{item.price}</p>
+                    <p className="text-gray-600">
+                      ₦{item.price.toLocaleString()}.00
+                    </p>
                   </div>
                   <div className="flex items-center gap-2 mt-4 sm:mt-0">
                     <Button

@@ -146,11 +146,11 @@ const OrdersPage = () => {
                           </div>
                           <div className="ml-4 flex-1">
                             <div className="flex items-center justify-between">
-                              <h3 className="text-sm font-medium text-gray-900">
+                              <h3 className="capitalize text-sm font-medium text-gray-900">
                                 {item.name}
                               </h3>
                               <p className="text-sm font-medium text-gray-900">
-                                ${item.price}
+                                ₦{item.price.toLocaleString()}.00
                               </p>
                             </div>
                             <p className="text-sm text-gray-500">
@@ -166,7 +166,7 @@ const OrdersPage = () => {
                 <div className="border-t border-gray-200 mt-4 pt-4">
                   <div className="flex justify-between text-base font-medium text-gray-900">
                     <p>Total</p>
-                    <p>${order.totalAmount}</p>
+                    <p>₦{order.totalAmount.toLocaleString()}.00</p>
                   </div>
                   <div className="mt-4">
                     <div className="rounded-md bg-gray-50 p-4">

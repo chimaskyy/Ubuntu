@@ -54,9 +54,9 @@ useEffect(() => {
   }, [dispatch, products.length]);
 
   return (
-    <section className="container mx-auto px-2 py-16">
+    <section className="container mx-auto px-2 py-16 lg:px-1">
       <Toaster />
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto sm:px-6 lg:px-2">
         <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
           New Arrivals
         </h2>
@@ -68,9 +68,7 @@ useEffect(() => {
               <div className="">
                 <ImageCard
                   image={product.imageUrls?.[0]}
-                  
                   link={`/product/${product.id}`}
-                 
                 />
                 <button
                   className="absolute top-4 right-4 p-2 rounded-full bg-white text-gray-700 hover:text-red-500 transition-colors duration-200"
@@ -89,7 +87,7 @@ useEffect(() => {
               </div>
               <div className="flex items-center justify-between w-full mt-2">
                 <p className="text-xs font-semibold text-gray-500">
-                  ₦{product.price}
+                  ₦{product.price.toLocaleString()}.00
                 </p>
                 {user ? (
                   items.some((item) => item.id === product.id) ? ( // Check if the product is already in the cart
@@ -105,9 +103,9 @@ useEffect(() => {
                       onClick={() => handleAddToCart(product)}
                       variant="outline"
                       size="sm"
+                      className="flex items-center rounded-full border-2 border-gray-700"
                     >
-                      <ShoppingCart className="h-4 w-4" />
-                      Add to Cart
+                      <ShoppingCart className="h-6 w-6" />
                     </Button>
                   )
                 ) : (

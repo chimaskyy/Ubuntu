@@ -11,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Link } from "react-router-dom";
 import ProfileSidebar from "@/components/ui/ProfileSidebar";
 import ProfileInfo from "@/components/ui/ProfileInfo";
 import { OrderList } from "@/components/ui/OrderList";
@@ -67,61 +66,12 @@ export default function ProfilePage() {
                   <OrderList orders={orders} loading={loading} error={error} />
                 </TabsContent>
 
-                <TabsContent value="addresses">
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle>Saved Addresses</CardTitle>
-                          <CardDescription>
-                            Manage your delivery addresses
-                          </CardDescription>
-                        </div>
-                        <Button>Add New Address</Button>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {[1, 2].map((address) => (
-                          <div key={address} className="p-4 border rounded-lg">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <p className="font-medium">
-                                  Home Address {address}
-                                </p>
-                                <p className="text-sm text-gray-500">
-                                  123 Main St, Apt {address}
-                                </p>
-                                <p className="text-sm text-gray-500">
-                                  New York, NY 10001
-                                </p>
-                              </div>
-                              <div className="space-x-2">
-                                <Button variant="outline" size="sm">
-                                  Edit
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  className="text-red-600 hover:text-red-700"
-                                >
-                                  Delete
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-
                 <TabsContent value="wishlist">
                   <Card>
                     <CardHeader>
                       <CardTitle>Wishlist</CardTitle>
                       <CardDescription>
-                        Items you've saved for later
+                        Items you&lsquo;ve saved for later
                       </CardDescription>
                     </CardHeader>
                     <CardContent>

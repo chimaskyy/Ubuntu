@@ -165,9 +165,7 @@ const ProductGrid = ({
                 <div className="5">
                   <ImageCard
                     image={product.imageUrls?.[0]}
-                   
                     link={`/product/${product.id}`}
-                    
                     className=""
                   />
                   <Button
@@ -189,7 +187,7 @@ const ProductGrid = ({
                     </Link>
                     <div className="flex items-center justify-between w-full">
                       <p className="text-xs font-semibold text-gray-500">
-                        ₦{product.price}
+                        ₦{product.price.toLocaleString()}.00
                       </p>
                       {user ? (
                         items.some((item) => item.id === product.id) ? (

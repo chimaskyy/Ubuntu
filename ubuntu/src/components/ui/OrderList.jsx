@@ -130,7 +130,7 @@ export function OrderList({ orders, loading, error }) {
                                 {item.name}
                               </h3>
                               <p className="text-sm font-medium text-gray-900">
-                                ${item.price}
+                                ₦{item.price.toLocaleString()}.00
                               </p>
                             </div>
                             <p className="text-sm text-gray-500">

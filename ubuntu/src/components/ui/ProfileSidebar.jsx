@@ -27,12 +27,6 @@ function ProfileSidebar({ user, onLogout }) {
             </Link>
           </Button>
           <Button variant="ghost" className="w-full justify-start" asChild>
-            <Link to="/profile/addresses">
-              <MapPin className="mr-2 h-4 w-4" />
-              Addresses
-            </Link>
-          </Button>
-          <Button variant="ghost" className="w-full justify-start" asChild>
             <Link to="/profile/wishlist">
               <Heart className="mr-2 h-4 w-4" />
               Wishlist
