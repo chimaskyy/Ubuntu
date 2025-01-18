@@ -6,7 +6,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
-import {Header, Footer, CatgoryNav, SignUp, Login  } from "./components";
+import { Header, Footer, CatgoryNav, SignUp, Login } from "./components";
 import {
   Accessories,
   ArivalList,
@@ -16,7 +16,7 @@ import {
   Men,
   Undies,
   UnisexShorts,
-  Kids
+  Kids,
 } from "./pages/Product";
 import {
   Admin,
@@ -27,9 +27,9 @@ import {
   ProductPage,
   ProfilePage,
 } from "./pages";
-import {monitorAuthState} from "./reducers/userSlice";
-import {useDispatch, useSelector} from "react-redux";
-import {useEffect} from "react";
+import { monitorAuthState } from "./reducers/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 import { fetchCart } from "./reducers/cartSlice";
 import WithAdminAuth from "../src/hooks/WithAdminAuth";
 import AuthWrapper from "./utils/AuthWrapper";
@@ -48,8 +48,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchCart(userId));
-  }
-  , [dispatch, userId]);
+  }, [dispatch, userId]);
 
   return (
     <>
@@ -96,7 +95,6 @@ function App() {
 
 export default function Root() {
   return (
-    
     <Router>
       <App />
     </Router>

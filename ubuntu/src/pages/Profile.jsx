@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logoutUser } from "@/reducers/userSlice";
+import { logoutUser } from "@/reducers/authSlice";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -22,12 +22,12 @@ export default function ProfilePage() {
 
   const { user } = useSelector((state) => state.user);
   const { orders, loading, error } = useSelector((state) => state.orders);
-  
+
   useEffect(() => {
-    if (user?.uid){
-    dispatch(fetchUserOrders(user.uid));
-  }
-}, [dispatch, user?.uid]);
+    if (user?.uid) {
+      dispatch(fetchUserOrders(user.uid));
+    }
+  }, [dispatch, user?.uid]);
 
   if (!user) {
     return <p>Loading...</p>; // Handle the case when user is not yet loaded

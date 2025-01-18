@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, Toaster } from "react-hot-toast";
-import { authenticateWithGoogle, loginWithEmail } from "@/reducers/userSlice";
+import { authenticateWithGoogle, loginWithEmail } from "@/reducers/authSlice";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { browserLocalPersistence, setPersistence } from "firebase/auth";
@@ -21,22 +21,20 @@ const Login = () => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
- const handleFormSubmit = async (e) => {
-   e.preventDefault();
-   await setPersistence(auth, browserLocalPersistence);
-   dispatch(loginWithEmail({ email: form.email, password: form.password }))
-     .unwrap()
-     .catch(() => {
-       toast.error(error.message || "Wrong password or email.");
-     });
- };
- useEffect(() => {
-   if (user?.email) {
-     navigate("/");
-   }
- }, [user, navigate]);
-
-
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    await setPersistence(auth, browserLocalPersistence);
+    dispatch(loginWithEmail({ email: form.email, password: form.password }))
+      .unwrap()
+      .catch(() => {
+        toast.error(error.message || "Wrong password or email.");
+      });
+  };
+  useEffect(() => {
+    if (user?.email) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">

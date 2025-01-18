@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast, Toaster } from "react-hot-toast";
-import { signUpWithEmail, authenticateWithGoogle } from "@/reducers/userSlice";
+import { signUpWithEmail, authenticateWithGoogle } from "@/reducers/authSlice";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 
@@ -9,7 +9,7 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, status} = useSelector((state) => state.user);
+  const { user, status } = useSelector((state) => state.user);
 
   const [form, setForm] = useState({
     email: "",

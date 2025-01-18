@@ -9,6 +9,7 @@ import {
   query,
   where,
   orderBy,
+  updateDoc,
 } from "firebase/firestore";
 import toast from "react-hot-toast";
 
@@ -23,6 +24,7 @@ export const createOrder = createAsyncThunk(
       const orderToSave = {
         ...orderData,
         userId,
+       
         orderId,
         createdAt: new Date().toISOString(),
         status: "pending", // Initial status
@@ -35,6 +37,20 @@ export const createOrder = createAsyncThunk(
     }
   }
 );
+
+export const updateOrderStatus = createAsyncThunk(
+  "orders/updateOrderStatus",
+  async ({ orderId, status }, { rejectWithValue }) => {
+    try {
+      const orderRef = doc(db, "orders", orderId);
+      await updateDoc(orderRef, { status });
+      return { orderId, status };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 
 // Fetch all orders for a user
 export const fetchUserOrders = createAsyncThunk(
@@ -80,6 +96,24 @@ export const fetchOrderById = createAsyncThunk(
   }
 );
 
+export const fetchAllOrders = createAsyncThunk(
+  "orders/fetchAllOrders",
+  async (_, { rejectWithValue }) => {
+    try {
+      const ordersRef = collection(db, "orders");
+      const querySnapshot = await getDocs(ordersRef);
+      const orders = [];
+      querySnapshot.forEach((doc) => {
+        orders.push(doc.data());
+      });
+
+      return orders;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "orders",
   initialState: {
@@ -92,13 +126,13 @@ const orderSlice = createSlice({
     clearCurrentOrder: (state) => {
       state.currentOrder = null;
     },
-    updateOrderStatus: (state, action) => {
-      const { orderId, status } = action.payload;
-      const order = state.orders.find((order) => order.orderId === orderId);
-      if (order) {
-        order.status = status;
-      }
-    },
+    // updateOrderStatus: (state, action) => {
+    //   const { orderId, status } = action.payload;
+    //   const order = state.orders.find((order) => order.orderId === orderId);
+    //   if (order) {
+    //     order.status = status;
+    //   }
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -118,6 +152,27 @@ const orderSlice = createSlice({
         state.error = action.payload;
         toast.error(`Failed to create order: ${action.payload}`);
       })
+
+      //update order status
+      .addCase(updateOrderStatus.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action) => {
+        state.loading = false;
+        const { orderId, status } = action.payload;
+        const order = state.orders.find((order) => order.orderId === orderId);
+         if (order) {
+          order.status = status;
+        }
+        toast.success("Order status updated successfully!");
+      })
+      .addCase(updateOrderStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Failed to update order status: ${action.payload}`);
+      }
+      )
 
       // Fetch User Orders
       .addCase(fetchUserOrders.pending, (state) => {
@@ -147,13 +202,27 @@ const orderSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`Failed to fetch order: ${action.payload}`);
+      })
+      .addCase(fetchAllOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      }
+      )
+      .addCase(fetchAllOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload;
+      })
+      .addCase(fetchAllOrders.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Failed to fetch orders: ${action.payload}`);
       });
   },
 });
 
 // Action creator to create order from cart
 export const createOrderFromCart =
-  (userId, cartItems, totalAmount, shippingDetails) => async (dispatch) => {
+  (userId,  cartItems, totalAmount, shippingDetails) => async (dispatch) => {
     try {
       const orderData = {
         items: cartItems,
@@ -172,5 +241,5 @@ export const createOrderFromCart =
     }
   };
 
-export const { clearCurrentOrder, updateOrderStatus } = orderSlice.actions;
+export const { clearCurrentOrder } = orderSlice.actions;
 export default orderSlice.reducer;
