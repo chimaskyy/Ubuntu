@@ -27,12 +27,14 @@ import {
   ProductPage,
   ProfilePage,
 } from "./pages";
+import orderDetailsPage from "./components/admin/OrderDetailsPage";
 import { monitorAuthState } from "./reducers/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCart } from "./reducers/cartSlice";
 import WithAdminAuth from "../src/hooks/WithAdminAuth";
 import AuthWrapper from "./utils/AuthWrapper";
+import OrderDetailsPage from "./components/admin/OrderDetailsPage";
 
 function App() {
   const location = useLocation(); // Get the current route
@@ -84,6 +86,15 @@ function App() {
               </WithAdminAuth>
             }
           />
+          <Route
+            path="/admin/orders/:orderId"
+            element={
+              <WithAdminAuth>
+                <OrderDetailsPage />
+              </WithAdminAuth>
+            }
+          />
+
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
 

@@ -23,6 +23,7 @@ export default function ProfilePage() {
   const { user } = useSelector((state) => state.user);
   const { orders, loading, error } = useSelector((state) => state.orders);
 
+  
   useEffect(() => {
     if (user?.uid) {
       dispatch(fetchUserOrders(user.uid));

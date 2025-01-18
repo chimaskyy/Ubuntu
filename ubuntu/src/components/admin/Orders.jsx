@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const orderStatuses = [
   { value: "pending", label: "Pending" },
@@ -46,6 +47,7 @@ const getStatusColor = (status) => {
 
 export default function OrdersContent() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { orders, loading } = useSelector((state) => state.orders);
 
   
@@ -53,9 +55,14 @@ export default function OrdersContent() {
     dispatch(fetchAllOrders());
   }, [dispatch]);
 
-  const handleStatusChange = async (orderId, newStatus) => {
+  const handleStatusChange = async (e, orderId, newStatus) => {
+    e.stopPropagation();
     await dispatch(updateOrderStatus({ orderId, status: newStatus }));
   };
+
+  const handleRowClick = (orderId) => {
+    navigate(`/admin/orders/${orderId}`);
+  }
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -98,7 +105,9 @@ export default function OrdersContent() {
           </TableHeader>
           <TableBody>
             {orders.map((order) => (
-              <TableRow key={order.orderId}>
+              <TableRow key={order.orderId} 
+              onClick={() => handleRowClick(order.orderId)}
+              className="cursor-pointer hover:bg-gray-50">
                 <TableCell className="font-medium">
                   #{order.orderId.slice(-8)}
                 </TableCell>

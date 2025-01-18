@@ -11,9 +11,11 @@ import {
   ChevronDown,
 } from "lucide-react";
 import AdminHeader from "./AdminHeader";
+import { useSelector } from "react-redux";
 
 export default function AdminDashboard() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const {user} = useSelector(state => state.user);
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "dashboard" },
@@ -55,7 +57,7 @@ export default function AdminDashboard() {
             <div className="bg-gray-900 p-2 rounded-lg mr-2">
               <Package className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold">Ubuntu Stores</span>
+            <span className="text-xl font-bold">Ubuntu Store</span>
           </div>
           <div className="flex items-center bg-gray-100 rounded-lg p-2 mb-6">
             <img
@@ -66,8 +68,8 @@ export default function AdminDashboard() {
               className="rounded-full mr-3"
             />
             <div>
-              <p className="font-semibold">Oshoke Idaewor</p>
-              <p className="text-xs text-gray-600">idaewor@gmail.com</p>
+              <p className="font-semibold">{user?.displayName}</p>
+              <p className="text-xs text-gray-600">{user?.email}</p>
             </div>
             <ChevronDown className="ml-auto h-4 w-4" />
           </div>
