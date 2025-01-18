@@ -44,6 +44,8 @@ export default function CheckoutPage() {
   const handlePaymentSuccess = async () => {
     const shippingDetails = {
       name,
+      email,
+      phone,
       address,
       city,
       state,

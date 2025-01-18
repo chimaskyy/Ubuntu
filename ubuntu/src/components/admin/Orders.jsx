@@ -55,8 +55,8 @@ export default function OrdersContent() {
     dispatch(fetchAllOrders());
   }, [dispatch]);
 
-  const handleStatusChange = async (e, orderId, newStatus) => {
-    e.stopPropagation();
+  const handleStatusChange = async ( orderId, newStatus) => {
+    
     await dispatch(updateOrderStatus({ orderId, status: newStatus }));
   };
 
@@ -97,7 +97,7 @@ export default function OrdersContent() {
             <TableRow>
               <TableHead>Order ID</TableHead>
               <TableHead>Customer</TableHead>
-              <TableHead>Date</TableHead>
+              {/* <TableHead>Date</TableHead> */}
               <TableHead>Total</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Action</TableHead>
@@ -112,7 +112,7 @@ export default function OrdersContent() {
                   #{order.orderId.slice(-8)}
                 </TableCell>
                 <TableCell>{order.shippingDetails.name}</TableCell>
-                <TableCell>{formatDate(order.createdAt)}</TableCell>
+                {/* <TableCell>{formatDate(order.createdAt)}</TableCell> */}
                 <TableCell>₦{order.totalAmount.toLocaleString()}.00</TableCell>
                 <TableCell>
                   <Badge className={getStatusColor(order.status)}>
