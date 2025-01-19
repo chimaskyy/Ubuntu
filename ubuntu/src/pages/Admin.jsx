@@ -10,7 +10,7 @@ import SettingsContent from "../components/admin/Settings";
 function Admin() {
   return (
       <Routes>
-        {/* All routes under AdminDashboard */}
+        {/* All routes under AdminDashboard is here */}
         <Route path="/" element={<AdminDashboard />}>
           <Route path="dashboard" element={<DashboardContent />} />
           <Route path="products" element={<ProductManager />} />
