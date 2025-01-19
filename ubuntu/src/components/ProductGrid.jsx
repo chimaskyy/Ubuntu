@@ -197,6 +197,7 @@ const ProductGrid = ({
                             }
                             variant="outline"
                             size="sm"
+                            className="flex items-center text-xs rounded-full border border-gray-700"
                           >
                             Remove from Cart
                           </Button>
@@ -205,6 +206,7 @@ const ProductGrid = ({
                             onClick={() => handleAddToCart(product)}
                             variant="outline"
                             size="sm"
+                            className="flex items-center text-xs rounded-full border border-gray-700"
                           >
                             <ShoppingCart className="h-4 w-4" />
                             Add to Cart
@@ -219,6 +221,7 @@ const ProductGrid = ({
                           }
                           variant="outline"
                           size="sm"
+                          className="flex items-center text-xs rounded-full border border-gray-700"
                         >
                           <ShoppingCart className="h-4 w-4" />
                           Add to Cart

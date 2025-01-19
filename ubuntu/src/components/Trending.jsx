@@ -116,6 +116,7 @@ export default function TrendingProducts() {
                         onClick={() => handleremoveFromCartAndSave(product.id)}
                         variant="outline"
                         size="sm"
+                        className="flex items-center rounded-full border-2 border-gray-700"
                       >
                         Remove from Cart
                       </Button>
@@ -127,7 +128,6 @@ export default function TrendingProducts() {
                         className="flex items-center rounded-full border-2 border-gray-700"
                       >
                         <ShoppingCart className="h-4 w-4" />
-                        
                       </Button>
                     )
                   ) : (
@@ -137,6 +137,7 @@ export default function TrendingProducts() {
                       }
                       variant="outline"
                       size="sm"
+                      className="flex items-center text-xs rounded-full border border-gray-700" njjuu
                     >
                       <ShoppingCart className="h-4 w-4" />
                       Add to Cart

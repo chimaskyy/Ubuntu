@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import logo from "../assets/logo.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import CategoryNav from "./Category";
+import { Button } from "./ui/button";
 
 export default function Header() {
   const { user } = useSelector((state) => state.user);
@@ -126,8 +127,10 @@ export default function Header() {
               <Link to="/sign-up">
                 <button size="icon" className="lg:inline-flex">
                   {/* <User className="h-5 w-5" /> */}
-                  <span className="text-gray-500 bg-gray-700 rounded-full p-2 text-white" >Sign Up</span>
-                  <span className="sr-only">Creat Account</span>
+                  <Button variant="outline" size="sm" className="flex items-center text-xs rounded-full border border-gray-700">
+                    Sign Up
+                    </Button>
+                  <span className="sr-only">Create Account</span>
                 </button>
               </Link>
             )}

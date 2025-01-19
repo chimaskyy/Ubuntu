@@ -95,6 +95,7 @@ useEffect(() => {
                       onClick={() => handleremoveFromCartAndSave(product.id)}
                       variant="outline"
                       size="sm"
+                      className="flex items-center text-xs rounded-full border border-gray-700"
                     >
                       Remove from Cart
                     </Button>
@@ -103,9 +104,10 @@ useEffect(() => {
                       onClick={() => handleAddToCart(product)}
                       variant="outline"
                       size="sm"
-                      className="flex items-center rounded-full border-2 border-gray-700"
+                      className="flex items-center text-xs rounded-full border border-gray-700"
                     >
                       <ShoppingCart className="h-6 w-6" />
+                      Add to Cart
                     </Button>
                   )
                 ) : (
@@ -115,6 +117,7 @@ useEffect(() => {
                     }
                     variant="outline"
                     size="sm"
+                    className="flex items-center text-xs rounded-full border border-gray-700"
                   >
                     <ShoppingCart className="h-4 w-4" />
                     Add to Cart
