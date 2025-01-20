@@ -1,8 +1,17 @@
-import { Bell, LogOut, Search, User } from "lucide-react";
-import { useSelector } from "react-redux";
+import { logoutUser } from "@/reducers/authSlice";
+import { LogOut, Search, User } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function AdminHeader () {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const {user} = useSelector(state => state.user);
+
+  const handleLogout = () => {
+      dispatch(logoutUser());
+      navigate("/");
+    };
 
   return (
     <header className="bg-white shadow-sm p-4 flex items-center justify-between">
@@ -29,7 +38,7 @@ function AdminHeader () {
           </button>
         </div>
 
-        <button className="text-red-600 font-bold text-2xl px-6 py-2 rounded-lg">
+        <button onClick={handleLogout} className="text-red-600 font-bold text-2xl px-6 py-2 rounded-lg">
           <LogOut className="w-6 h-6" />
         </button>
       </div>
