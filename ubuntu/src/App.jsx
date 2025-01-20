@@ -55,7 +55,7 @@ function App() {
   return (
     <>
       <AuthWrapper>
-        <Header />
+        {!isAdminRoute && <Header />}
 
         {/* Render CategoryNav only if not on an Admin route */}
         {!isAdminRoute && <CatgoryNav />}

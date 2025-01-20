@@ -7,8 +7,11 @@ import ProductManager from "../components/admin/ProductManger";
 import CustomersContent from "../components/admin/Customer";
 import OrdersContent from "../components/admin/Orders";
 import SettingsContent from "../components/admin/Settings";
+import AdminHeader from "@/components/admin/AdminHeader";
 function Admin() {
   return (
+    <>
+      <AdminHeader />
       <Routes>
         {/* All routes under AdminDashboard is here */}
         <Route path="/" element={<AdminDashboard />}>
@@ -20,6 +23,7 @@ function Admin() {
           <Route index element={<DashboardContent />} /> {/* Default route */}
         </Route>
       </Routes>
+    </>
   );
 }
 
