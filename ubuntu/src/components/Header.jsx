@@ -78,11 +78,11 @@ export default function Header() {
   );
 
   const SearchInput = () => {
-    useEffect(() => {
-      if (inputRef.current) {
-        inputRef.current.focus();
-      }
-    }, [searchValue]);
+    // useEffect(() => {
+    //   if (inputRef.current) {
+    //     inputRef.current.focus();
+    //   }
+    // }, [searchValue]);
 
     return (
       <div className="relative" ref={searchRef}>

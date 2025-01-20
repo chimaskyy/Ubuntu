@@ -49,11 +49,8 @@ export default function AdminDashboard() {
           isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:static inset-y-0 left-0 z-10 w-64 bg-white border-r overflow-y-auto`}
       >
-        <div className="p-6">
-          <h1 className="text-xl font-bold">Admin Dashboard</h1>
-        </div>
         <div className="px-4 space-y-2 mb-6">
-          <div className="flex items-center mb-6">
+          <div className="flex items-center mb-6 pt-12">
             <div className="bg-gray-900 p-2 rounded-lg mr-2">
               <Package className="h-6 w-6 text-white" />
             </div>
@@ -80,7 +77,7 @@ export default function AdminDashboard() {
             <Link
               to={path}
               key={path}
-              className="flex items-center space-x-2 px-4 py-2 text-gray-600 hover:bg-gray-50 rounded-lg"
+              className="flex items-center space-x-2 px-4 py-2 text-gray-900 hover:bg-gray-50 rounded-lg"
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <Icon className="w-5 h-5" />
@@ -91,7 +88,10 @@ export default function AdminDashboard() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-y-auto p-6">
+      <main className="flex-1 p-6">
+        <div className="p-6">
+          <h1 className="text-4xl font-bold">Admin Dashboard</h1>
+        </div>
         <Outlet />
       </main>
     </div>
