@@ -10,19 +10,23 @@ import {
   clearCartAndSave,
   fetchCart,
 } from "@/reducers/cartSlice";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useAuth from "@/hooks/useAuth";
+import { SelectZone } from "@/components/ui/SelectZone";
+import { getShippingFee } from "@/lib/Shipping";
 
 export default function CartPage() {
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.cart);
-  const user  = useAuth();
+  const user = useAuth();
+  const [selectedState, setSelectedState] = useState("");
+
   const subtotal = items.reduce(
     (acc, item) => acc + parseFloat(item.price) * item.quantity,
     0
   );
 
-  const shipping = 10;
+  const shipping = getShippingFee(selectedState);
   const total = subtotal + shipping;
 
   useEffect(() => {
@@ -71,7 +75,7 @@ export default function CartPage() {
               {items.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col sm:flex-row items-center gap-4 bg-white p-4 rounded-lg shadow-sm"
+                  className="flex flex-row sm:flex-row items-center gap-4 bg-white p-4 rounded-lg shadow-sm"
                 >
                   <img
                     src={item.imageUrls?.[0] || ""}
@@ -128,23 +132,52 @@ export default function CartPage() {
             <div className="lg:w-1/3 mt-8 lg:mt-0">
               <div className="bg-white p-6 rounded-lg shadow-sm">
                 <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+
+                {/* Shipping Zone Selection */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Delivery Location
+                  </label>
+                  <SelectZone
+                    value={selectedState}
+                    onValueChange={setSelectedState}
+                  />
+                  {/* {selectedState === "Enugu" && ( */}
+                    <p className="text-lg text-green-600 mt-1">
+                      Free delivery available in Enugu!
+                    </p>
+                  
+                </div>
+
                 <div className="flex justify-between mb-2">
                   <span>Subtotal</span>
-                  <span>₦{subtotal.toFixed(2)}</span>
+                  <span>₦{subtotal.toLocaleString()}.00</span>
                 </div>
                 <div className="flex justify-between mb-2">
                   <span>Shipping</span>
-                  <span>₦{shipping.toFixed(2)}</span>
+                  <span>₦{shipping.toLocaleString()}.00</span>
                 </div>
                 <div className="flex justify-between font-semibold text-lg mt-4 pt-4 border-t">
                   <span>Total</span>
-                  <span>₦{total.toFixed(2)}</span>
+                  <span>₦{total.toLocaleString()}.00</span>
                 </div>
-                <Button className="w-full mt-6" asChild>
-                  <Link to="/checkout" state={{ total }}>
+                <Button
+                  className="w-full mt-6"
+                  asChild
+                  disabled={!selectedState}
+                >
+                  <Link
+                    to="/checkout"
+                    state={{ total, shipping, selectedState }}
+                  >
                     Proceed to Checkout
                   </Link>
                 </Button>
+                {!selectedState && (
+                  <p className="text-sm text-red-500 mt-2 text-center">
+                    Please select your delivery location
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -152,7 +185,7 @@ export default function CartPage() {
           <div className="text-center py-12">
             <p className="text-xl font-semibold mb-4">Your cart is empty.</p>
             <Button variant="outline" size="lg" asChild>
-              <Link href="/shop">Go to Shop</Link>
+              <Link to="/shop">Go to Shop</Link>
             </Button>
           </div>
         )}

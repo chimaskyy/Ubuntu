@@ -10,7 +10,6 @@ import {
   X,
   ChevronDown,
 } from "lucide-react";
-import AdminHeader from "./AdminHeader";
 import { useSelector } from "react-redux";
 
 export default function AdminDashboard() {
@@ -18,7 +17,7 @@ export default function AdminDashboard() {
   const {user} = useSelector(state => state.user);
 
   const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "dashboard" },
+    { icon: LayoutDashboard, label: "Overview", path: "dashboard" },
     { icon: Package, label: "Products", path: "products" },
     { icon: Users, label: "Customers", path: "customers" },
     { icon: ShoppingCart, label: "Orders", path: "orders" },
@@ -30,7 +29,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gray-100">
+    <div className="flex flex-col md:flex-row h-screen">
       {/* Mobile menu toggle button */}
       <button
         className="md:hidden fixed top-4 left-4 z-20 p-2 bg-white rounded-md shadow-md"
@@ -56,20 +55,6 @@ export default function AdminDashboard() {
             </div>
             <span className="text-xl font-bold">Ubuntu Store</span>
           </div>
-          <div className="flex items-center bg-gray-100 rounded-lg p-2 mb-6">
-            <img
-              src="/placeholder.svg"
-              alt="Profile"
-              width={40}
-              height={40}
-              className="rounded-full mr-3"
-            />
-            <div>
-              <p className="font-semibold">{user?.displayName}</p>
-              <p className="text-xs text-gray-600">{user?.email}</p>
-            </div>
-            <ChevronDown className="ml-auto h-4 w-4" />
-          </div>
         </div>
 
         <nav className="px-4 space-y-2">
@@ -81,7 +66,7 @@ export default function AdminDashboard() {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <Icon className="w-5 h-5" />
-              <span className="md:inline hidden">{label}</span>
+              <span className="md:inline hidden pl-2">{label}</span>
             </Link>
           ))}
         </nav>

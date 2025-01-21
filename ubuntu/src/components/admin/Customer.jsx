@@ -46,6 +46,14 @@ export default function CustomersContent() {
     }
   });
 
+   const formatDate = (dateString) => {
+     return new Date(dateString).toLocaleDateString("en-US", {
+       year: "numeric",
+       month: "long",
+       day: "numeric",
+     });
+   };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -129,7 +137,7 @@ export default function CustomersContent() {
                       {user.isCustomer ? "Customer" : "User"}
                     </Badge>
                   </TableCell>
-                  <TableCell>{user.createdAt}</TableCell>
+                  <TableCell>{formatDate(user.createdAt)}</TableCell>
                   <TableCell>
                     <div className="flex gap-1">
                       {user.role?.map((role) => (
