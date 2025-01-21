@@ -32,7 +32,7 @@ export default function AdminDashboard() {
     <div className="flex flex-col md:flex-row h-screen">
       {/* Mobile menu toggle button */}
       <button
-        className="md:hidden fixed top-4 left-4 z-20 p-2 bg-white rounded-md shadow-md"
+        className="md:hidden fixed top-14 left-4 z-20 p-2 bg-white rounded-md shadow-md"
         onClick={toggleMobileMenu}
       >
         {isMobileMenuOpen ? (
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
               onClick={() => setIsMobileMenuOpen(false)}
             >
               <Icon className="w-5 h-5" />
-              <span className="md:inline hidden pl-2">{label}</span>
+              <span className="md:inline  pl-2">{label}</span>
             </Link>
           ))}
         </nav>
