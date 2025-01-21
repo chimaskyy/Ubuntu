@@ -1,6 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState, useRef } from "react";
-import { Search, Heart, User, ShoppingCart } from "lucide-react";
+import {
+  Search,
+  Heart,
+  User,
+  ShoppingCart,
+  LayoutDashboard,
+} from "lucide-react";
 import { useSelector } from "react-redux";
 import logo from "../assets/logo.jpg";
 import { Link, useNavigate } from "react-router-dom";
@@ -117,19 +123,33 @@ export default function Header() {
 
           <div className="flex items-center pr-6 space-x-6">
             {user ? (
-              <Link to="/profile">
-                <button size="icon" className="lg:inline-flex">
-                  <User className="h-5 w-5" />
-                  <span className="sr-only">Account</span>
-                </button>
-              </Link>
+              <>
+                {user && user.role && user.role.includes("admin") && (
+                  <Link to="/admin">
+                    <Button size="lg" className="lg:inline-flex">
+                      <LayoutDashboard className="h-5 w-5" />
+                      Admin Dashboard
+                    </Button>
+                  </Link>
+                )}
+                <Link to="/profile">
+                  <button size="icon" className="lg:inline-flex">
+                    <User className="h-5 w-5" />
+                    <span className="sr-only">Account</span>
+                  </button>
+                </Link>
+              </>
             ) : (
-              <Link to="/sign-up">
+              <Link to="/login">
                 <button size="icon" className="lg:inline-flex">
                   {/* <User className="h-5 w-5" /> */}
-                  <Button variant="outline" size="sm" className="flex items-center text-xs rounded-full border border-gray-700">
-                    Sign Up
-                    </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center text-xs rounded-full border border-gray-700"
+                  >
+                    Sign In
+                  </Button>
                   <span className="sr-only">Create Account</span>
                 </button>
               </Link>
