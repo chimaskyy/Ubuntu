@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTrendingProducts } from "@/reducers/productSlice";
 import { Link } from "react-router-dom";
-import { ShoppingCart, Heart, Trash2 } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ImageCard from "./ui/ImageCard";
 

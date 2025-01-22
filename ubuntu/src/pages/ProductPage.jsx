@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "@/reducers/productSlice";
 import {
@@ -17,7 +17,6 @@ import { cn } from "@/lib/utils";
 import { addToWishlist, removeFromWishlist } from "@/reducers/wishListSlice";
 function ProductPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { product, loading, error } = useSelector((state) => state.products);
   const [selectedImage, setSelectedImage] = useState(0);

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+
 import foto from "../assets/pinkkyyy.jpg";
 import CategoryCard from "./ui/CategoryCard";
 

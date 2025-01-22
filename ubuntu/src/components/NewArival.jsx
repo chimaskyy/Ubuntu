@@ -1,4 +1,4 @@
-import { Heart, ShoppingCart, ArrowRight } from "lucide-react";
+import { ShoppingCart, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { fetchProducts } from "@/reducers/productSlice";

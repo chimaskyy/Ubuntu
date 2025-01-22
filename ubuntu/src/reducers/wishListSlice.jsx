@@ -3,11 +3,9 @@ import {
   doc,
   setDoc,
   getDoc,
-  deleteField,
-  updateDoc,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import toast from "react-hot-toast";
+
 
 // Fetch wishlist wishlist
 export const fetchWishlist = createAsyncThunk(
