@@ -9,7 +9,7 @@ import {
 import { db } from "../config/firebase";
 import toast from "react-hot-toast";
 
-// Fetch wishlist items
+// Fetch wishlist wishlist
 export const fetchWishlist = createAsyncThunk(
   "wishlist/fetchWishlist",
   async (userId) => {
@@ -18,7 +18,7 @@ export const fetchWishlist = createAsyncThunk(
       const wishlistSnap = await getDoc(wishlistRef);
 
       if (wishlistSnap.exists()) {
-        return wishlistSnap.data().items || [];
+        return wishlistSnap.data().wishlist || [];
       }
       return [];
     } catch (error) {
@@ -36,19 +36,19 @@ export const addToWishlist = createAsyncThunk(
       const wishlistRef = doc(db, "wishlists", userId);
       const wishlistSnap = await getDoc(wishlistRef);
 
-      let items = [];
+      let wishlist = [];
       if (wishlistSnap.exists()) {
-        items = wishlistSnap.data().items || [];
+        wishlist = wishlistSnap.data().wishlist || [];
       }
 
       // Check if item already exists
-      if (!items.some((item) => item.id === product.id)) {
-        items.push(product);
-        await setDoc(wishlistRef, { items }, { merge: true });
-        toast.success("Added to wishlist");
+      if (!wishlist.some((item) => item.id === product.id)) {
+        wishlist.push(product);
+        await setDoc(wishlistRef, { wishlist }, { merge: true });
+       
       }
 
-      return items;
+      return wishlist;
     } catch (error) {
       console.error("Add to Wishlist Error:", error);
       throw error;
@@ -65,12 +65,12 @@ export const removeFromWishlist = createAsyncThunk(
       const wishlistSnap = await getDoc(wishlistRef);
 
       if (wishlistSnap.exists()) {
-        const items = wishlistSnap
+        const wishlist = wishlistSnap
           .data()
-          .items.filter((item) => item.id !== productId);
-        await setDoc(wishlistRef, { items }, { merge: true });
-        toast.success("Removed from wishlist");
-        return items;
+          .wishlist.filter((item) => item.id !== productId);
+        await setDoc(wishlistRef, { wishlist }, { merge: true });
+       
+        return wishlist;
       }
       return [];
     } catch (error) {
@@ -96,7 +96,7 @@ const wishlistSlice = createSlice({
       })
       .addCase(fetchWishlist.fulfilled, (state, action) => {
         state.status = "succeeded";
-        state.items = action.payload;
+        state.wishlist = action.payload;
       })
       .addCase(fetchWishlist.rejected, (state, action) => {
         state.status = "failed";
@@ -104,11 +104,11 @@ const wishlistSlice = createSlice({
       })
       // Add to wishlist
       .addCase(addToWishlist.fulfilled, (state, action) => {
-        state.items = action.payload;
+        state.wishlist = action.payload;
       })
       // Remove from wishlist
       .addCase(removeFromWishlist.fulfilled, (state, action) => {
-        state.items = action.payload;
+        state.wishlist = action.payload;
       });
   },
 });

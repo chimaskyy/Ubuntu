@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-// ProductGrid.jsx
 import { Heart, ShoppingCart } from "lucide-react";
 import {
   Select,
@@ -20,6 +19,7 @@ import {
 } from "@/reducers/cartSlice";
 import { Link } from "react-router-dom";
 import ImageCard from "./ui/ImageCard";
+import { addToWishlist, removeFromWishlist } from "@/reducers/wishListSlice";
 
 const ProductGrid = ({
   title,
@@ -40,7 +40,7 @@ const ProductGrid = ({
   const { products, loading } = useSelector((state) => state.products);
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.cart);
-
+  const { wishlist } = useSelector((state) => state.wishlist);
   const [selectedCategory, setSelectedCategory] = useState(category || "");
   const [sortBy, setSortBy] = useState("");
 
@@ -85,6 +85,21 @@ const ProductGrid = ({
     toast.success("Item removed from cart");
   };
 
+  const handleWishlistToggle = (product) => {
+    if (!user) {
+      toast.error("Please login to manage your wishlist.");
+      return;
+    }
+    const isInWishlist = wishlist.some((item) => item.id === product.id);
+    if (isInWishlist) {
+      dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
+      toast.success(`${product.name} removed from wishlist`);
+    } else {
+      dispatch(addToWishlist({ userId: user.uid, product }));
+      toast.success(`${product.name} added to wishlist`);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -109,41 +124,34 @@ const ProductGrid = ({
 
         {showFilters && (
           <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
-            <div className="flex flex-wrap gap-4">
-              {!category && (
-                <Select
-                  value={selectedCategory}
-                  onValueChange={setSelectedCategory}
-                >
-                  <SelectTrigger className="w-[140px]">
-                    <SelectValue placeholder="Filter by category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.value} value={cat.value}>
-                        {cat.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-
-              <Select onValueChange={setSortBy}>
+            {!category && (
+              <Select
+                value={selectedCategory}
+                onValueChange={setSelectedCategory}
+              >
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Sort By" />
+                  <SelectValue placeholder="Filter by category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="newest">Newest</SelectItem>
-                  <SelectItem value="oldest">Oldest</SelectItem>
-                  <SelectItem value="low-to-high">
-                    Price: Low to High
-                  </SelectItem>
-                  <SelectItem value="high-to-low">
-                    Price: High to Low
-                  </SelectItem>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
-            </div>
+            )}
+            <Select onValueChange={setSortBy}>
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Sort By" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="newest">Newest</SelectItem>
+                <SelectItem value="oldest">Oldest</SelectItem>
+                <SelectItem value="low-to-high">Price: Low to High</SelectItem>
+                <SelectItem value="high-to-low">Price: High to Low</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         )}
 
@@ -151,7 +159,7 @@ const ProductGrid = ({
           <div className="text-center mt-12">
             <h2 className="text-lg font-bold text-gray-900">
               Oops! No products are available in the &quot;{selectedCategory}
-              &ldquo; category at the moment.
+              &quot; category at the moment.
             </h2>
             <p className="text-gray-600 mt-2">
               We&lsquo;re working hard to restock this category soon. Stay tuned
@@ -160,50 +168,64 @@ const ProductGrid = ({
           </div>
         ) : (
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
-            {products.map((product) => (
-              <div key={product.id} className="relative group overflow-hidden">
-                <div className="5">
+            {products.map((product) => {
+              const isInWishlist = wishlist.some(
+                (item) => item.id === product.id
+              );
+              return (
+                <div
+                  key={product.id}
+                  className="relative group overflow-hidden"
+                >
                   <ImageCard
                     image={product.imageUrls?.[0]}
                     link={`/product/${product.id}`}
-                    className=""
+                    product={product}
+                    isInWishlist={isInWishlist}
+                    onWishlistToggle={() => handleWishlistToggle(product)}
                   />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                  >
-                    <Heart className="h-4 w-4" />
-                    <span className="sr-only">Add to wishlist</span>
-                  </Button>
-                </div>
-                <div className="mt-4">
-                  <div className="flex flex-col gap-2">
-                    <Link
-                      to={`/product/${product.id}`}
-                      className="text-sm font-medium text-gray-900 hover:text-gray-700"
-                    >
-                      {product.name}
-                    </Link>
-                    <div className="flex items-center justify-between w-full">
-                      <p className="text-xs font-semibold text-gray-500">
-                        ₦{product.price.toLocaleString()}.00
-                      </p>
-                      {user ? (
-                        items.some((item) => item.id === product.id) ? (
-                          <Button
-                            onClick={() =>
-                              handleremoveFromCartAndSave(product.id)
-                            }
-                            variant="outline"
-                            size="sm"
-                            className="flex items-center text-xs rounded-full border border-gray-700"
-                          >
-                            Remove from Cart
-                          </Button>
+                  <div className="mt-4">
+                    <div className="flex flex-col gap-2">
+                      <Link
+                        to={`/product/${product.id}`}
+                        className="text-sm font-medium text-gray-900 hover:text-gray-700"
+                      >
+                        {product.name}
+                      </Link>
+                      <div className="flex items-center justify-between w-full">
+                        <p className="text-xs font-semibold text-gray-500">
+                          ₦{product.price.toLocaleString()}.00
+                        </p>
+                        {user ? (
+                          items.some((item) => item.id === product.id) ? (
+                            <Button
+                              onClick={() =>
+                                handleremoveFromCartAndSave(product.id)
+                              }
+                              variant="outline"
+                              size="sm"
+                              className="flex items-center text-xs rounded-full border border-gray-700"
+                            >
+                              Remove from Cart
+                            </Button>
+                          ) : (
+                            <Button
+                              onClick={() => handleAddToCart(product)}
+                              variant="outline"
+                              size="sm"
+                              className="flex items-center text-xs rounded-full border border-gray-700"
+                            >
+                              <ShoppingCart className="h-4 w-4" />
+                              Add to Cart
+                            </Button>
+                          )
                         ) : (
                           <Button
-                            onClick={() => handleAddToCart(product)}
+                            onClick={() =>
+                              toast.error(
+                                "Please login to add items to the cart."
+                              )
+                            }
                             variant="outline"
                             size="sm"
                             className="flex items-center text-xs rounded-full border border-gray-700"
@@ -211,27 +233,13 @@ const ProductGrid = ({
                             <ShoppingCart className="h-4 w-4" />
                             Add to Cart
                           </Button>
-                        )
-                      ) : (
-                        <Button
-                          onClick={() =>
-                            toast.error(
-                              "Please login to add items to the cart."
-                            )
-                          }
-                          variant="outline"
-                          size="sm"
-                          className="flex items-center text-xs rounded-full border border-gray-700"
-                        >
-                          <ShoppingCart className="h-4 w-4" />
-                          Add to Cart
-                        </Button>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

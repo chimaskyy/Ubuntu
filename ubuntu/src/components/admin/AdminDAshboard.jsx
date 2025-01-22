@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 
 export default function AdminDashboard() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const {user} = useSelector(state => state.user);
+  const { user } = useSelector((state) => state.user);
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Overview", path: "dashboard" },
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-screen">
+    <div className="flex flex-col md:flex-row h-full">
       {/* Mobile menu toggle button */}
       <button
         className="md:hidden fixed top-14 left-4 z-20 p-2 bg-white rounded-md shadow-md"
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        <nav className="px-4 space-y-2">
+        <nav className="px-4 space-y-4">
           {menuItems.map(({ icon: Icon, label, path }) => (
             <Link
               to={path}

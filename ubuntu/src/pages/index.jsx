@@ -5,5 +5,5 @@ import HomePage from "./Home";
 import OrdersPage from "./Order";
 import ProductPage from "./ProductPage";
 import ProfilePage from "./Profile";
-
-export { Admin, CartPage, CheckoutPage, HomePage, OrdersPage, ProductPage, ProfilePage };
+import WishlistPage from "./wishlistPage";
+export { Admin, CartPage, CheckoutPage, HomePage, OrdersPage, ProductPage, ProfilePage, WishlistPage };

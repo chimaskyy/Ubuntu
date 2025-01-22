@@ -26,6 +26,7 @@ import {
   OrdersPage,
   ProductPage,
   ProfilePage,
+  WishlistPage,
 } from "./pages";
 import orderDetailsPage from "./components/admin/OrderDetailsPage";
 import { monitorAuthState } from "./reducers/authSlice";
@@ -78,6 +79,7 @@ function App() {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders" element={<OrdersPage />} />
+          <Route path="/my-wishlist" element={<WishlistPage />} />
           <Route
             path="/admin/*"
             element={

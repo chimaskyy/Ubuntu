@@ -71,7 +71,6 @@ export default function Header() {
             className="p-3 hover:bg-gray-50 cursor-pointer flex items-center gap-3"
             onClick={() => handleProductClick(product.id)}
           >
-            
             <div>
               <p className="text-sm font-medium">{product.name}</p>
             </div>
@@ -106,10 +105,9 @@ export default function Header() {
     );
   };
 
-
   return (
-    <header className="border-b pt-4 sticky top-0 z-50 w-full bg-white">
-      <div className="container lg:mx-auto lg:px-4 max-w-7xl mx-auto">
+    <header className="border-b pt-4 sticky top-0 z-50 w-full bg-white w-full">
+      <div className=" lg:mx-auto lg:px-4 max-w-7xl mx-auto">
         <div className="flex items-center justify-between h-16 mx-4">
           <Link to="/" className="flex-shrink-0">
             <img src={logo} alt="Logo" width={50} height={50} />
@@ -154,11 +152,12 @@ export default function Header() {
                 </button>
               </Link>
             )}
-
-            <button size="icon">
-              <Heart className="h-5 w-5" />
-              <span className="sr-only">Wishlist</span>
-            </button>
+            <Link to="/my-wishlist">
+              <button size="icon">
+                <Heart className="h-5 w-5" />
+                <span className="sr-only">Wishlist</span>
+              </button>
+            </Link>
             <Link to="/cart">
               <button size="icon" className="relative">
                 <ShoppingCart className="h-8 w-8" />

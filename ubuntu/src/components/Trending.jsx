@@ -12,12 +12,14 @@ import {
   removeFromCartAndSave,
 } from "@/reducers/cartSlice";
 import toast from "react-hot-toast";
+import { addToWishlist, removeFromWishlist } from "@/reducers/wishListSlice";
 
 export default function TrendingProducts() {
   const dispatch = useDispatch();
   const { trendingProducts, loading } = useSelector((state) => state.products);
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.cart);
+const { wishlist } = useSelector((state) => state.wishlist);
 
   useEffect(() => {
     if (user && !items.length) {
@@ -51,6 +53,20 @@ export default function TrendingProducts() {
     dispatch(fetchTrendingProducts());
   }, [dispatch]);
 
+  const handleWishlistToggle = (product) => {
+    if (!user) {
+      toast.error("Please login to manage your wishlist.");
+      return;
+    }
+    const isInWishlist = wishlist.some((item) => item.id === product.id);
+    if (isInWishlist) {
+      dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
+      toast.success(`${product.name} removed from wishlist`);
+    } else {
+      dispatch(addToWishlist({ userId: user.uid, product }));
+      toast.success(`${product.name} added to wishlist`);
+    }
+  };
   if (loading) {
     return (
       <div className="flex items-center justify-center h-48">
@@ -58,9 +74,6 @@ export default function TrendingProducts() {
       </div>
     );
   }
-
-  // Add debug information
-  console.log("Trending Products:", trendingProducts);
 
   return (
     <section className="container mx-auto px-2 py-8 lg:px-0">
@@ -84,15 +97,12 @@ export default function TrendingProducts() {
                     title={product.name}
                     link={`/product/${product.id}`}
                     overlay={false}
+                    isInWishlist={wishlist.some(
+                      (item) => item.id === product.id
+                    )}
+                    onWishlistToggle={() => handleWishlistToggle(product)}
                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                   />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-2 top-2 h-8 w-8 rounded-full bg-white/80 hover:bg-white"
-                  >
-                    <Heart className="h-4 w-4" />
-                  </Button>
                 </div>
 
                 <div className="pt-4 pb-2 flex justify-between">
@@ -116,7 +126,7 @@ export default function TrendingProducts() {
                         onClick={() => handleremoveFromCartAndSave(product.id)}
                         variant="outline"
                         size="sm"
-                        className="flex items-center rounded-full border-2 border-gray-700"
+                        className="flex items-center text-xs rounded-full border border-gray-700"
                       >
                         Remove from Cart
                       </Button>
@@ -125,9 +135,10 @@ export default function TrendingProducts() {
                         onClick={() => handleAddToCart(product)}
                         variant="outline"
                         size="sm"
-                        className="flex items-center rounded-full border-2 border-gray-700"
+                        className="flex items-center text-xs rounded-full border border-gray-700"
                       >
-                        <ShoppingCart className="h-4 w-4" />
+                        <ShoppingCart className="h-6 w-6" />
+                        Add to Cart
                       </Button>
                     )
                   ) : (
@@ -137,7 +148,7 @@ export default function TrendingProducts() {
                       }
                       variant="outline"
                       size="sm"
-                      className="flex items-center text-xs rounded-full border border-gray-700" njjuu
+                      className="flex items-center text-xs rounded-full border border-gray-700"
                     >
                       <ShoppingCart className="h-4 w-4" />
                       Add to Cart

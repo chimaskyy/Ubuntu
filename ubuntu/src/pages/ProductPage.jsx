@@ -26,23 +26,23 @@ function ProductPage() {
   const { items } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
- const isInWishlist = wishlist.some((item) => item.id === product?.id);
+//  const isInWishlist = wishlist.some((item) => item.id === product?.id);
 
- const handleAddToWishlist = () => {
-   if (user) {
-     dispatch(addToWishlist({ userId: user.uid, product }));
-   } else {
-     toast.error("Please log in to add items to your wishlist.");
-   }
- };
+//  const handleAddToWishlist = () => {
+//    if (user) {
+//      dispatch(addToWishlist({ userId: user.uid, product }));
+//    } else {
+//      toast.error("Please log in to add items to your wishlist.");
+//    }
+//  };
 
- const handleRemoveFromWishlist = () => {
-   if (user) {
-     dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
-   } else {
-     toast.error("Please log in to remove items from your wishlist.");
-   }
- };
+//  const handleRemoveFromWishlist = () => {
+//    if (user) {
+//      dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
+//    } else {
+//      toast.error("Please log in to remove items from your wishlist.");
+//    }
+//  };
   useEffect(() => {
     if (!product || product.id !== id) {
       dispatch(fetchProductById(id));
@@ -270,28 +270,37 @@ function ProductPage() {
                 Add to Cart
               </Button>
             )}
-            <Button className="flex space-x-4 mb-8 mt-8">
-              {user ? (
-                isInWishlist ? (
-                  <Heart
-                    onClick={handleRemoveFromWishlist}
-                    className="bg-red-500 text-white hover:bg-red-600"
-                  >
-                    Remove from Wishlist
-                  </Heart>
-                ) : (
-                  <Heart
-                    onClick={handleAddToWishlist}
-                    className="bg-blue-500 text-white hover:bg-blue-600"
-                  >
-                    Add to Wishlist
-                  </Heart>
-                )
-              ) : (
-                <p className="text-gray-600">
-                  Please log in to manage your wishlist.
-                </p>
-              )}
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => {
+                if (!user) {
+                  toast.error("Please login to add items to wishlist");
+                  return;
+                }
+                const isInWishlist = wishlist.some(
+                  (item) => item.id === product.id
+                );
+                if (isInWishlist) {
+                  dispatch(
+                    removeFromWishlist({
+                      userId: user.uid,
+                      productId: product.id,
+                    })
+                  );
+                } else {
+                  dispatch(addToWishlist({ userId: user.uid, product }));
+                }
+              }}
+            >
+              <Heart
+                className={cn(
+                  "w-5 h-5",
+                  wishlist.some((item) => item.id === product.id)
+                    ? "fill-red-500 text-red-500"
+                    : ""
+                )}
+              />
             </Button>
             <Button variant="outline" size="icon">
               <Share2 className="w-5 h-5" />
