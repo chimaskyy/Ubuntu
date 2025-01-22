@@ -63,8 +63,8 @@ export default function TrendingProducts() {
   console.log("Trending Products:", trendingProducts);
 
   return (
-    <section className="container mx-auto px-2 py-8">
-      <div className="max-w-7xl mx-auto lg:px-2">
+    <section className="container mx-auto px-2 py-8 lg:px-0">
+      <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
           Trending Products
         </h2>

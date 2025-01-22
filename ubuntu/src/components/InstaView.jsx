@@ -72,24 +72,20 @@ function InstagramFeatures() {
   ];
 
   return (
-    <div className="container mx-auto px-2 py-8">
+    <div className="container mx-auto px-2 py-8 lg:px-0">
       {/* Instagram Stories Section */}
-      <div className="mb-16">
+      <div className="mb-16 max-w-7xl mx-auto">
         <h2 className="text-center text-2xl font-medium mb-8">
           Our Instagram Stories
         </h2>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 ">
           {instagramPosts.map((post) => (
-            <div
-              key={post.id}
-              className=" overflow-hidden relative group"
-            >
+            <div key={post.id} className=" overflow-hidden relative group">
               <a href={post.url} target="_blank" rel="noreferrer">
                 <img
                   src={post.image}
                   alt={post.alt}
-                 
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">

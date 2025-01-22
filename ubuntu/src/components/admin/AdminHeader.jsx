@@ -1,7 +1,8 @@
 import { logoutUser } from "@/reducers/authSlice";
-import { LogOut, Search, User } from "lucide-react";
+import { LayoutDashboard, LogOut, Search, Store, User } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "../ui/button";
 
 function AdminHeader () {
   const dispatch = useDispatch();
@@ -24,13 +25,22 @@ function AdminHeader () {
           height={40}
           className="rounded-full bg-gray-800"
         /> */}
+        <Link to="/">
+          <Button size="lg" className="lg:inline-flex">
+            <Store className="h-5 w-5"/> 
+            Go To Shop
+          </Button>
+        </Link>
         <div className="rounded-full bg-gray-900">
           <button className="text-gray-400 hover:text-white p-2">
             <User className="w-6 h-6" />
           </button>
         </div>
 
-        <button onClick={handleLogout} className="text-red-600 font-bold text-2xl px-6 py-2 rounded-lg">
+        <button
+          onClick={handleLogout}
+          className="text-red-600 font-bold text-2xl px-6 py-2 rounded-lg"
+        >
           <LogOut className="w-6 h-6" />
         </button>
       </div>
