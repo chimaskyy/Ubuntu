@@ -21,7 +21,7 @@ function ProfileSidebar({ user, onLogout }) {
         </div>
         <div className="mt-6 space-y-2">
           <Button variant="ghost" className="w-full justify-start" asChild>
-            <Link to="/profile/orders">
+            <Link to={`/orders/${user.uid}`}>
               <Package className="mr-2 h-4 w-4" />
               My Orders
             </Link>

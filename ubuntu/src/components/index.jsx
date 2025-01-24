@@ -10,5 +10,5 @@ import ProductGrid from './ProductGrid';
 import Trending from './Trending';
 import SignUp from './forms/SignUp';
 import Login from './forms/Login';
-
-export {SignUp, Login, AboutSection, Hero, Footer, Header, CatgoryNav, InstagramFeatures, FeaturedCategories, NewArrivals, ProductGrid, Trending};
+import GetFeatured from './GetFeatured';
+export {SignUp, Login,GetFeatured, AboutSection, Hero, Footer, Header, CatgoryNav, InstagramFeatures, FeaturedCategories, NewArrivals, ProductGrid, Trending};

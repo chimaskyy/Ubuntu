@@ -60,7 +60,7 @@ export default function CheckoutPage() {
     if (success) {
       dispatch(clearCartAndSave(user.uid));
       toast.success("Order placed successfully!");
-      navigate("/orders");
+      navigate(`/orders/${user.uid}`);
     }
   };
 

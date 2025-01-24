@@ -120,38 +120,6 @@ export default function Header() {
           </div>
 
           <div className="flex items-center pr-6 space-x-6">
-            {user ? (
-              <>
-                {user && user.role && user.role.includes("admin") && (
-                  <Link to="/admin">
-                    <Button size="lg" className="lg:inline-flex">
-                      <LayoutDashboard className="h-5 w-5" />
-                      Admin Dashboard
-                    </Button>
-                  </Link>
-                )}
-                <Link to="/profile">
-                  <button size="icon" className="lg:inline-flex">
-                    <User className="h-5 w-5" />
-                    <span className="sr-only">Account</span>
-                  </button>
-                </Link>
-              </>
-            ) : (
-              <Link to="/login">
-                <button size="icon" className="lg:inline-flex">
-                  {/* <User className="h-5 w-5" /> */}
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center text-xs rounded-full border border-gray-700"
-                  >
-                    Sign In
-                  </Button>
-                  <span className="sr-only">Create Account</span>
-                </button>
-              </Link>
-            )}
             <Link to="/my-wishlist">
               <button size="icon">
                 <Heart className="h-5 w-5" />
@@ -167,6 +135,38 @@ export default function Header() {
                 <span className="sr-only">Cart</span>
               </button>
             </Link>
+            {user ? (
+              <>
+                <Link to="/profile">
+                  <button size="icon" className="lg:inline-flex">
+                    <User className="h-5 w-5" />
+                    <span className="sr-only">Account</span>
+                  </button>
+                </Link>
+                {user && user.role && user.role.includes("admin") && (
+                  <Link to="/admin">
+                    <Button size="lg" className="lg:inline-flex">
+                      {/* <LayoutDashboard className="h-5 w-5" /> */}
+                      Admin Dashboard
+                    </Button>
+                  </Link>
+                )}
+              </>
+            ) : (
+              <Link to="/login">
+                {/* <button size="icon" className="lg:inline-flex"> */}
+                {/* <User className="h-5 w-5" /> */}
+                <Button
+                  // variant="outline"
+                  size="sm"
+                  className="flex items-center text-xs rounded-full border border-gray-700"
+                >
+                  Sign In
+                </Button>
+                <span className="sr-only">Create Account</span>
+                {/* </button> */}
+              </Link>
+            )}
           </div>
         </div>
 

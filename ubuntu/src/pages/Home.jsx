@@ -6,7 +6,9 @@ import {
   NewArrivals,
   InstagramFeatures,
   CatgoryNav,
+  GetFeatured,
 } from "../components";
+import WhatsAppButton from "@/components/ui/whatsAppButton";
 export default function HomePage() {
   return (
     <>
@@ -14,10 +16,12 @@ export default function HomePage() {
       <main>
         <Hero />
         <AboutSection />
+        <WhatsAppButton />
         <FeaturedCategories />
         <Trending />
         {/* <Category2/> */}
         <NewArrivals />
+        <GetFeatured />
         <InstagramFeatures />
       </main>
       {/* </body> */}

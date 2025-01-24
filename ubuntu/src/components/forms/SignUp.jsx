@@ -108,7 +108,7 @@ const SignUp = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="flex min-h-screen">
         {/* Left side - Illustration */}
-        <div className="hidden lg:flex lg:w-1/2 bg-white items-center justify-center p-12">
+        {/* <div className="hidden lg:flex lg:w-1/2 bg-white items-center justify-center p-12">
           <div className="max-w-lg">
             <ShoppingBag className="h-12 w-12 text-primary mb-8" />
             <h1 className="text-4xl font-bold text-gray-900 mb-6">
@@ -124,7 +124,7 @@ const SignUp = () => {
               className="rounded-2xl shadow-2xl"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Right side - Form */}
         <div className="flex-1 flex items-center justify-center p-6 sm:p-12 lg:p-24">
