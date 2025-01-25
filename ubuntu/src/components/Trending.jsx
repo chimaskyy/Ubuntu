@@ -76,7 +76,7 @@ const { wishlist } = useSelector((state) => state.wishlist);
   }
 
   return (
-    <section className="container mx-auto px-2 py-8 lg:px-0">
+    <section className="container mx-auto px-2 py-8 lg:px-2">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
           Trending Products

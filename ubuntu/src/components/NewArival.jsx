@@ -70,7 +70,7 @@ export function NewArrivals() {
   }, [dispatch, products.length]);
 
   return (
-    <section className="container mx-auto px-2 py-16 lg:px-0">
+    <section className="container mx-auto px-2 py-16 lg:px-2">
       <Toaster />
       <div className="max-w-7xl mx-auto">
         <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
@@ -109,19 +109,23 @@ export function NewArrivals() {
                         onClick={() => handleRemoveFromCart(product.id)}
                         variant="outline"
                         size="sm"
-                        className="flex items-center text-xs rounded-full border border-gray-700"
+                        className="mr-3 flex items-center text-xs rounded-full border border-gray-700"
                       >
-                        Remove from Cart
+                        <span className="hidden md:hidden lg:block ">
+                          Remove from Cart
+                        </span>
                       </Button>
                     ) : (
                       <Button
                         onClick={() => handleAddToCart(product)}
                         variant="outline"
                         size="sm"
-                        className="flex items-center text-xs rounded-full border border-gray-700"
+                        className="mr-3 flex items-center text-xs rounded-full border border-gray-700"
                       >
                         <ShoppingCart className="h-6 w-6" />
-                        Add to Cart
+                        <span className="hidden md:hidden lg:block">
+                          Add to cart
+                        </span>
                       </Button>
                     )
                   ) : (
@@ -131,10 +135,13 @@ export function NewArrivals() {
                       }
                       variant="outline"
                       size="sm"
-                      className="flex items-center text-xs rounded-full border border-gray-700"
+                      className="mr-3 flex items-center text-xs rounded-full border border-gray-700"
                     >
                       <ShoppingCart className="h-4 w-4" />
-                      Add to Cart
+                      <span className="hidden md:hidden lg:block">
+                        Add to Cart
+                      </span>{" "}
+                     
                     </Button>
                   )}
                 </div>

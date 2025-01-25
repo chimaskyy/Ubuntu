@@ -72,7 +72,7 @@ function InstagramFeatures() {
   ];
 
   return (
-    <div className="container mx-auto px-2 py-8 lg:px-0">
+    <div className="container mx-auto px-2 py-8 lg:px-2">
       {/* Instagram Stories Section */}
       <div className="mb-16 max-w-7xl mx-auto">
         <h2 className="text-center text-2xl font-medium mb-8">

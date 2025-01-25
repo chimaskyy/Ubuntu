@@ -111,8 +111,8 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
-// Add this to your productSlice.js
-// Add this to your productSlice.js
+
+
 export const fetchTrendingProducts = createAsyncThunk(
   "product/fetchTrendingProducts",
   async (_, thunkAPI) => {
@@ -167,7 +167,7 @@ export const fetchTrendingProducts = createAsyncThunk(
           orderCount: productFrequency.get(doc.id) || 0,
         }));
       console.log("Trending Products:", products);
-
+        // change to not sort, but just display the products randomly
       // Sort products by their order frequency
       return products.sort((a, b) => b.orderCount - a.orderCount);
     } catch (error) {
