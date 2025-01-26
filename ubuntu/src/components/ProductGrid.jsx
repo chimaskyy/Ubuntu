@@ -248,3 +248,96 @@ const ProductGrid = ({
 };
 
 export default ProductGrid;
+
+
+// Previous imports remain the same...
+
+// const ProductGrid = ({ title, description, category, showFilters = true, categories = [
+//   { value: "all", label: "All" },
+//   { value: "men", label: "Men" },
+//   { value: "kids", label: "Kids" },
+//   { value: "footings", label: "Footings" },
+//   { value: "accessories", label: "Accessories" },
+//   { value: "unisex shorts", label: "Unisex Shorts" },
+//   { value: "his & hers", label: "His & Hers" },
+// ]}) => {
+//   const dispatch = useDispatch();
+//   const { products, loading } = useSelector((state) => state.products);
+//   const { user } = useSelector((state) => state.user);
+//   const { items } = useSelector((state) => state.cart);
+//   const { wishlist } = useSelector((state) => state.wishlist);
+//   const [selectedCategory, setSelectedCategory] = useState(category || "all");
+//   const [sortBy, setSortBy] = useState("newest"); // Set default sort
+
+//   useEffect(() => {
+//     if (user && !items.length) {
+//       dispatch(fetchCart(user.uid));
+//     }
+//   }, [user, dispatch, items.length]);
+
+//   useEffect(() => {
+//     setSelectedCategory(category || "all");
+//   }, [category]);
+
+//   // Fetch products whenever filters change
+//   useEffect(() => {
+//     const fetchFilteredProducts = () => {
+//       dispatch(fetchProducts({
+//         category: selectedCategory,
+//         sortBy
+//       }));
+//     };
+
+//     fetchFilteredProducts();
+//   }, [selectedCategory, sortBy, dispatch]);
+
+//   // Rest of your component code remains the same...
+
+//   return (
+//     <div className="min-h-screen bg-white">
+//       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+//         {/* Title and description section remains the same */}
+
+//         {showFilters && (
+//           <div className="flex flex-wrap gap-4 items-center justify-between mb-8">
+//             {!category && (
+//               <Select
+//                 value={selectedCategory}
+//                 onValueChange={(value) => setSelectedCategory(value)}
+//               >
+//                 <SelectTrigger className="w-[140px]">
+//                   <SelectValue placeholder="Filter by category" />
+//                 </SelectTrigger>
+//                 <SelectContent>
+//                   {categories.map((cat) => (
+//                     <SelectItem key={cat.value} value={cat.value}>
+//                       {cat.label}
+//                     </SelectItem>
+//                   ))}
+//                 </SelectContent>
+//               </Select>
+//             )}
+//             <Select 
+//               value={sortBy}
+//               onValueChange={(value) => setSortBy(value)}
+//             >
+//               <SelectTrigger className="w-[140px]">
+//                 <SelectValue placeholder="Sort By" />
+//               </SelectTrigger>
+//               <SelectContent>
+//                 <SelectItem value="newest">Newest</SelectItem>
+//                 <SelectItem value="oldest">Oldest</SelectItem>
+//                 <SelectItem value="low-to-high">Price: Low to High</SelectItem>
+//                 <SelectItem value="high-to-low">Price: High to Low</SelectItem>
+//               </SelectContent>
+//             </Select>
+//           </div>
+//         )}
+
+//         {/* Rest of your component code remains the same */}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ProductGrid;
