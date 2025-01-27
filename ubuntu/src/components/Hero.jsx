@@ -53,7 +53,7 @@ function Hero() {
             <div className=" md:w-1/3 md:pt-8 text-right">
               <Link
                 to="/head-wear"
-                className="text-xl md:text-2xl lg:text-2xl font-sans font-extrabold text-white/90"
+                className="text-sm ml-8 md:text-2xl lg:text-2xl font-sans font-extrabold text-white/90"
               >
                 HEAD WEAR
               </Link>
