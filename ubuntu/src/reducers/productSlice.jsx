@@ -71,35 +71,35 @@ export const fetchProducts = createAsyncThunk(
     try {
 
       const productsRef = collection(db, "products");
-      let queryConstraints = [];
+      let queryRef = productsRef;
 
       // If a category is provided, filter by category
       if (category && category !== "all") {
-        queryConstraints.push(where("category", "==", category));
+        queryRef = query(queryRef, where("category", "==", category));
       }  
 
       //apply sorting based on the sortBy parameter
-     
+      if (sortBy){
         switch (sortBy) {
           case "low-to-high":
-            queryConstraints.push(orderBy("price", "asc"));
+            queryRef = query(queryRef, orderBy("price", "asc"));
             break;
           case "high-to-low":
-            queryConstraints.push(orderBy("price", "desc"));
+            queryRef = query(queryRef, orderBy("price", "desc"));
             break;
           case "newest":
-            queryConstraints.push(orderBy("createdAt", "desc"));
+            queryRef = query(queryRef, orderBy("createdAt", "desc"));
             break;
           case "oldest":
-            queryConstraints.push(orderBy("createdAt", "asc"));
+            queryRef = query(queryRef, orderBy("createdAt", "asc"));
             break;
           default:
-            queryConstraints.push(orderBy("createdAt", "desc"));
+            queryRef = query(queryRef, orderBy("createdAt", "desc"));
         }
-      
+      }
   
       // Get the products based on query
-     const queryConstraints = query(productsRef, ...queryConstraints);
+     const querySnapshot = await getDocs(queryRef);
      const products = querySnapshot.docs.map((doc) => ({
        id: doc.id,
        ...doc.data(),
@@ -303,52 +303,3 @@ const productSlice = createSlice({
 });
 export const { sortByPrice, sortByDateAdded, filterByCategory } = productSlice.actions;
 export default productSlice.reducer;
-
-
-// export const fetchProducts = createAsyncThunk(
-//   "product/fetchProducts",
-//   async ({ category = "all", sortBy = "" } = {}, thunkAPI) => {
-//     try {
-//       const productsRef = collection(db, "products");
-//       let queryConstraints = [];
-
-//       // Add category filter if specified
-//       if (category && category !== "all") {
-//         queryConstraints.push(where("category", "==", category));
-//       }
-
-//       // Add sorting
-//       switch (sortBy) {
-//         case "low-to-high":
-//           queryConstraints.push(orderBy("price", "asc"));
-//           break;
-//         case "high-to-low":
-//           queryConstraints.push(orderBy("price", "desc"));
-//           break;
-//         case "newest":
-//           queryConstraints.push(orderBy("createdAt", "desc"));
-//           break;
-//         case "oldest":
-//           queryConstraints.push(orderBy("createdAt", "asc"));
-//           break;
-//         default:
-//           // Default sorting by createdAt desc if no sort specified
-//           queryConstraints.push(orderBy("createdAt", "desc"));
-//       }
-
-//       // Create query with all constraints
-//       const queryConstraints = query(productsRef, ...queryConstraints);
-//       const querySnapshot = await getDocs(queryConstraints);
-
-//       const products = querySnapshot.docs.map((doc) => ({
-//         id: doc.id,
-//         ...doc.data(),
-//       }));
-
-//       return products;
-//     } catch (error) {
-//       console.error("Error fetching products:", error);
-//       return thunkAPI.rejectWithValue(error.message);
-//     }
-//   }
-// );
