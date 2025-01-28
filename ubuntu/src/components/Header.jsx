@@ -119,10 +119,10 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="flex items-center pr-6 space-x-6">
+          <div className="flex items-center pr-1 space-x-6">
             <Link to="/my-wishlist">
               <button size="icon">
-                <Heart className="h-5 w-5" />
+                <Heart className="h-8 w-8" />
                 <span className="sr-only">Wishlist</span>
               </button>
             </Link>
@@ -145,9 +145,12 @@ export default function Header() {
                 </Link>
                 {user && user.role && user.role.includes("admin") && (
                   <Link to="/admin">
-                    <Button size="lg" className="lg:inline-flex">
-                      {/* <LayoutDashboard className="h-5 w-5" /> */}
-                      Admin Dashboard
+                    <Button
+                      size="sm"
+                      className=" bg-gray-900 text-white p-4 rounded-lg shadow-lg hover:bg-gray-800 hover:text-gray-100"
+                    >
+                      <LayoutDashboard className="h-5 w-5" />
+                      Admin 
                     </Button>
                   </Link>
                 )}
@@ -157,9 +160,9 @@ export default function Header() {
                 {/* <button size="icon" className="lg:inline-flex"> */}
                 {/* <User className="h-5 w-5" /> */}
                 <Button
-                  // variant="outline"
+                  variant="outline"
                   size="sm"
-                  className="flex items-center text-xs rounded-full border border-gray-700"
+                  className=" bg-gray-900 text-white p-4 rounded-lg shadow-lg hover:bg-gray-800 hover:text-gray-100"
                 >
                   Sign In
                 </Button>

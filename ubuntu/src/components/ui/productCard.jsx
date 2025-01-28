@@ -6,7 +6,7 @@ import ImageCard from "./ImageCard";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCartAndSave, removeFromCartAndSave } from "@/reducers/cartSlice";
 import { addToWishlist, removeFromWishlist } from "@/reducers/wishListSlice";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
@@ -42,6 +42,7 @@ const ProductCard = ({ product }) => {
 
   return (
     <div className="relative group overflow-hidden">
+      <Toaster position="top-right" reverseOrder={false} />
       <ImageCard
         image={product.imageUrls?.[0]}
         link={`/product/${product.id}`}
@@ -56,21 +57,47 @@ const ProductCard = ({ product }) => {
         >
           {product.name}
         </Link>
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-between">
           <p className="text-xs font-semibold text-gray-500">
             ₦{product.price.toLocaleString()}.00
           </p>
-          <Button
-            onClick={isInCart ? handleRemoveFromCart : handleAddToCart}
-            variant="outline"
-            size="sm"
-            className="flex items-center text-xs rounded-full border border-gray-700"
-          >
-            <ShoppingCart className="h-4 w-4" />
-            <span className="hidden lg:block ml-2">
-              {isInCart ? "Remove from Cart" : "Add to Cart"}
-            </span>
-          </Button>
+          <div className="flex items-center space-x-2 ml-6">
+            {/* Remove from Cart button - always visible if in cart */}
+            {isInCart && (
+              <Button
+                onClick={handleRemoveFromCart}
+                variant="outline"
+                size="sm"
+                className="flex items-center text-xs rounded-full border border-gray-700 lg:mr-5"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                <span className="">Remove</span>
+              </Button>
+            )}
+            {/* Add to Cart button - visible only on large screens */}
+            {!isInCart && (
+              <Button
+                onClick={handleAddToCart}
+                variant="outline"
+                size="sm"
+                className="hidden mr-5 lg:flex items-center text-xs rounded-full border border-gray-700"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                <span>Add to cart</span>
+              </Button>
+            )}
+            {/* Cart Icon - visible only on small and medium screens */}
+            {!isInCart && (
+              <Button
+                onClick={handleAddToCart}
+                variant="outline"
+                size="sm"
+                className="lg:hidden  flex items-center text-xs rounded-full border border-gray-700"
+              >
+                <ShoppingCart className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     </div>
