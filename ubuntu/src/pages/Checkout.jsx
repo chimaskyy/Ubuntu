@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +18,7 @@ import { createOrderFromCart } from "@/reducers/orderSlice";
 import { clearCartAndSave } from "@/reducers/cartSlice";
 import useAuth from "@/hooks/useAuth";
 import { nigerianStates } from "@/Data/Data";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function CheckoutPage() {
   const user = useAuth();
@@ -40,6 +39,7 @@ export default function CheckoutPage() {
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [country, setCountry] = useState("Nigeria");
+  const [transferProof, setTransferProof] = useState(null);
 
   const handlePaymentSuccess = async () => {
     const shippingDetails = {
@@ -51,6 +51,7 @@ export default function CheckoutPage() {
       state,
       zip: zipCode,
       country,
+      transferProof,
     };
 
     const success = await dispatch(
@@ -215,18 +216,45 @@ export default function CheckoutPage() {
                 onValueChange={setPaymentMethod}
               >
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="paypal" id="paypal" />
-                  <Label htmlFor="paypal">PayStack</Label>
+                  <RadioGroupItem value="paystack" id="paystack" />
+                  <Label htmlFor="paystack">PayStack</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="transfer" id="transfer" />
+                  <Label htmlFor="transfer">Bank Transfer</Label>
                 </div>
               </RadioGroup>
             </div>
+             {paymentMethod === "transfer" && (
+              <div className="space-y-4">
+                <Card>
+                  <CardContent className="pt-6">
+                    <input
+                      id="transferEvidence"
+                      type="file"
+                      accept="image/*,.pdf"
+                      required
+                      onChange={(e) =>
+                        setTransferProof(e.target.files[0] || null)
+                      }
+                      className="mt-1"
+                    />
+                    <p className="text-sm text-gray-500 mt-1">
+                      Please upload an image or PDF of your transfer receipt.
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
 
             {/* Order Summary */}
             <div>
               <div>Order Summary</div>
               <div className="font-semibold text-lg">
                 Total Amount:{" "}
-                <span className="text-green-600">₦{total.toLocaleString()}.00</span>
+                <span className="text-green-600">
+                  ₦{total.toLocaleString()}.00
+                </span>
               </div>
             </div>
 

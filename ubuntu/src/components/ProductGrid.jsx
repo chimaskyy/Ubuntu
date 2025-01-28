@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { Heart, ShoppingCart } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -7,19 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { fetchProducts } from "@/reducers/productSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import {
-  addToCartAndSave,
-  fetchCart,
-  removeFromCartAndSave,
-} from "@/reducers/cartSlice";
-import { Link } from "react-router-dom";
-import ImageCard from "./ui/ImageCard";
-import { addToWishlist, removeFromWishlist } from "@/reducers/wishListSlice";
+import { useEffect, useState, useMemo } from "react";
+import ProductCard from "./ui/productCard";
+import { fetchCart } from "@/reducers/cartSlice";
 
 const ProductGrid = ({
   title,
@@ -37,12 +28,20 @@ const ProductGrid = ({
   ],
 }) => {
   const dispatch = useDispatch();
-  const { products, loading } = useSelector((state) => state.products);
+  const { products: fetchedProducts, loading } = useSelector(
+    (state) => state.products
+  );
   const { user } = useSelector((state) => state.user);
   const { items } = useSelector((state) => state.cart);
-  const { wishlist } = useSelector((state) => state.wishlist);
-  const [selectedCategory, setSelectedCategory] = useState(category || "");
+  const [selectedCategory, setSelectedCategory] = useState(category || "all");
   const [sortBy, setSortBy] = useState("");
+
+  const [allProducts, setAllProducts] = useState([]);
+
+  // Fetch products and cart on component mount
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   useEffect(() => {
     if (user && !items.length) {
@@ -50,55 +49,47 @@ const ProductGrid = ({
     }
   }, [user, dispatch, items.length]);
 
+  // Update local state when products are fetched
   useEffect(() => {
-    setSelectedCategory(category || "");
-  }, [category]);
+    setAllProducts(fetchedProducts);
+  }, [fetchedProducts]);
 
-  useEffect(() => {
-    dispatch(
-      fetchProducts({
-        category: selectedCategory,
-        sortBy,
-      })
-    );
-  }, [selectedCategory, sortBy, dispatch]);
-
-  const handleAddToCart = (product) => {
-    if (!product?.price) {
-      toast.error("Product data is invalid.");
-      return;
-    }
-    if (user) {
-      dispatch(addToCartAndSave(user.uid, product));
-      toast.success(`${product.name} added to cart`);
-    } else {
-      toast.error("Please login to add items to the cart.");
-    }
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value);
   };
 
-  const handleremoveFromCartAndSave = (productId) => {
-    if (!user) {
-      toast.error("Please log in to modify your cart.");
-      return;
-    }
-    dispatch(removeFromCartAndSave(user.uid, productId));
-    toast.success("Item removed from cart");
+  const handleSortByChange = (value) => {
+    setSortBy(value);
   };
 
-  const handleWishlistToggle = (product) => {
-    if (!user) {
-      toast.error("Please login to manage your wishlist.");
-      return;
+  // Filter and sort products
+  const filteredAndSortedProducts = useMemo(() => {
+    let filtered = allProducts;
+
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(
+        (product) =>
+          product.category.toLowerCase() === selectedCategory.toLowerCase()
+      );
     }
-    const isInWishlist = wishlist.some((item) => item.id === product.id);
-    if (isInWishlist) {
-      dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
-      toast.success(`${product.name} removed from wishlist`);
-    } else {
-      dispatch(addToWishlist({ userId: user.uid, product }));
-      toast.success(`${product.name} added to wishlist`);
+
+    if (sortBy) {
+      filtered = [...filtered].sort((a, b) => {
+        if (sortBy === "newest") {
+          return new Date(b.createdAt) - new Date(a.createdAt);
+        } else if (sortBy === "oldest") {
+          return new Date(a.createdAt) - new Date(b.createdAt);
+        } else if (sortBy === "low-to-high") {
+          return a.price - b.price;
+        } else if (sortBy === "high-to-low") {
+          return b.price - a.price;
+        }
+        return 0;
+      });
     }
-  };
+
+    return filtered;
+  }, [allProducts, selectedCategory, sortBy]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -127,10 +118,10 @@ const ProductGrid = ({
             {!category && (
               <Select
                 value={selectedCategory}
-                onValueChange={setSelectedCategory}
+                onValueChange={handleCategoryChange}
               >
                 <SelectTrigger className="w-[140px]">
-                  <SelectValue placeholder="Filter by category" />
+                  <SelectValue placeholder="Filter" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((cat) => (
@@ -141,7 +132,7 @@ const ProductGrid = ({
                 </SelectContent>
               </Select>
             )}
-            <Select onValueChange={setSortBy}>
+            <Select value={sortBy} onValueChange={handleSortByChange}>
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Sort By" />
               </SelectTrigger>
@@ -155,7 +146,7 @@ const ProductGrid = ({
           </div>
         )}
 
-        {products.length === 0 ? (
+        {filteredAndSortedProducts.length === 0 ? (
           <div className="text-center mt-12">
             <h2 className="text-lg font-bold text-gray-900">
               Oops! No products are available in the &quot;{selectedCategory}
@@ -168,78 +159,9 @@ const ProductGrid = ({
           </div>
         ) : (
           <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
-            {products.map((product) => {
-              const isInWishlist = wishlist.some(
-                (item) => item.id === product.id
-              );
-              return (
-                <div
-                  key={product.id}
-                  className="relative group overflow-hidden"
-                >
-                  <ImageCard
-                    image={product.imageUrls?.[0]}
-                    link={`/product/${product.id}`}
-                    product={product}
-                    isInWishlist={isInWishlist}
-                    onWishlistToggle={() => handleWishlistToggle(product)}
-                  />
-                  <div className="mt-4">
-                    <div className="flex flex-col gap-2">
-                      <Link
-                        to={`/product/${product.id}`}
-                        className="text-sm font-medium text-gray-900 hover:text-gray-700"
-                      >
-                        {product.name}
-                      </Link>
-                      <div className="flex items-center justify-between w-full">
-                        <p className="text-xs font-semibold text-gray-500">
-                          ₦{product.price.toLocaleString()}.00
-                        </p>
-                        {user ? (
-                          items.some((item) => item.id === product.id) ? (
-                            <Button
-                              onClick={() =>
-                                handleremoveFromCartAndSave(product.id)
-                              }
-                              variant="outline"
-                              size="sm"
-                              className="flex items-center text-xs rounded-full border border-gray-700"
-                            >
-                              Remove from Cart
-                            </Button>
-                          ) : (
-                            <Button
-                              onClick={() => handleAddToCart(product)}
-                              variant="outline"
-                              size="sm"
-                              className="flex items-center text-xs rounded-full border border-gray-700"
-                            >
-                              <ShoppingCart className="h-4 w-4" />
-                              Add to Cart
-                            </Button>
-                          )
-                        ) : (
-                          <Button
-                            onClick={() =>
-                              toast.error(
-                                "Please login to add items to the cart."
-                              )
-                            }
-                            variant="outline"
-                            size="sm"
-                            className="flex items-center text-xs rounded-full border border-gray-700"
-                          >
-                            <ShoppingCart className="h-4 w-4" />
-                            Add to Cart
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {filteredAndSortedProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         )}
       </div>

@@ -111,7 +111,7 @@ export function NewArrivals() {
                         size="sm"
                         className="mr-3 flex items-center text-xs rounded-full border border-gray-700"
                       >
-                        <span className="hidden md:hidden lg:block ">
+                        <span className=" md:hidden lg:block ">
                           Remove from Cart
                         </span>
                       </Button>
