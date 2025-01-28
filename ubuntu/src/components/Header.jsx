@@ -126,7 +126,7 @@ export default function Header() {
                 <span className="sr-only">Wishlist</span>
               </button>
             </Link>
-            <Link to="/cart">
+            <Link to={`/cart/${user?.uid}`}>
               <button size="icon" className="relative">
                 <ShoppingCart className="h-8 w-8" />
                 <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">

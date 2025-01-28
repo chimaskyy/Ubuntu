@@ -76,7 +76,7 @@ function App() {
           <Route path="/footings" element={<Footings />} />
           <Route path="/his-hers" element={<Couple />} />
           <Route path="/product/:id" element={<ProductPage />} />
-          <Route path="/cart" element={<CartPage />} />
+          <Route path="/cart/:id" element={<CartPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/orders/:userId" element={<OrdersPage />} />
           <Route path="/my-wishlist" element={<WishlistPage />} />

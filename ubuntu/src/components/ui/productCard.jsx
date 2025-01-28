@@ -11,45 +11,32 @@ import toast from "react-hot-toast";
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
-  const { items } = useSelector((state) => state.cart);
+  const { items: cartItems } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
+  const isInCart = cartItems.some((item) => item.id === product.id);
   const isInWishlist = wishlist.some((item) => item.id === product.id);
-  const isInCart = items.some((item) => item.id === product.id);
 
   const handleAddToCart = () => {
-    if (!product?.price) {
-      toast.error("Product data is invalid.");
-      return;
-    }
-    if (user) {
-      dispatch(addToCartAndSave(user.uid, product));
-      toast.success(`${product.name} added to cart`);
-    } else {
-      toast.error("Please login to add items to the cart.");
-    }
+    if (!user) return toast.error("Please log in to add items to your cart.");
+    dispatch(addToCartAndSave(user.uid, product));
+    toast.success(`${product.name} added to cart.`);
   };
 
   const handleRemoveFromCart = () => {
-    if (!user) {
-      toast.error("Please log in to modify your cart.");
-      return;
-    }
+    if (!user) return toast.error("Please log in to modify your cart.");
     dispatch(removeFromCartAndSave(user.uid, product.id));
-    toast.success("Item removed from cart");
+    toast.success(`${product.name} removed from cart.`);
   };
 
   const handleWishlistToggle = () => {
-    if (!user) {
-      toast.error("Please login to manage your wishlist.");
-      return;
-    }
+    if (!user) return toast.error("Please log in to manage your wishlist.");
     if (isInWishlist) {
       dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
-      toast.success(`${product.name} removed from wishlist`);
+      toast.success(`${product.name} removed from wishlist.`);
     } else {
       dispatch(addToWishlist({ userId: user.uid, product }));
-      toast.success(`${product.name} added to wishlist`);
+      toast.success(`${product.name} added to wishlist.`);
     }
   };
 
@@ -63,56 +50,27 @@ const ProductCard = ({ product }) => {
         onWishlistToggle={handleWishlistToggle}
       />
       <div className="mt-4">
-        <div className="flex flex-col gap-2">
-          <Link
-            to={`/product/${product.id}`}
-            className="text-sm font-medium text-gray-900 hover:text-gray-700"
+        <Link
+          to={`/product/${product.id}`}
+          className="text-sm font-medium text-gray-900 hover:text-gray-700"
+        >
+          {product.name}
+        </Link>
+        <div className="flex items-center justify-between mt-2">
+          <p className="text-xs font-semibold text-gray-500">
+            ₦{product.price.toLocaleString()}.00
+          </p>
+          <Button
+            onClick={isInCart ? handleRemoveFromCart : handleAddToCart}
+            variant="outline"
+            size="sm"
+            className="flex items-center text-xs rounded-full border border-gray-700"
           >
-            {product.name}
-          </Link>
-          <div className="flex items-center justify-between w-full">
-            <p className="text-xs font-semibold text-gray-500">
-              ₦{product.price.toLocaleString()}.00
-            </p>
-            {user ? (
-              isInCart ? (
-                <Button
-                  onClick={handleRemoveFromCart}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center text-xs rounded-full border border-gray-700"
-                >
-                  Remove from Cart
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleAddToCart}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center text-xs rounded-full border border-gray-700"
-                >
-                  <ShoppingCart className="h-4 w-4" />
-                  <span className="hidden md:hidden lg:block">
-                    Add to Cart
-                  </span>{" "}
-                </Button>
-              )
-            ) : (
-              <Button
-                onClick={() =>
-                  toast.error("Please login to add items to the cart.")
-                }
-                variant="outline"
-                size="sm"
-                className="flex items-center text-xs rounded-full border border-gray-700"
-              >
-                <ShoppingCart className="h-4 w-4" />
-                <span className="hidden md:hidden lg:block">
-                  Add to Cart
-                </span>{" "}
-              </Button>
-            )}
-          </div>
+            <ShoppingCart className="h-4 w-4" />
+            <span className="hidden lg:block ml-2">
+              {isInCart ? "Remove from Cart" : "Add to Cart"}
+            </span>
+          </Button>
         </div>
       </div>
     </div>
