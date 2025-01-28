@@ -15,6 +15,8 @@ const NewArrivals = () => {
     }
   }, [dispatch, products.length]);
 
+  const displayedProducts = products.slice(0, 8);
+
   return (
     <section className="container mx-auto px-2 py-16 lg:px-2">
       <div className="max-w-7xl mx-auto">
@@ -22,7 +24,7 @@ const NewArrivals = () => {
           New Arrivals
         </h2>
         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 lg:grid-cols-4">
-          {products.map((product) => (
+          {displayedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

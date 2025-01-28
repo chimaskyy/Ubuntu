@@ -6,11 +6,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 import { fetchProducts } from "@/reducers/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useMemo } from "react";
 import ProductCard from "./ui/productCard";
 import { fetchCart } from "@/reducers/cartSlice";
+import { Loader2 } from "lucide-react";
+
+const PRODUCTS_PER_PAGE = 12;
 
 const ProductGrid = ({
   title,
@@ -35,8 +39,9 @@ const ProductGrid = ({
   const { items } = useSelector((state) => state.cart);
   const [selectedCategory, setSelectedCategory] = useState(category || "all");
   const [sortBy, setSortBy] = useState("");
-
   const [allProducts, setAllProducts] = useState([]);
+  const [displayedProducts, setDisplayedProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch products and cart on component mount
   useEffect(() => {
@@ -56,10 +61,12 @@ const ProductGrid = ({
 
   const handleCategoryChange = (value) => {
     setSelectedCategory(value);
+    setCurrentPage(1); // Reset to first page when category changes
   };
 
   const handleSortByChange = (value) => {
     setSortBy(value);
+    setCurrentPage(1); // Reset to first page when sort changes
   };
 
   // Filter and sort products
@@ -91,8 +98,25 @@ const ProductGrid = ({
     return filtered;
   }, [allProducts, selectedCategory, sortBy]);
 
+  // Update displayed products when filtered products or page changes
+  useEffect(() => {
+    const endIndex = currentPage * PRODUCTS_PER_PAGE;
+    setDisplayedProducts(filteredAndSortedProducts.slice(0, endIndex));
+  }, [filteredAndSortedProducts, currentPage]);
+
+  const handleLoadMore = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  const hasMoreProducts =
+    displayedProducts.length < filteredAndSortedProducts.length;
+
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -158,11 +182,30 @@ const ProductGrid = ({
             </p>
           </div>
         ) : (
-          <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
-            {filteredAndSortedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <>
+            <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+              {displayedProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {hasMoreProducts && (
+              <div className="flex justify-center mt-8">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={handleLoadMore}
+                  className="min-w-[200px]"
+                >
+                  {loading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    "Load More"
+                  )}
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
