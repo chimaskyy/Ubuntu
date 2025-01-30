@@ -11,8 +11,16 @@ const saveToLocalStorage =(cart) => {
 //fetch cart from local storage
 const fetchFromLocalStorage = () => {
   const cart = localStorage.getItem("cart");
-  return cart ? JSON.parse(cart) : [];
+  try {
+    // Parse and return the cart, ensuring it's always an array
+    const parsedCart = JSON.parse(cart);
+    return Array.isArray(parsedCart) ? parsedCart : [];
+  } catch (e) {
+    // In case the JSON is corrupted or invalid, return an empty array
+    return [];
+  }
 };
+
 
 
 export const saveCart = createAsyncThunk(

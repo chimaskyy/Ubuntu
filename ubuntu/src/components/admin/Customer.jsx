@@ -19,17 +19,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Users as UsersIcon } from "lucide-react";
+import { usePagination } from "../../hooks/usePaginate";
+import  Pagination  from "../../components/ui/pagination";
+
+const USERS_PER_PAGE = 5;
 
 export default function CustomersContent() {
   const dispatch = useDispatch();
   const { users, status } = useSelector((state) => state.users);
-  const [filter, setFilter] = useState("all"); // all, customers, authenticated
+  const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
-  
 
   const filteredUsers = (users || []).filter((user) => {
     const matchesSearch =
@@ -46,13 +49,18 @@ export default function CustomersContent() {
     }
   });
 
-   const formatDate = (dateString) => {
-     return new Date(dateString).toLocaleDateString("en-US", {
-       year: "numeric",
-       month: "long",
-       day: "numeric",
-     });
-   };
+  const pagination = usePagination({
+    data: filteredUsers,
+    itemsPerPage: USERS_PER_PAGE,
+  });
+
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -70,11 +78,20 @@ export default function CustomersContent() {
           <Input
             placeholder="Search users..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              pagination.reset();
+            }}
             className="pl-10"
           />
         </div>
-        <Select value={filter} onValueChange={setFilter}>
+        <Select
+          value={filter}
+          onValueChange={(value) => {
+            setFilter(value);
+            pagination.reset();
+          }}
+        >
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Filter users" />
           </SelectTrigger>
@@ -104,14 +121,14 @@ export default function CustomersContent() {
                   Loading users...
                 </TableCell>
               </TableRow>
-            ) : filteredUsers.length === 0 ? (
+            ) : pagination.displayedItems.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={5} className="text-center py-10">
                   No users found
                 </TableCell>
               </TableRow>
             ) : (
-              filteredUsers.map((user) => (
+              pagination.displayedItems.map((user) => (
                 <TableRow key={user.uid}>
                   <TableCell className="font-medium">
                     <div className="flex items-center space-x-3">
@@ -153,6 +170,12 @@ export default function CustomersContent() {
           </TableBody>
         </Table>
       </div>
+
+      <Pagination
+        hasMoreItems={pagination.hasMoreItems}
+        onLoadMore={pagination.loadMore}
+        loading={status === "loading"}
+      />
     </div>
   );
 }

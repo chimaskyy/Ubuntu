@@ -6,13 +6,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { fetchProducts } from "@/reducers/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState, useMemo } from "react";
 import ProductCard from "./ui/productCard";
 import { fetchCart } from "@/reducers/cartSlice";
 import { Loader2 } from "lucide-react";
+import { usePagination } from "../hooks/usePaginate";
+import Pagination from "./ui/pagination";
 
 const PRODUCTS_PER_PAGE = 12;
 
@@ -40,8 +41,6 @@ const ProductGrid = ({
   const [selectedCategory, setSelectedCategory] = useState(category || "all");
   const [sortBy, setSortBy] = useState("");
   const [allProducts, setAllProducts] = useState([]);
-  const [displayedProducts, setDisplayedProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
 
   // Fetch products and cart on component mount
   useEffect(() => {
@@ -61,12 +60,12 @@ const ProductGrid = ({
 
   const handleCategoryChange = (value) => {
     setSelectedCategory(value);
-    setCurrentPage(1); // Reset to first page when category changes
+    pagination.reset(); // Reset to first page when category changes
   };
 
   const handleSortByChange = (value) => {
     setSortBy(value);
-    setCurrentPage(1); // Reset to first page when sort changes
+    pagination.reset(); // Reset to first page when sort changes
   };
 
   // Filter and sort products
@@ -98,18 +97,10 @@ const ProductGrid = ({
     return filtered;
   }, [allProducts, selectedCategory, sortBy]);
 
-  // Update displayed products when filtered products or page changes
-  useEffect(() => {
-    const endIndex = currentPage * PRODUCTS_PER_PAGE;
-    setDisplayedProducts(filteredAndSortedProducts.slice(0, endIndex));
-  }, [filteredAndSortedProducts, currentPage]);
-
-  const handleLoadMore = () => {
-    setCurrentPage((prev) => prev + 1);
-  };
-
-  const hasMoreProducts =
-    displayedProducts.length < filteredAndSortedProducts.length;
+  const pagination = usePagination({
+    data: filteredAndSortedProducts,
+    itemsPerPage: PRODUCTS_PER_PAGE,
+  });
 
   if (loading) {
     return (
@@ -184,27 +175,16 @@ const ProductGrid = ({
         ) : (
           <>
             <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
-              {displayedProducts.map((product) => (
+              {pagination.displayedItems.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
 
-            {hasMoreProducts && (
-              <div className="flex justify-center mt-8">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={handleLoadMore}
-                  className="min-w-[200px]"
-                >
-                  {loading ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    "Load More"
-                  )}
-                </Button>
-              </div>
-            )}
+            <Pagination
+              hasMoreItems={pagination.hasMoreItems}
+              onLoadMore={pagination.loadMore}
+              loading={loading}
+            />
           </>
         )}
       </div>

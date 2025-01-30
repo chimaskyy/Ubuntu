@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/select";
 import { Loader2, Package } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { usePagination } from "@/hooks/usePaginate";
+import Pagination from "../ui/pagination";
 import { toast } from "react-hot-toast";
 
 const orderStatuses = [
@@ -98,6 +100,11 @@ export default function OrdersContent() {
     });
   };
 
+  const pagination = usePagination({
+    data: orders,
+    itemsPerPage: 5,
+  });
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -117,6 +124,7 @@ export default function OrdersContent() {
       </div>
     );
   }
+
 
   return (
     <div className="space-y-4">
@@ -143,7 +151,7 @@ export default function OrdersContent() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {orders.map((order) => (
+              {pagination.displayedItems.map((order) => (
                 <TableRow
                   key={order.orderId}
                   onClick={(e) => handleRowClick(order.orderId, e)}
@@ -214,6 +222,11 @@ export default function OrdersContent() {
               ))}
             </TableBody>
           </Table>
+          <Pagination
+            hasMoreItems={pagination.hasMoreItems}
+            onLoadMore={pagination.loadMore}
+            loading={loading}
+          />
         </div>
       </div>
     </div>

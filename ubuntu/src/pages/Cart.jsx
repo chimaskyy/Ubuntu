@@ -54,11 +54,12 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+        <div className="flex flex-row sm:flex-row justify-between items-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-0">
             {user ? `${user.displayName}'s Cart` : "Shopping Cart"}
           </h1>
-          <Button
+          {items.length > 0 && (
+            <Button
             className="bg-black text-white hover:bg-gray-800"
             onClick={handleClearCart}
             variant="outline"
@@ -66,6 +67,8 @@ export default function CartPage() {
           >
             Clear Cart
           </Button>
+          )}
+          
         </div>
 
         {items.length > 0 ? (
@@ -184,7 +187,7 @@ export default function CartPage() {
           <div className="text-center py-12">
             <p className="text-xl font-semibold mb-4">Your cart is empty.</p>
             <Button variant="outline" size="lg" asChild>
-              <Link to="/shop">Go to Shop</Link>
+              <Link to="/new-arrival">Go to Shop</Link>
             </Button>
           </div>
         )}

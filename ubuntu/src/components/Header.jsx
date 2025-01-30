@@ -63,15 +63,28 @@ export default function Header() {
                 <span className="sr-only">Wishlist</span>
               </button>
             </Link>
-            <Link to={`/cart/${user?.uid}`}>
-              <button size="icon" className="relative">
-                <ShoppingCart className="h-8 w-8" />
-                <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {items.length}
-                </span>
-                <span className="sr-only">Cart</span>
-              </button>
-            </Link>
+            {user ? (
+              <Link to={`/cart/${user.uid}`}>
+                <button size="icon" className="relative">
+                  <ShoppingCart className="h-8 w-8" />
+                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {items.length}
+                  </span>
+                  <span className="sr-only">Cart</span>
+                </button>
+              </Link>
+            ) : (
+              <Link to="/cart">
+                <button size="icon" className="relative">
+                  <ShoppingCart className="h-8 w-8" />
+                  <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                    {items.length}
+                  </span>
+                  <span className="sr-only">Cart</span>
+                </button>
+              </Link>
+            )}
+
             {user ? (
               <>
                 <Link to={`/profile/${user?.uid}`}>
@@ -108,7 +121,7 @@ export default function Header() {
         </div>
 
         {/* Mobile search input */}
-        <div className="flex justify-center mt-4 lg:hidden sm:hidden md:hidden px-4 pb-4">
+        <div className="flex justify-center mt-4 lg:hidden sm:hidden md:block px-4 pb-4">
           <SearchInput
             searchValue={searchValue}
             onSearchChange={(e) => setSearchValue(e.target.value)}

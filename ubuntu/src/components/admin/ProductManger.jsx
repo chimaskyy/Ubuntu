@@ -10,6 +10,10 @@ import {
 import toast from "react-hot-toast";
 import ProductList from "@/components/ui/productList";
 import ProductModal from "@/components/ui/productModal";
+import { usePagination } from "../../hooks/usePaginate";
+import  Pagination  from "../../components/ui/pagination";
+
+const PRODUCTS_PER_PAGE = 4;
 
 function ProductManager() {
   const [files, setFiles] = useState([]);
@@ -22,12 +26,22 @@ function ProductManager() {
   const [category, setCategory] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const { products, loading, error } = useSelector((state) => state.products); // Fetch products from Redux
+  const [searchTerm, setSearchTerm] = useState("");
+  const { products, loading, error } = useSelector((state) => state.products);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchProducts(category));
   }, [dispatch, category]);
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const pagination = usePagination({
+    data: filteredProducts,
+    itemsPerPage: PRODUCTS_PER_PAGE,
+  });
 
   if (error) return <p>Error: {error}</p>;
 
@@ -116,15 +130,26 @@ function ProductManager() {
         <input
           type="text"
           placeholder="Search products"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            pagination.reset();
+          }}
           className="w-full pl-10 pr-4 py-2 border rounded-lg"
         />
         <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
       </div>
 
       <ProductList
-        products={products}
+        products={pagination.displayedItems}
         onEdit={handleEdit}
         onDelete={handleDelete}
+      />
+
+      <Pagination
+        hasMoreItems={pagination.hasMoreItems}
+        onLoadMore={pagination.loadMore}
+        loading={loading}
       />
 
       {isEditing && (
