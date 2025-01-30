@@ -3,6 +3,18 @@ import { db } from "../config/firebase";
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import toast from "react-hot-toast";
 
+//save cart to local storage
+const saveToLocalStorage =(cart) => {
+  localStorage.setItem("cart", JSON.stringify(cart));
+};
+
+//fetch cart from local storage
+const fetchFromLocalStorage = () => {
+  const cart = localStorage.getItem("cart");
+  return cart ? JSON.parse(cart) : [];
+};
+
+
 export const saveCart = createAsyncThunk(
   "cart/saveCart",
   async ({ userId, cart }, { rejectWithValue }) => {
@@ -77,7 +89,7 @@ export const deleteFromCart = createAsyncThunk(
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
-    items: [],
+    items: fetchFromLocalStorage(),
     totalQuantity: 0,
     totalPrice: 0,
     loaded: false,
@@ -151,6 +163,7 @@ const cartSlice = createSlice({
       } else {
         console.warn("Invalid product data:", action.payload);
       }
+      saveToLocalStorage(state.items);
     },
 
     removeFromCart: (state, action) => {
@@ -161,11 +174,13 @@ const cartSlice = createSlice({
         state.totalQuantity -= state.items[itemIndex].quantity;
         state.items.splice(itemIndex, 1);
       }
+      saveToLocalStorage(state.items);
     },
 
     clearCart: (state) => {
       state.items = [];
       state.totalQuantity = 0;
+      saveToLocalStorage(state.items);
     },
 
     incrementItem: (state, action) => {
@@ -176,6 +191,7 @@ const cartSlice = createSlice({
         itemExist.quantity++;
         state.totalQuantity++;
       }
+      saveToLocalStorage(state.items);
     },
 
     decrementItem: (state, action) => {
@@ -186,67 +202,95 @@ const cartSlice = createSlice({
         itemExist.quantity--;
         state.totalQuantity--;
       }
+      saveToLocalStorage(state.items);
     },
+
+    mergeCart: (state, action) => {
+      // Merge the local cart with the cart from Firestore
+      const userId = action.payload;
+      if(state.items.length > 0) {
+        saveCart({ userId, cart: state.items });
+      } 
+    }
   },
 });
 
 export const addToCartAndSave = (userId, product) => (dispatch, getState) => {
   dispatch(addToCart(product));
-  const { items } = getState().cart; // Extract items from cart state
-  dispatch(saveCart({ userId, cart: items })); // Save items to Firebase
+  if(userId) {
+    //only save to Firestore if user is logged in
+    const { items } = getState().cart; 
+    dispatch(saveCart({ userId, cart: items })); 
+  }
 };
 
 export const removeFromCartAndSave =
   (userId, productId) => (dispatch, getState) => {
     dispatch(removeFromCart({ id: productId })); // Update Redux state first
 
-    const { items } = getState().cart; // Get the updated cart items from the Redux state
-    dispatch(saveCart({ userId, cart: items })) // Save the updated cart to Firestore
-      .then(() => {
-        toast.success("Item removed from cart successfully!");
-      })
-      .catch((error) => {
-        toast.error(`Failed to save updated cart: ${error}`);
-        console.error("Error saving cart to Firestore:", error);
-      });
+    if(userId){
+      const { items } = getState().cart; // Get the updated cart items from the Redux state
+      dispatch(saveCart({ userId, cart: items })) // Save the updated cart to Firestore
+        .then(() => {
+          toast.success("Item removed from cart successfully!");
+        })
+        .catch((error) => {
+          toast.error(`Failed to save updated cart: ${error}`);
+          console.error("Error saving cart to Firestore:", error);
+        });
+    }
+    
   };
 
   export const incrementItemAndSave = (userId, itemId) => (dispatch, getState) => {
     dispatch(incrementItem({ id: itemId })); // Update Redux state first
-    const { items } = getState().cart; // Get the updated cart items from the Redux state
-    dispatch(saveCart({ userId, cart: items })) // Save the updated cart to Firestore
-      .then(() => {
-        toast.success("Item quantity updated successfully!");
-      })
-      .catch((error) => {
-        toast.error(`Failed to save updated cart: ${error}`);
-        console.error("Error saving cart to Firestore:", error);
-      });
+    
+    if(userId){
+      //only save to Firestore if user is logged in
+      const { items } = getState().cart; // Get the updated cart items from the Redux state
+      dispatch(saveCart({ userId, cart: items })) // Save the updated cart to Firestore
+        .then(() => {
+          toast.success("Item quantity updated successfully!");
+        })
+        .catch((error) => {
+          toast.error(`Failed to save updated cart: ${error}`);
+          console.error("Error saving cart to Firestore:", error);
+        });
+    }
+    
   }
 
     export const decrementItemAndSave = (userId, itemId) => (dispatch, getState) => {
         dispatch(decrementItem({ id: itemId })); // Update Redux state first
-        const { items } = getState().cart; // Get the updated cart items from the Redux state
-        dispatch(saveCart({ userId, cart: items })) // Save the updated cart to Firestore
-        .then(() => {
-            toast.success("Item quantity updated successfully!");
-        })
-        .catch((error) => {
-            toast.error(`Failed to save updated cart: ${error}`);
-            console.error("Error saving cart to Firestore:", error);
-        });
+       
+        if(userId){
+          const { items } = getState().cart; // Get the updated cart items from the Redux state
+          dispatch(saveCart({ userId, cart: items })) // Save the updated cart to Firestore
+            .then(() => {
+              toast.success("Item quantity updated successfully!");
+            })
+            .catch((error) => {
+              toast.error(`Failed to save updated cart: ${error}`);
+              console.error("Error saving cart to Firestore:", error);
+            });
+        }
+        
     }
 
     export const clearCartAndSave = (userId) => (dispatch) => {
         dispatch(clearCart()); // Update Redux state first
+       
+       if(userId){
         dispatch(deleteFromCart(userId)) // Delete the cart from Firestore
-        .then(() => {
+          .then(() => {
             toast.success("Cart cleared successfully!");
-        })
-        .catch((error) => {
+          })
+          .catch((error) => {
             toast.error(`Failed to clear cart: ${error}`);
             console.error("Error deleting cart from Firestore:", error);
-        });
+          });
+       }
+        
     }
 
 export const {

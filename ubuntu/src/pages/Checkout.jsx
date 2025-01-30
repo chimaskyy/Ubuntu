@@ -23,12 +23,12 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 
 export default function CheckoutPage() {
-  const user = useAuth();
+  const { user } = useSelector((state) => state.user);
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
-  const total = location.state?.total || 0;
+  const { total, selectedState } = location.state;
 
   const publicKey = "pk_test_484fd7fadd7812f81081d295a694b8fb4e697e60";
 
@@ -39,11 +39,11 @@ export default function CheckoutPage() {
     phone: user?.phone || "",
     address: "",
     city: "",
-    state: "",
-    zipCode: "",
+    state: selectedState || "",
+    // zipCode: "",
     country: "Nigeria",
   });
-  const [transferProof, setTransferProof] = useState(null);
+  //const [transferProof, setTransferProof] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -59,7 +59,6 @@ export default function CheckoutPage() {
       "address",
       "city",
       "state",
-      "zipCode",
     ];
     requiredFields.forEach((field) => {
       if (!formData[field]?.trim()) {
@@ -83,9 +82,9 @@ export default function CheckoutPage() {
     }
 
     // Transfer proof validation
-    if (paymentMethod === "transfer" && !transferProof) {
-      newErrors.transferProof = "Please upload payment proof";
-    }
+    // if (paymentMethod === "transfer" && !transferProof) {
+    //   newErrors.transferProof = "Please upload payment proof";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -113,45 +112,56 @@ export default function CheckoutPage() {
         reference: response?.reference,
       };
 
-      if (paymentMethod === "transfer") {
-        // Convert file to base64 if it's a transfer payment
-        const base64File = await new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.readAsDataURL(transferProof);
-        });
+      // if (paymentMethod === "transfer") {
+      //   // Convert file to base64 if it's a transfer payment
+      //   const base64File = await new Promise((resolve) => {
+      //     const reader = new FileReader();
+      //     reader.onloadend = () => resolve(reader.result);
+      //     reader.readAsDataURL(transferProof);
+      //   });
 
-        paymentDetails = {
-          ...paymentDetails,
-          transferProof: base64File,
-          status: "pending", // Transfer payments start as pending
-          bankDetails: {
-            accountName: "Ubuntu Store",
-            accountNumber: "0123456789",
-            bankName: "Your Bank Name",
-          },
-        };
-      }
+      //   paymentDetails = {
+      //     ...paymentDetails,
+      //     transferProof: base64File,
+      //     status: "pending", // Transfer payments start as pending
+      //     bankDetails: {
+      //       accountName: "Ubuntu Store",
+      //       accountNumber: "0123456789",
+      //       bankName: "Your Bank Name",
+      //     },
+      //   };
+      // }
 
       const shippingDetails = {
         ...formData,
-        transferProof: paymentDetails.transferProof,
+        // transferProof: paymentDetails.transferProof,
       };
 
-      const success = await dispatch(
+      //create order with or without payment proof
+      //create order with or without user
+      const orderId = await dispatch(
         createOrderFromCart(
-          user.uid,
           cartItems,
           total,
           shippingDetails,
-          paymentDetails
+          user || null
         )
       );
 
-      if (success) {
-        dispatch(clearCartAndSave(user.uid));
+      if (orderId) {
+        if(user){
+          dispatch(clearCartAndSave(user?.uid));
+          toast.success("Order placed successfully!");
+          navigate(`/orders/${user?.uid}`);
+        }else 
+        localStorage.removeItem("cart");
+        navigate(`/orders-confirmation`, { 
+          state: { 
+            orderId ,
+            email: formData.email,
+          } 
+        });
         toast.success("Order placed successfully!");
-        navigate(`/orders/${user.uid}`);
       }
     } catch (error) {
       toast.error("Failed to process order. Please try again.");
@@ -190,9 +200,9 @@ export default function CheckoutPage() {
       formData.phone &&
       formData.address &&
       formData.city &&
-      formData.state &&
-      formData.zipCode &&
-      (paymentMethod !== "transfer" || transferProof)
+      formData.state
+      // formData.zipCode
+      // (paymentMethod !== "transfer" || transferProof)
     );
   };
 
@@ -319,7 +329,7 @@ export default function CheckoutPage() {
                   onValueChange={(value) =>
                     handleInputChange({ target: { name: "state", value } })
                   }
-                  value={formData.state}
+                  value={selectedState || formData.state}
                 >
                   <SelectTrigger id="state">
                     <SelectValue placeholder="Select state" />
@@ -367,15 +377,11 @@ export default function CheckoutPage() {
                 <RadioGroupItem value="paystack" id="paystack" />
                 <Label htmlFor="paystack">PayStack</Label>
               </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="transfer" id="transfer" />
-                <Label htmlFor="transfer">Bank Transfer</Label>
-              </div>
             </RadioGroup>
           </div>
 
           {/* Bank Transfer Details */}
-          {paymentMethod === "transfer" && (
+          {/* {paymentMethod === "transfer" && (
             <div className="space-y-4">
               <Card>
                 <CardContent className="pt-6">
@@ -419,7 +425,7 @@ export default function CheckoutPage() {
                 </CardContent>
               </Card>
             </div>
-          )}
+          )} */}
 
           {/* Order Summary */}
           <div className="border-t pt-6">
@@ -460,7 +466,10 @@ export default function CheckoutPage() {
         </form>
 
         <div className="mt-4 text-center">
-          <Link to={`/cart/${user.uid}`} className="text-blue-600 hover:underline">
+          <Link
+            to={`/cart/${user?.uid}`}
+            className="text-blue-600 hover:underline"
+          >
             Return to Cart
           </Link>
         </div>

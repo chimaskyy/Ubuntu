@@ -27,3 +27,8 @@ dist-ssr
 .env
 googleDrive.json
 product.txt
+
+*.txt
+order.txt
+checkout.txt
+cart.txt

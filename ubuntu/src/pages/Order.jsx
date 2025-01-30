@@ -52,8 +52,8 @@ const OrdersPage = () => {
   const { orders, loading, error } = useSelector((state) => state.orders);
 
   useEffect(() => {
-    dispatch(fetchUserOrders(user.uid));
-  }, [dispatch, user.uid]);
+    dispatch(fetchUserOrders(user?.uid));
+  }, [dispatch, user?.uid]);
 
   if (loading) {
     return (

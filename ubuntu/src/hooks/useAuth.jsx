@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-export default function useAuth() {
+function useAuth() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
 
@@ -14,3 +14,4 @@ export default function useAuth() {
 
   return user;
 }
+export default useAuth;

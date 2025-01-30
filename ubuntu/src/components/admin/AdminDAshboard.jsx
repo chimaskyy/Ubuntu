@@ -8,13 +8,10 @@ import {
   Settings,
   Menu,
   X,
-  ChevronDown,
 } from "lucide-react";
-import { useSelector } from "react-redux";
 
 export default function AdminDashboard() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user } = useSelector((state) => state.user);
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Overview", path: "dashboard" },

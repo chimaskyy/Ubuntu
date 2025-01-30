@@ -12,22 +12,32 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import toast from "react-hot-toast";
+import { serverTimestamp } from "firebase/firestore";
+
+
+//generate unique guest id
+const generateGuestId = () => {
+  return `guest-${Date.now()}-${Math.round(Math.random() * 1000)}`;
+};
 
 // Create a new order
 export const createOrder = createAsyncThunk(
   "orders/createOrder",
-  async ({ userId, orderData }, { rejectWithValue }) => {
+  async ({ userId, orderData, isGuest }, { rejectWithValue }) => {
     try {
-      const orderId = `${userId}-${Date.now()}`; // Generate unique order ID
+      const orderId = `${userId}-${Date.now()}-${Math.round(
+        Math.random() * 1000
+      )}`; // Generate unique order ID
       const orderRef = doc(db, "orders", orderId);
 
       const orderToSave = {
         ...orderData,
         userId,
-       
         orderId,
-        createdAt: new Date().toISOString(),
+        createdAt: serverTimestamp(),
         status: "pending", // Initial status
+        paymentStatus: "pending", // Initial payment status
+        isGuest,
       };
 
       await setDoc(orderRef, orderToSave);
@@ -114,6 +124,25 @@ export const fetchAllOrders = createAsyncThunk(
   }
 );
 
+//fetchorder by email for guest
+export const fetchOrderByEmail = createAsyncThunk(
+  "orders/fetchOrderByEmail",
+  async (email, { rejectWithValue }) => {
+    try {
+      const ordersRef = collection(db, "orders");
+      const q = query(ordersRef, where("shippingDetails.email", "==", email));
+      const querySnapshot = await getDocs(q);
+      const orders = [];
+      querySnapshot.forEach((doc) => {
+        orders.push(doc.data());
+      });
+      return orders;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "orders",
   initialState: {
@@ -153,6 +182,21 @@ const orderSlice = createSlice({
         toast.error(`Failed to create order: ${action.payload}`);
       })
 
+      // Fetch Order by Email
+      .addCase(fetchOrderByEmail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrderByEmail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.orders = action.payload;
+      })
+      .addCase(fetchOrderByEmail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+        toast.error(`Failed to fetch orders: ${action.payload}`);
+      })
+
       //update order status
       .addCase(updateOrderStatus.pending, (state) => {
         state.loading = true;
@@ -162,7 +206,7 @@ const orderSlice = createSlice({
         state.loading = false;
         const { orderId, status } = action.payload;
         const order = state.orders.find((order) => order.orderId === orderId);
-         if (order) {
+        if (order) {
           order.status = status;
         }
         toast.success("Order status updated successfully!");
@@ -171,8 +215,7 @@ const orderSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
         toast.error(`Failed to update order status: ${action.payload}`);
-      }
-      )
+      })
 
       // Fetch User Orders
       .addCase(fetchUserOrders.pending, (state) => {
@@ -206,8 +249,7 @@ const orderSlice = createSlice({
       .addCase(fetchAllOrders.pending, (state) => {
         state.loading = true;
         state.error = null;
-      }
-      )
+      })
       .addCase(fetchAllOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.orders = action.payload;
@@ -222,24 +264,31 @@ const orderSlice = createSlice({
 
 // Action creator to create order from cart
 export const createOrderFromCart =
-  (userId,  cartItems, totalAmount, shippingDetails) => async (dispatch) => {
-    try {
-      const orderData = {
-        items: cartItems,
-        totalAmount,
-        shippingDetails,
-        status: "pending",
-        paymentStatus: "pending",
-      };
+  (cartItems, totalAmount, shippingDetails, user = null) => 
+    async (dispatch) => {
+     try {
+      const isGuest = !user;
+      const userId = user?.uid || generateGuestId();
 
-      await dispatch(createOrder({ userId, orderData }));
-      toast.success("Order placed successfully!");
-      return true;
-    } catch (error) {
-      toast.error(`Failed to create order: ${error.message}`);
-      return false;
-    }
-  };
+       const orderData = {
+         items: cartItems,
+         totalAmount,
+         shippingDetails,
+         status: "pending",
+         paymentStatus: "pending",
+          isGuest,
+          createdAt: serverTimestamp(),
+       };
+
+       await dispatch(createOrder({ userId, orderData, isGuest }));
+       toast.success("Order placed successfully!");
+       return `${userId}-${orderData.createdAt}`;
+     } catch (error) {
+       toast.error(`Failed to create order: ${error.message}`);
+       return false;
+     }
+   };
+    
 
 export const { clearCurrentOrder } = orderSlice.actions;
 export default orderSlice.reducer;

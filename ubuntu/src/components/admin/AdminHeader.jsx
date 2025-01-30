@@ -1,5 +1,5 @@
 import { logoutUser } from "@/reducers/authSlice";
-import { LayoutDashboard, LogOut, Search, Store, User } from "lucide-react";
+import {  LogOut, Search, Store, User } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../ui/button";

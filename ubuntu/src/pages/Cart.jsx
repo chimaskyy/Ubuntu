@@ -18,7 +18,7 @@ import { getShippingFee } from "@/lib/Shipping";
 export default function CartPage() {
   const dispatch = useDispatch();
   const { items } = useSelector((state) => state.cart);
-  const user = useAuth();
+  const {user} = useSelector((state) => state.user);
   const [selectedState, setSelectedState] = useState("");
 
   const subtotal = items.reduce(
@@ -36,19 +36,19 @@ export default function CartPage() {
   }, [user?.uid, dispatch]);
 
   const handleIncrease = (itemId) => {
-    dispatch(incrementItemAndSave(user.uid, itemId));
+    dispatch(incrementItemAndSave(user?.uid, itemId));
   };
 
   const handleDecrease = (itemId) => {
-    dispatch(decrementItemAndSave(user.uid, itemId));
+    dispatch(decrementItemAndSave(user?.uid, itemId));
   };
 
   const handleRemove = (itemId) => {
-    dispatch(removeFromCartAndSave(user.uid, itemId));
+    dispatch(removeFromCartAndSave(user?.uid, itemId));
   };
 
   const handleClearCart = () => {
-    dispatch(clearCartAndSave(user.uid));
+    dispatch(clearCartAndSave(user?.uid));
   };
 
   return (
@@ -56,7 +56,7 @@ export default function CartPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-0">
-            {user?.displayName}&apos;s Cart
+            {user ? `${user.displayName}'s Cart` : "Shopping Cart"}
           </h1>
           <Button
             className="bg-black text-white hover:bg-gray-800"
@@ -143,10 +143,9 @@ export default function CartPage() {
                     onValueChange={setSelectedState}
                   />
                   {/* {selectedState === "Enugu" && ( */}
-                    <p className="text-lg text-green-600 mt-1">
-                      Free delivery available in Enugu!
-                    </p>
-                  
+                  <p className="text-lg text-green-600 mt-1">
+                    Free delivery available in Enugu!
+                  </p>
                 </div>
 
                 <div className="flex justify-between mb-2">

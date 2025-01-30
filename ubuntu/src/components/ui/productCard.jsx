@@ -14,18 +14,19 @@ const ProductCard = ({ product }) => {
   const { items: cartItems } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
-  const isInCart = cartItems.some((item) => item.id === product.id);
+  const isInCart =
+    Array.isArray(cartItems) &&
+    cartItems.some((item) => item.id === product.id);
+
   const isInWishlist = wishlist.some((item) => item.id === product.id);
 
   const handleAddToCart = () => {
-    if (!user) return toast.error("Please log in to add items to your cart.");
-    dispatch(addToCartAndSave(user.uid, product));
+    dispatch(addToCartAndSave(user?.uid, product));
     toast.success(`${product.name} added to cart.`);
   };
 
   const handleRemoveFromCart = () => {
-    if (!user) return toast.error("Please log in to modify your cart.");
-    dispatch(removeFromCartAndSave(user.uid, product.id));
+    dispatch(removeFromCartAndSave(user?.uid, product.id));
     toast.success(`${product.name} removed from cart.`);
   };
 

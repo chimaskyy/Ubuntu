@@ -33,7 +33,8 @@ import { monitorAuthState } from "./reducers/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { fetchCart } from "./reducers/cartSlice";
-import WithAdminAuth from "../src/hooks/WithAdminAuth";
+import WithAdminAuth from "./HOC/WithAdminAuth";
+import WithUserAuth from "./HOC/WithUserAuth";
 import AuthWrapper from "./utils/AuthWrapper";
 import OrderDetailsPage from "./components/admin/OrderDetailsPage";
 
@@ -55,7 +56,6 @@ function App() {
 
   return (
     <>
-      <AuthWrapper>
         {!isAdminRoute && <Header />}
 
         {/* Render CategoryNav only if not on an Admin route */}
@@ -65,7 +65,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/profile/:id" element={<ProfilePage />} />
           <Route path="/new-arrival" element={<ArivalList />} />
           <Route path="/head-wear" element={<HeadWear />} />
           <Route path="/unisex-shorts" element={<UnisexShorts />} />
@@ -76,8 +76,16 @@ function App() {
           <Route path="/footings" element={<Footings />} />
           <Route path="/his-hers" element={<Couple />} />
           <Route path="/product/:id" element={<ProductPage />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="/cart/:id" element={<CartPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route 
+          path="/checkout" 
+          element={
+            // <WithUserAuth>
+              <CheckoutPage />
+            //  </WithUserAuth>
+          }
+          />
           <Route path="/orders/:userId" element={<OrdersPage />} />
           <Route path="/my-wishlist" element={<WishlistPage />} />
           <Route
@@ -101,7 +109,6 @@ function App() {
         </Routes>
 
         {!isAdminRoute && <Footer />}
-      </AuthWrapper>
     </>
   );
 }
