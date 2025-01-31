@@ -1,58 +1,38 @@
 import { MapPin, Phone, Mail } from "lucide-react";
-import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from "react-icons/fa";
-import logo from "../assets/logo.jpg"
+import { FaFacebook, FaInstagram, FaTiktok, } from "react-icons/fa";
 function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4 py-12">
+    <footer className="bg-black text-gray-300 ">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:mx-1 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center text-2xl font-bold text-white mb-4">
-              <a href="/" className="flex items-center space-x-2">
-                <img
-                src={logo}
-                  alt="Logo"
-                  width={80}
-                  height={80}
-                />
-              </a>
-              {/* <span className="ml-2 font-mono">UbuntuElite</span> */}
-            </div>
-
-            <p className="text-sm">
-              Bringing authentic African fashion to the world with modern style
-              and traditional beauty.
-            </p>
-          </div>
-
-          <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
+            <ul className="space-y-2 capitalize">
               <li>
                 <a href="#" className="">
-                  About Us
+                  Contact Us
                 </a>
               </li>
               <li>
                 <a href="#" className="">
-                  Contact
+                  Terms of service
                 </a>
               </li>
               <li>
                 <a href="#" className="">
-                  FAQs
+                  Shippng policy
                 </a>
               </li>
               <li>
                 <a href="#" className="">
-                  Shipping Info
+                  Return policy
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
+            <h3 className="text-lg font-semibold mb-4">Get In touch</h3>
             <ul className="space-y-2">
               <li className="flex items-center">
                 <MapPin className="h-5 w-5 mr-2" />
@@ -73,17 +53,15 @@ function Footer() {
             <h3 className="text-lg font-semibold mb-4">Follow Us</h3>
             <div className="flex space-x-4">
               <a href="#" className="">
-                <FaFacebook className="h-6 w-6" />
+                <FaFacebook className="h-5 w-5" />
               </a>
               <a href="#" className="">
-                <FaTwitter className="h-6 w-6" />
+                <FaTiktok className="h-5 w-5" />
               </a>
               <a href="#" className="">
-                <FaInstagram className="h-6 w-6" />
+                <FaInstagram className="h-5 w-5" />
               </a>
-              <a href="#" className="">
-                <FaYoutube className="h-6 w-6" />
-              </a>
+              
             </div>
           </div>
         </div>

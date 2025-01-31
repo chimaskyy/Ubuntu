@@ -56,59 +56,59 @@ function App() {
 
   return (
     <>
-        {!isAdminRoute && <Header />}
+      {!isAdminRoute && <Header />}
 
-        {/* Render CategoryNav only if not on an Admin route */}
-        {!isAdminRoute && <CatgoryNav />}
+      {/* Render CategoryNav only if not on an Admin route */}
+      {/* {!isAdminRoute && <CatgoryNav />} */}
 
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile/:id" element={<ProfilePage />} />
-          <Route path="/new-arrival" element={<ArivalList />} />
-          <Route path="/head-wear" element={<HeadWear />} />
-          <Route path="/unisex-shorts" element={<UnisexShorts />} />
-          <Route path="/men" element={<Men />} />
-          <Route path="/accessories" element={<Accessories />} />
-          <Route path="/undies" element={<Undies />} />
-          <Route path="/kids" element={<Kids />} />
-          <Route path="/footings" element={<Footings />} />
-          <Route path="/his-hers" element={<Couple />} />
-          <Route path="/product/:id" element={<ProductPage />} />
-          <Route path="/cart" element={<CartPage />} />
-          <Route path="/cart/:id" element={<CartPage />} />
-          <Route 
-          path="/checkout" 
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile/:id" element={<ProfilePage />} />
+        <Route path="/new-arrival" element={<ArivalList />} />
+        <Route path="/head-wear" element={<HeadWear />} />
+        <Route path="/unisex-shorts" element={<UnisexShorts />} />
+        <Route path="/men" element={<Men />} />
+        <Route path="/accessories" element={<Accessories />} />
+        <Route path="/undies" element={<Undies />} />
+        <Route path="/kids" element={<Kids />} />
+        <Route path="/footings" element={<Footings />} />
+        <Route path="/his-hers" element={<Couple />} />
+        <Route path="/product/:id" element={<ProductPage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/cart/:id" element={<CartPage />} />
+        <Route
+          path="/checkout"
           element={
             // <WithUserAuth>
-              <CheckoutPage />
+            <CheckoutPage />
             //  </WithUserAuth>
           }
-          />
-          <Route path="/orders/:userId" element={<OrdersPage />} />
-          <Route path="/my-wishlist" element={<WishlistPage />} />
-          <Route
-            path="/admin/*"
-            element={
-              <WithAdminAuth>
-                <Admin />
-              </WithAdminAuth>
-            }
-          />
-          <Route
-            path="/admin/orders/:orderId"
-            element={
-              <WithAdminAuth>
-                <OrderDetailsPage />
-              </WithAdminAuth>
-            }
-          />
+        />
+        <Route path="/orders/:userId" element={<OrdersPage />} />
+        <Route path="/my-wishlist" element={<WishlistPage />} />
+        <Route
+          path="/admin/*"
+          element={
+            <WithAdminAuth>
+              <Admin />
+            </WithAdminAuth>
+          }
+        />
+        <Route
+          path="/admin/orders/:orderId"
+          element={
+            <WithAdminAuth>
+              <OrderDetailsPage />
+            </WithAdminAuth>
+          }
+        />
 
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
 
-        {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <Footer className={`bg-black text-gray-300 `} className2={`max-w-7xl mx-auto px-4 sm:px-6 lg:mx-1 py-12`} />}
     </>
   );
 }
