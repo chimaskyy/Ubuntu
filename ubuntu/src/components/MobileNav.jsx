@@ -56,9 +56,7 @@ export function MobileNav({ user, isOpen, onOpenChange }) {
                     <span>My Wishlist</span>
                   </Link>
                   {user.role?.includes("admin") && (
-                    <Link to="/admin">
-                      {" "}
-                      onClick={handleLinkClick}
+                    <Link to="/admin" onClick={handleLinkClick}>
                       <Button variant="default" className="w-full">
                         Admin Dashboard
                       </Button>
@@ -77,7 +75,12 @@ export function MobileNav({ user, isOpen, onOpenChange }) {
               {categories.map((category) => (
                 <Collapsible key={category.name}>
                   <CollapsibleTrigger className="flex items-center text-xs justify-between w-full p-2 text-left font-medium hover:bg-accent rounded-md">
-                    {category.name}
+                    <Link
+                      to={`collection/${category.link}`}
+                      onClick={handleLinkClick}
+                    >
+                      {category.name}
+                    </Link>
                     <ChevronDown className="h-4 w-4" />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="pl-4">
@@ -85,7 +88,7 @@ export function MobileNav({ user, isOpen, onOpenChange }) {
                       {category.subcategory.map((item) => (
                         <li key={item}>
                           <Link
-                            to={`${category.link}/${item
+                            to={`collection/${category.link}/${item
                               .toLowerCase()
                               .replace(" ", "-")}`}
                             className="block py-2 px-2 text-sm rounded hover:bg-accent"
