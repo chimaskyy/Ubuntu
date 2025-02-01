@@ -1,32 +1,37 @@
 export const categories = [
   {
     name: "MEN",
-    items: ["Shirts", "Pants", "Accessories", "Undies"],
-    link: "/men",
+    subcategory: ["Shirts", "Pants", "Accessories", "Undies"],
+    link: "men",
   },
   {
     name: "KIDS",
-    items: ["Boys", "Girls"],
-    link: "/kids",
+    subcategory: ["Boys", "Girls"],
+    link: "kids",
   },
   {
     name: "FOOTINGS",
-    items: ["Men's Shoes", "Women's Shoes"],
-    link: "/footings",
+    subcategory: ["Men's Shoes", "Women's Shoes"],
+    link: "footings",
   },
   {
     name: "ACCESSORIES",
-    items: ["Caps", "Sticks", "Hats", "Fans", "Belts"],
-    link: "/accessories",
+    subcategory: ["Caps", "Sticks", "Hats", "Fans", "Belts"],
+    link: "accessories",
   },
   {
     name: "UNISEX SHORTS",
-    items: ["Men's Shoes", "Women's Shoes"],
-    link: "/unisex-shorts",
+    subcategory: ["Men's Shoes", "Women's Shoes"],
+    link: "unisex-shorts",
+  },
+  {
+    name: "UNDERWEAR",
+    subcategory: ["boxers", "briefs", "boxer-briefs"],
+    link: "underwear",
   },
   {
     name: "HIS & HERS",
-    items: ["Men's Shoes", "Women's Shoes"],
-    link: "/his-hers",
+    subcategory: ["Men's Shoes", "Women's Shoes"],
+    link: "his-hers",
   },
-] ;
+]; ;

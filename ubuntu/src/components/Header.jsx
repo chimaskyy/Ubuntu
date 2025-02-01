@@ -1,7 +1,7 @@
 // import { useEffect, useState } from "react";
 // import { Heart, User, ShoppingCart, LayoutDashboard } from "lucide-react";
 // import { useSelector } from "react-redux";
-import logo from "../assets/logo.jpg";
+
 // import { Link, useNavigate } from "react-router-dom";
 // import { Button } from "./ui/button";
 // import SearchInput from "./ui/searchInput";
@@ -134,7 +134,6 @@ import logo from "../assets/logo.jpg";
 //     </header>
 //   );
 // }
-
 
 // import { useEffect, useState } from "react";
 // import { Heart, User, ShoppingCart, Menu, AlignLeft, ChevronDown, Search } from "lucide-react";
@@ -472,11 +471,11 @@ import logo from "../assets/logo.jpg";
 
 // export default Header;
 
-
 import { useState } from "react";
+import logo from "../assets/logo.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, User, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/MobileNav";
 import { DesktopNav } from "@/components/DesktopNav";
@@ -516,7 +515,7 @@ export default function Header() {
     <header className=" sticky top-0 z-50 w-full bg-white border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:mx-1">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="lg:hidden flex items-center gap-4">
             <MobileNav
               user={user}
               isOpen={isSidebarOpen}
@@ -525,14 +524,14 @@ export default function Header() {
           </div>
 
           <Link to="/" className="flex-1 lg:flex-none text-center">
-            <img src={logo} alt="Logo" className="h-8 w-auto mx-auto" />
+            <img src={logo} alt="Logo" className="h-12 w-auto mx-auto" />
           </Link>
 
-          <div className="hidden lg:flex flex-1 justify-center">
+          {/* <div className="hidden lg:flex flex-1 justify-center">
             <DesktopNav />
-          </div>
+          </div> */}
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-5 lg:gap-8">
             <SearchDialog
               searchValue={searchValue}
               onSearchChange={(e) => handleSearch(e.target.value)}
@@ -540,17 +539,39 @@ export default function Header() {
               searchedProducts={searchedProducts}
               onProductClick={handleProductClick}
             />
+
+            <Link
+              to={user ? `/profile/${user.uid}` : "/login"}
+              className="flex items-center space-x-2 px-2"
+            >
+              <User className="h-5 w-5" />
+              <span className="sr-only">My Account</span>
+            </Link>
+
             <Link to={user ? `/cart/${user.uid}` : "/cart"}>
-              <Button variant="ghost" size="icon" className="relative">
-                <ShoppingCart className="h-5 w-5" />
+              <button variant="ghost" size="icon" className="relative mt-2">
+                <ShoppingCart className="h-10 w-6" />
                 {items.length > 0 && (
                   <span className="absolute -top-1 -right-1 h-4 min-w-4 rounded-full bg-primary text-[10px] font-medium text-primary-foreground flex items-center justify-center px-1">
                     {items.length}
                   </span>
                 )}
                 <span className="sr-only">Cart</span>
-              </Button>
+              </button>
             </Link>
+            <div className="hidden lg:flex items-center gap-4">
+              {user && user.role?.includes("admin") && (
+                <Link to="/admin">
+                  <Button
+                    size="lg"
+                    className="bg-gray-900 text-white p-4 rounded-lg shadow-lg hover:bg-gray-800 hover:text-gray-100"
+                  >
+                    <LayoutDashboard className="h-5 w-5" />
+                    Admin Dashboard
+                  </Button>
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>

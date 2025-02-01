@@ -60,15 +60,14 @@ export default function CartPage() {
           </h1>
           {items.length > 0 && (
             <Button
-            className="bg-black text-white hover:bg-gray-800"
-            onClick={handleClearCart}
-            variant="outline"
-            size="lg"
-          >
-            Clear Cart
-          </Button>
+              className="bg-black text-white hover:bg-gray-800"
+              onClick={handleClearCart}
+              variant="outline"
+              size="lg"
+            >
+              Clear Cart
+            </Button>
           )}
-          
         </div>
 
         {items.length > 0 ? (
@@ -87,46 +86,48 @@ export default function CartPage() {
                     height={100}
                     className="rounded-md object-cover"
                   />
-                  <div className="flex-grow text-center sm:text-left">
-                    <h3 className="font-semibold">{item.name}</h3>
-                    <p className="text-gray-600">
-                      ₦{item.price.toLocaleString()}.00
-                    </p>
+                  <div className="flex flex-col sm:flex-row  w-full">
+                    <div className="flex-grow text-center sm:text-left">
+                      <h3 className="font-semibold">{item.name}</h3>
+                      <p className="text-gray-600">
+                        ₦{item.price.toLocaleString()}.00
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 mt-4 sm:mt-0">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleDecrease(item.id)}
+                        disabled={item.quantity <= 1}
+                        aria-label="Decrease quantity"
+                      >
+                        <Minus className="h-4 w-4" />
+                      </Button>
+                      <Input
+                        type="number"
+                        value={item.quantity}
+                        className="w-16 text-center"
+                        readOnly
+                        aria-label="Item quantity"
+                      />
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleIncrease(item.id)}
+                        aria-label="Increase quantity"
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => handleRemove(item.id)}
+                        aria-label="Remove item"
+                      >
+                        <Trash2 className="h-6 w-6 text-red-700" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 mt-4 sm:mt-0">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handleDecrease(item.id)}
-                      disabled={item.quantity <= 1}
-                      aria-label="Decrease quantity"
-                    >
-                      <Minus className="h-4 w-4" />
-                    </Button>
-                    <Input
-                      type="number"
-                      value={item.quantity}
-                      className="w-16 text-center"
-                      readOnly
-                      aria-label="Item quantity"
-                    />
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handleIncrease(item.id)}
-                      aria-label="Increase quantity"
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleRemove(item.id)}
-                    aria-label="Remove item"
-                  >
-                    <Trash2 className="h-6 w-6 text-red-700" />
-                  </Button>
                 </div>
               ))}
             </div>

@@ -8,17 +8,6 @@ import {
 } from "react-router-dom";
 import { Header, Footer, CatgoryNav, SignUp, Login } from "./components";
 import {
-  Accessories,
-  ArivalList,
-  Footings,
-  HeadWear,
-  Couple,
-  Men,
-  Undies,
-  UnisexShorts,
-  Kids,
-} from "./pages/Product";
-import {
   Admin,
   CartPage,
   CheckoutPage,
@@ -27,6 +16,7 @@ import {
   ProductPage,
   ProfilePage,
   WishlistPage,
+  ArivalList,
 } from "./pages";
 import orderDetailsPage from "./components/admin/OrderDetailsPage";
 import { monitorAuthState } from "./reducers/authSlice";
@@ -37,7 +27,7 @@ import WithAdminAuth from "./HOC/WithAdminAuth";
 import WithUserAuth from "./HOC/WithUserAuth";
 import AuthWrapper from "./utils/AuthWrapper";
 import OrderDetailsPage from "./components/admin/OrderDetailsPage";
-
+import CategoryPage from "./pages/CategoryPage";
 function App() {
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
@@ -67,17 +57,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile/:id" element={<ProfilePage />} />
         <Route path="/new-arrival" element={<ArivalList />} />
-        <Route path="/head-wear" element={<HeadWear />} />
-        <Route path="/unisex-shorts" element={<UnisexShorts />} />
-        <Route path="/men" element={<Men />} />
-        <Route path="/accessories" element={<Accessories />} />
-        <Route path="/undies" element={<Undies />} />
-        <Route path="/kids" element={<Kids />} />
-        <Route path="/footings" element={<Footings />} />
-        <Route path="/his-hers" element={<Couple />} />
         <Route path="/product/:id" element={<ProductPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/cart/:id" element={<CartPage />} />
+        <Route path="/collection" element={<ArivalList />} />
+
+        <Route path="/collection/:category" element={<CategoryPage />} />
+        <Route
+          path="/collection/:category/:subcategory"
+          element={<CategoryPage />}
+        />
+
         <Route
           path="/checkout"
           element={
@@ -108,7 +98,12 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
-      {!isAdminRoute && <Footer className={`bg-black text-gray-300 `} className2={`max-w-7xl mx-auto px-4 sm:px-6 lg:mx-1 py-12`} />}
+      {!isAdminRoute && (
+        <Footer
+          className={`bg-black text-gray-300 `}
+          className2={`max-w-7xl mx-auto px-4 sm:px-6 lg:mx-1 py-12`}
+        />
+      )}
     </>
   );
 }

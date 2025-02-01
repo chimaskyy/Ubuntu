@@ -15,7 +15,7 @@ export function DesktopNav() {
       <NavigationMenuList>
         {categories.map((category) => (
           <NavigationMenuItem key={category.name}>
-            <NavigationMenuTrigger className="text-sm h-9 px-4">
+            <NavigationMenuTrigger className="text-xs h-9 px-4 text-gray-600 ">
               {category.name}
             </NavigationMenuTrigger>
             <NavigationMenuContent>
@@ -23,18 +23,18 @@ export function DesktopNav() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Link
-                      to={category.link}
+                      to={`/collection/${category.link}`}
                       className="block p-4 rounded-lg bg-gradient-to-br from-muted/50 to-muted hover:from-muted/60 hover:to-muted/60"
                     >
                       <h3 className="font-medium mb-1">{category.name}</h3>
                       <p className="text-sm text-muted-foreground">Shop All</p>
                     </Link>
                   </div>
-                  <div className="space-y-2">
-                    {category.items.map((item) => (
+                  <div className="grid grid-cols-2 gap-1">
+                    {category.subcategory.map((item) => (
                       <Link
                         key={item}
-                        to={`${category.link}/${item
+                        to={`collection/${category.link}/${item
                           .toLowerCase()
                           .replace(" ", "-")}`}
                         className="block p-2 text-sm rounded-md hover:bg-accent"

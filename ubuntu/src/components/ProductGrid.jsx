@@ -21,11 +21,13 @@ const ProductGrid = ({
   title,
   description,
   category,
+  subcategory,
   showFilters = true,
   categories = [
     { value: "all", label: "All" },
     { value: "men", label: "Men" },
     { value: "kids", label: "Kids" },
+    { value: "underwear", label: "Under Wear" },
     { value: "footings", label: "Footings" },
     { value: "accessories", label: "Accessories" },
     { value: "unisex shorts", label: "Unisex Shorts" },
@@ -44,8 +46,19 @@ const ProductGrid = ({
 
   // Fetch products and cart on component mount
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    const fetchData = async () => {
+      const params = {};
+      if (category) {
+        params.category = category;
+      }
+      if (subcategory) {
+        params.subcategory = subcategory;
+      }
+      dispatch(fetchProducts(params));
+    };
+
+    fetchData();
+  }, [dispatch, category, subcategory]);
 
   useEffect(() => {
     if (user && !items.length) {

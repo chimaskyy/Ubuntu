@@ -67,7 +67,7 @@ export const addProduct = createAsyncThunk(
 
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
-  async ({category = "all"} = {}, thunkAPI) => {
+  async ({category = "all", subcategory = null} = {}, thunkAPI) => {
     try {
 
       const productsRef = collection(db, "products");
@@ -76,7 +76,12 @@ export const fetchProducts = createAsyncThunk(
       // If a category is provided, filter by category
       if (category && category !== "all") {
         queryRef = query(queryRef, where("category", "==", category));
-      }  
+      } 
+      
+      //if subcategory is provide, addits filter
+      if(subcategory) {
+        queryRef =query(queryRef, where("subcategory", "==", subcategory))
+      }
   
       // Get the products based on query
      const querySnapshot = await getDocs(queryRef);
@@ -124,7 +129,7 @@ export const fetchTrendingProducts = createAsyncThunk(
       // Convert the map to an array and sort by frequency
       const sortedProductIds = Array.from(productFrequency.entries())
         .sort(([, a], [, b]) => b - a) // Sort by frequency descending
-        .slice(0, 2) // Get top 8 products
+        .slice(0, 8) // Get top 8 products
         .map(([id]) => id);
         console.log("Sorted Product IDs (Top Trending):", sortedProductIds);
 

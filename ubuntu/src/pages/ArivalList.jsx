@@ -237,7 +237,7 @@ function ArivalList() {
   return (
     <div>
       <ProductGrid
-        title="NEW ARRIVALS OF MODERN AFRICAN PRINT CLOTHING"
+        title="MODERN AFRICAN PRINT CLOTHINGS"
         description="Be a trendsetter in our latest modern African clothing arrivals!
              Enjoy vibrant collections where contemporary fashion meets traditional African prints. Shop the latest trends."
       />

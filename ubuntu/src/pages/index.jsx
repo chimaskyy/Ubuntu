@@ -6,4 +6,5 @@ import OrdersPage from "./Order";
 import ProductPage from "./ProductPage";
 import ProfilePage from "./Profile";
 import WishlistPage from "./wishlistPage";
-export { Admin, CartPage, CheckoutPage, HomePage, OrdersPage, ProductPage, ProfilePage, WishlistPage };
+import ArivalList from "./ArivalList";
+export { ArivalList, Admin, CartPage, CheckoutPage, HomePage, OrdersPage, ProductPage, ProfilePage, WishlistPage };
