@@ -22,17 +22,19 @@ import {
 import orderDetailsPage from "./components/admin/OrderDetailsPage";
 import { monitorAuthState } from "./reducers/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchCart } from "./reducers/cartSlice";
 import WithAdminAuth from "./HOC/WithAdminAuth";
 import WithUserAuth from "./HOC/WithUserAuth";
 import AuthWrapper from "./utils/AuthWrapper";
 import OrderDetailsPage from "./components/admin/OrderDetailsPage";
 import CategoryPage from "./pages/CategoryPage";
+import { CircleLoader } from "react-spinners";
 function App() {
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.uid);
+  
   // Check if the current route starts with "/admin"
   const isAdminRoute = location.pathname.startsWith("/admin");
 
@@ -40,6 +42,8 @@ function App() {
     const unsubscribe = dispatch(monitorAuthState());
     return () => unsubscribe; // Cleanup subscription
   }, [dispatch]);
+
+ 
 
   useEffect(() => {
     dispatch(fetchCart(userId));
@@ -119,9 +123,32 @@ function App() {
 }
 
 export default function Root() {
+
+  const [loading, setLoading] = useState(true);
+   useEffect(() => {
+     const timer = setTimeout(() => {
+       setLoading(false);
+     }, 2000);
+     // Clear timeout if the component is unmounted
+     return () => clearTimeout(timer);
+   }, []);
+
+   const ScrollToTop = () => {
+     window.scrollTo(0, 0);
+     return null;
+   };
   return (
-    <Router>
-      <App />
-    </Router>
+    <div>
+    {loading ? (
+      <div className="fixed top-0 left-0 z-50 w-screen h-screen flex items-center justify-center bg-white">
+        <CircleLoader color="#333" size={50} />
+      </div>
+    ) : (
+      <Router>
+        <ScrollToTop />
+        <App />
+      </Router>
+    )}
+    </div>
   );
 }
