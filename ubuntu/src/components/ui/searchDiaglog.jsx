@@ -54,9 +54,9 @@ function SearchInput({
                       className="w-12 h-12 object-cover rounded"
                     />
                     <div>
-                      <p className="font-medium line-clamp-1">{product.name}</p>
+                      <p className="font-medium line-clamp-1 capitalize">{product.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        ${product.price.toLocaleString()}.00
+                        ₦{product.price.toLocaleString()}.00
                       </p>
                     </div>
                   </button>

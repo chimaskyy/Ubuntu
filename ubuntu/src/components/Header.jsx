@@ -522,7 +522,11 @@ export default function Header() {
               onOpenChange={setIsSidebarOpen}
             />
           </div>
-
+          {/* <Link to="/" className="flex-1 lg:flex-none text-center lg:text-left text-2xl font-bold tracking-widest">
+          <h1>
+            UBUNTU 
+          </h1>
+          </Link> */}
           <Link to="/" className="flex-1 lg:flex-none text-center">
             <img src={logo} alt="Logo" className="h-12 w-auto mx-auto" />
           </Link>

@@ -17,7 +17,7 @@ import toast from "react-hot-toast";
 
 export const addProduct = createAsyncThunk(
   "products/addProduct",
-  async ({ files, productData, category }, { rejectWithValue }) => {
+  async ({ files, productData }, { rejectWithValue }) => {
     try {
       const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
@@ -48,7 +48,7 @@ export const addProduct = createAsyncThunk(
       const productWithImages = {
         ...productData,
         imageUrls: imageUrls || [],
-        category,
+        
       };
       const docRef = await addDoc(
         collection(db, "products"),

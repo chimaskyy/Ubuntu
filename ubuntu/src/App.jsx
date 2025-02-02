@@ -6,6 +6,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import ProductModal from "./components/ui/productModal";
 import { Header, Footer, CatgoryNav, SignUp, Login } from "./components";
 import {
   Admin,
@@ -91,6 +92,15 @@ function App() {
           element={
             <WithAdminAuth>
               <OrderDetailsPage />
+            </WithAdminAuth>
+          }
+        />
+
+        <Route
+          path="/admin/products/new"
+          element={
+            <WithAdminAuth>
+              <ProductModal />
             </WithAdminAuth>
           }
         />

@@ -12,6 +12,7 @@ import ProductList from "@/components/ui/productList";
 import ProductModal from "@/components/ui/productModal";
 import { usePagination } from "../../hooks/usePaginate";
 import  Pagination  from "../../components/ui/pagination";
+import { Link } from "react-router-dom";
 
 const PRODUCTS_PER_PAGE = 4;
 
@@ -101,7 +102,9 @@ function ProductManager() {
           className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2"
         >
           <Plus className="w-5 h-5" />
-          <span>Add Product</span>
+          <Link to={`/admin/products/new`} className="text-white">
+          Add product
+          </Link>
         </button>
       </div>
       <div className="mb-6">
@@ -157,7 +160,7 @@ function ProductManager() {
           isEditing={isEditing}
           selectedProduct={selectedProduct}
           onClose={() => setIsEditing(false)}
-          onSubmit={handleSubmit}
+          // onSubmit={handleSubmit}
           files={files}
           setFiles={setFiles}
           productData={productData}
