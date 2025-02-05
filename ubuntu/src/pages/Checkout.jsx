@@ -145,23 +145,26 @@ export default function CheckoutPage() {
           user || null
         )
       );
+      console.log("orderId", orderId);
+      console.log("user", user);
 
       if (orderId) {
-        if(user){
+        if (user) {
           dispatch(clearCartAndSave(user?.uid));
-          toast.success("Order placed successfully!");
-          navigate(`/orders/${user?.uid}`);
-        }else 
-        localStorage.removeItem("cart");
-        navigate(`/orders-confirmation`, { 
-          state: { 
-            orderId ,
+        } else {
+          localStorage.removeItem("cart");
+        }
+        navigate(`/order-confirmation`, {
+          state: {
+            orderId,
+            userId: user?.uid || null,
             email: formData.email,
-          } 
+          },
         });
         toast.success("Order placed successfully!");
       }
     } catch (error) {
+      console.log("error:", error)
       toast.error("Failed to process order. Please try again.");
     } finally {
       setIsSubmitting(false);

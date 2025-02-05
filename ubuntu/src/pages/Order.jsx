@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {fetchUserOrders} from "../reducers/orderSlice";
 import { Package, Clock, CheckCircle, AlertCircle } from "lucide-react";
 import useAuth from "@/hooks/useAuth";
+import { useParams } from "react-router-dom";
 
 
 const OrderStatusBadge = ({ status }) => {
@@ -46,8 +47,9 @@ const OrderStatusBadge = ({ status }) => {
 };
 
 const OrdersPage = () => {
-    const user = useAuth();
-
+    const {user} = useSelector((state) => state.user);
+// const {userId} = useParams();
+// console.log("Rendered OrdersPage with userId:", userId);
   const dispatch = useDispatch();
   const { orders, loading, error } = useSelector((state) => state.orders);
 
@@ -66,13 +68,13 @@ const OrdersPage = () => {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
+        {/* <div className="text-center">
           <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">
             Error loading orders
           </h3>
           <p className="mt-1 text-sm text-gray-500">{error}</p>
-        </div>
+        </div> */}
       </div>
     );
   }

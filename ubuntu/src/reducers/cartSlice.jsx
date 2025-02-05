@@ -41,6 +41,11 @@ export const fetchCart = createAsyncThunk(
   "cart/fetchCart",
   async (userId, { rejectWithValue }) => {
     try {
+
+      if (!userId) {
+        throw new Error("User ID is required to fetch the cart.");
+      }
+      
       const cartRef = doc(db, "carts", userId);
       const cartSnap = await getDoc(cartRef);
       if (cartSnap.exists()) {
@@ -239,9 +244,6 @@ export const removeFromCartAndSave =
     if(userId){
       const { items } = getState().cart; // Get the updated cart items from the Redux state
       dispatch(saveCart({ userId, cart: items })) // Save the updated cart to Firestore
-        .then(() => {
-          toast.success("Item removed from cart successfully!");
-        })
         .catch((error) => {
           toast.error(`Failed to save updated cart: ${error}`);
           console.error("Error saving cart to Firestore:", error);

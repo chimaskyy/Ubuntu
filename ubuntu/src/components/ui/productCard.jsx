@@ -22,28 +22,27 @@ const ProductCard = ({ product }) => {
 
   const handleAddToCart = () => {
     dispatch(addToCartAndSave(user?.uid, product));
-    toast.success(`${product.name} added to cart.`);
+    toast.success(`Added to cart.`);
   };
 
   const handleRemoveFromCart = () => {
     dispatch(removeFromCartAndSave(user?.uid, product.id));
-    toast.success(`${product.name} removed from cart.`);
+    toast.success(`Removed from cart.`);
   };
 
   const handleWishlistToggle = () => {
     if (!user) return toast.error("Please log in to manage your wishlist.");
     if (isInWishlist) {
       dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
-      toast.success(`${product.name} removed from wishlist.`);
+      toast.success(`Removed from wishlist.`);
     } else {
       dispatch(addToWishlist({ userId: user.uid, product }));
-      toast.success(`${product.name} added to wishlist.`);
+      toast.success(`Added to wishlist.`);
     }
   };
 
   return (
     <div className="relative group overflow-hidden">
-      <Toaster position="top-right" reverseOrder={false} />
       <ImageCard
         image={product.imageUrls?.[0]}
         link={`/product/${product.id}`}

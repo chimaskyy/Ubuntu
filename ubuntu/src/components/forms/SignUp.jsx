@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast, Toaster } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { signUpWithEmail, authenticateWithGoogle } from "@/reducers/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { 
@@ -129,7 +129,6 @@ const SignUp = () => {
         {/* Right side - Form */}
         <div className="flex-1 flex items-center justify-center p-6 sm:p-12 lg:p-24">
           <div className="w-full max-w-md space-y-8">
-            <Toaster />
 
             {/* Sign up with Google */}
             <div className="space-y-6">

@@ -30,10 +30,12 @@ import AuthWrapper from "./utils/AuthWrapper";
 import OrderDetailsPage from "./components/admin/OrderDetailsPage";
 import CategoryPage from "./pages/CategoryPage";
 import { CircleLoader } from "react-spinners";
+import OrderConfirmationPage from "./pages/OrderCornfirmation";
+import { Toaster } from "react-hot-toast";
 function App() {
   const location = useLocation(); // Get the current route
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.user.uid);
+  const {user} = useSelector((state) => state.user);
   
   // Check if the current route starts with "/admin"
   const isAdminRoute = location.pathname.startsWith("/admin");
@@ -45,9 +47,14 @@ function App() {
 
  
 
-  useEffect(() => {
-    dispatch(fetchCart(userId));
-  }, [dispatch, userId]);
+useEffect(() => {
+  if (user?.uid) {
+    dispatch(fetchCart(user.uid));
+  }
+}, [dispatch, user?.uid]);
+
+
+
 
   return (
     <>
@@ -55,7 +62,15 @@ function App() {
 
       {/* Render CategoryNav only if not on an Admin route */}
       {/* {!isAdminRoute && <CatgoryNav />} */}
-
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#1f2937", // Tailwind's bg-gray-900
+            color: "#ffffff", // White text
+          },
+        }}
+      />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/sign-up" element={<SignUp />} />
@@ -82,6 +97,7 @@ function App() {
           }
         />
         <Route path="/orders/:userId" element={<OrdersPage />} />
+        <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
         <Route path="/my-wishlist" element={<WishlistPage />} />
         <Route
           path="/admin/*"

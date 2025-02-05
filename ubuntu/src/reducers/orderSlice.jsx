@@ -34,7 +34,7 @@ export const createOrder = createAsyncThunk(
         ...orderData,
         userId,
         orderId,
-        createdAt: serverTimestamp(),
+        createdAt: new Date().toISOString(),
         status: "pending", // Initial status
         paymentStatus: "pending", // Initial payment status
         isGuest,
@@ -229,7 +229,7 @@ const orderSlice = createSlice({
       .addCase(fetchUserOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-        toast.error(`Failed to fetch orders: ${action.payload}`);
+        // toast.error(`Failed to fetch orders: ${action.payload}`);
       })
 
       // Fetch Single Order
@@ -276,13 +276,13 @@ export const createOrderFromCart =
          shippingDetails,
          status: "pending",
          paymentStatus: "pending",
-          isGuest,
-          createdAt: serverTimestamp(),
+         isGuest,
+         createdAt: new Date().toISOString(),
        };
 
-       await dispatch(createOrder({ userId, orderData, isGuest }));
-       toast.success("Order placed successfully!");
-       return `${userId}-${orderData.createdAt}`;
+       const result = await dispatch(createOrder({ userId, orderData, isGuest })).unwrap();
+       
+       return result.orderId;
      } catch (error) {
        toast.error(`Failed to create order: ${error.message}`);
        return false;

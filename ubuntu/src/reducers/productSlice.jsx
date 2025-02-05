@@ -55,8 +55,6 @@ export const addProduct = createAsyncThunk(
         productWithImages
       ); 
 
-      console.log("Product added to Firestore:", productWithImages);
-      console.log("Document written with ID: ", docRef.id);
       return { id: docRef.id, ...productWithImages }; // Returning the product with the document ID
     } catch (error) {
       console.error("Error adding product:", error);
@@ -105,11 +103,7 @@ export const fetchTrendingProducts = createAsyncThunk(
       // First, get all orders to analyze product frequency
       const ordersRef = collection(db, "orders");
       const ordersSnapshot = await getDocs(ordersRef);
-      console.log(
-        "Orders Snapshot:",
-        ordersSnapshot.docs.map((doc) => doc.data())
-      );
-      
+     
       // Create a map to track product order frequency
       const productFrequency = new Map();
       
@@ -121,17 +115,13 @@ export const fetchTrendingProducts = createAsyncThunk(
           productFrequency.set(item.id, currentCount + item.quantity);
         });
       });
-      console.log(
-        "Product Frequency Map:",
-        Array.from(productFrequency.entries())
-      );
+      
 
       // Convert the map to an array and sort by frequency
       const sortedProductIds = Array.from(productFrequency.entries())
         .sort(([, a], [, b]) => b - a) // Sort by frequency descending
         .slice(0, 8) // Get top 8 products
         .map(([id]) => id);
-        console.log("Sorted Product IDs (Top Trending):", sortedProductIds);
 
       // If no products found, return empty array
      if (sortedProductIds.length === 0) {
@@ -151,7 +141,7 @@ export const fetchTrendingProducts = createAsyncThunk(
           ...doc.data(),
           orderCount: productFrequency.get(doc.id) || 0,
         }));
-      console.log("Trending Products:", products);
+      
         // change to not sort, but just display the products randomly
       // Sort products by their order frequency
       return products.sort((a, b) => b.orderCount - a.orderCount);
