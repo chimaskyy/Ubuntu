@@ -19,6 +19,7 @@ import { clearCartAndSave } from "@/reducers/cartSlice";
 import { nigerianStates } from "@/Data/Data";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { sendOrderConfirmationEmail } from "@/utils/emailService";
 
 export default function CheckoutPage() {
   const { user } = useSelector((state) => state.user);
@@ -145,10 +146,12 @@ export default function CheckoutPage() {
           user || null
         )
       );
-      console.log("orderId", orderId);
-      console.log("user", user);
+      
 
       if (orderId) {
+        // Send order confirmation email
+        const url = `${window.location.origin}/orders/${user?.uid}`;
+        await sendOrderConfirmationEmail(formData, orderId, url);
         if (user) {
           dispatch(clearCartAndSave(user?.uid));
         } else {
