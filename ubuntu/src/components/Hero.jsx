@@ -4,7 +4,7 @@ import cover from "../assets/cover.jpg";
 function Hero() {
   return (
     <div
-      className="relative h-[80vh] bg-cover bg-center overflow-hidden"
+      className="relative h-[40vh] bg-cover bg-center overflow-hidden sm:h-[60vh] md:h-[60vh] lg:h-[100vh] xl:h-[100vh]"
       style={{
         backgroundImage: `url(${cover})`,
       }}
@@ -12,30 +12,30 @@ function Hero() {
       <div className="absolute inset-0 bg-black bg-opacity-50" />
       <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center py-16">
         <div className="text-white">
-          <div className="mt-8 text-center">
-            <h1 className="font-sans text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white whitespace-nowrap">
+          <div className="mt-24 text-center sm:mt-16 md:mt-6">
+            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white whitespace-nowrap">
               UBUNTU ELITE
             </h1>
             <p className="mt-2 text-sm md:text-base text-white/80">
               TRADITIONALLY ROOTED, FOREVER ELITE
             </p>
           </div>
-          <div className="mt-12 md:mt-16 w-full flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0">
-            <div className="md:w-1/3 max-w-xs">
+          <div className="mt-8 mb-4 md:mt-6 w-full flex flex-col md:flex-row justify-between items-start space-y-8 md:space-y-0 lg:mt-32">
+            <div className="hidden  md:w-1/3 max-w-xs lg:block">
               <p className="text-sm md:text-base leading-relaxed text-white/80">
                 Discover our collection of authentic African designs. Bringing
                 authentic African fashion to the world with modern style and
                 traditional beauty.
               </p>
             </div>
-            <div className="md:w-1/3 flex justify-center md:pt-8 md:pl-12">
+            <div className=" flex justify-center md:pt-8 md:pl-12">
               <Link
                 to="/collection"
                 className="group inline-flex items-center gap-2 bg-transparent text-white px-6 py-2 rounded-full border-2 font-bold transition-transform hover:scale-105 text-sm md:text-base"
               >
                 Start Shopping
                 <svg
-                  className="h-3 w-3 md:h-4 md:w-4 transition-transform group-hover:translate-x-1"
+                  className="h-3 md:text-xs w-3 md:h-4 md:w-4 transition-transform group-hover:translate-x-1"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -55,7 +55,7 @@ function Hero() {
                 to="collection/accessories/caps"
                 className="text-sm ml-8 md:text-2xl lg:text-2xl font-sans font-extrabold text-white/90"
               >
-                HEAD WEAR
+                HEAD WEARS
               </Link>
             </div>
           </div>
