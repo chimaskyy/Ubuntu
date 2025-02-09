@@ -10,6 +10,7 @@ import {
   where,
   getDoc,
   orderBy,
+  limit,
 } from "firebase/firestore";
 import { db } from "../config/firebase"; 
 import axios from "axios";
@@ -101,50 +102,15 @@ export const fetchTrendingProducts = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       // First, get all orders to analyze product frequency
-      const ordersRef = collection(db, "orders");
-      const ordersSnapshot = await getDocs(ordersRef);
-     
-      // Create a map to track product order frequency
-      const productFrequency = new Map();
-      
-      // Count the frequency of each product in orders
-      ordersSnapshot.docs.forEach(doc => {
-        const order = doc.data();
-        order.items.forEach(item => {
-          const currentCount = productFrequency.get(item.id) || 0;
-          productFrequency.set(item.id, currentCount + item.quantity);
-        });
-      });
-      
+      const trendingRef = collection(db, "trending");
+      const trendingQuery = query(trendingRef, orderBy("sold", "desc"), limit(8));
+      const trendingSnapshot = await getDocs(trendingQuery);
 
-      // Convert the map to an array and sort by frequency
-      const sortedProductIds = Array.from(productFrequency.entries())
-        .sort(([, a], [, b]) => b - a) // Sort by frequency descending
-        .slice(0, 8) // Get top 8 products
-        .map(([id]) => id);
-
-      // If no products found, return empty array
-     if (sortedProductIds.length === 0) {
-       console.warn("No trending products found.");
-       return [];
-     }
-
-      // Fetch the actual product details for the trending products
-      const productsRef = collection(db, "products");
-      const productsSnapshot = await getDocs(productsRef);
-
-      
-      const products = productsSnapshot.docs
-        .filter((doc) => sortedProductIds.includes(doc.id))
-        .map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-          orderCount: productFrequency.get(doc.id) || 0,
-        }));
-      
-        // change to not sort, but just display the products randomly
-      // Sort products by their order frequency
-      return products.sort((a, b) => b.orderCount - a.orderCount);
+      const trendingProducts = trendingSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      return trendingProducts;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }

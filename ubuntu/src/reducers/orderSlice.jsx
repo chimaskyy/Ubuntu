@@ -10,6 +10,8 @@ import {
   where,
   orderBy,
   updateDoc,
+  increment,
+  writeBatch,
 } from "firebase/firestore";
 import toast from "react-hot-toast";
 import { serverTimestamp } from "firebase/firestore";
@@ -27,7 +29,7 @@ export const createOrder = createAsyncThunk(
     try {
       const orderId = `${userId}-${Date.now()}-${Math.round(
         Math.random() * 1000
-      )}`; // Generate unique order ID
+      )}`;
       const orderRef = doc(db, "orders", orderId);
 
       const orderToSave = {
@@ -39,8 +41,30 @@ export const createOrder = createAsyncThunk(
         paymentStatus: "pending", // Initial payment status
         isGuest,
       };
-
+      // Save order to Firestore
       await setDoc(orderRef, orderToSave);
+
+      const trendingRef = collection(db, "trending");
+      const batch = writeBatch(db);
+
+      for (const item of orderData.items) {
+        const productRef = doc(trendingRef, item.id);
+        const productSnap = await getDoc(productRef);
+
+        if (productSnap.exists()) {
+          batch.update(productRef, {
+            sold: increment(item.quantity),
+          });
+        } else {
+          batch.set(productRef, {
+            sold: item.quantity,
+            productData: item,
+          });
+        }
+      }
+      // Commit the batch
+      await batch.commit();
+
       return orderToSave;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -284,6 +308,7 @@ export const createOrderFromCart =
        
        return result.orderId;
      } catch (error) {
+      console.log(error);
        toast.error(`Failed to create order: ${error.message}`);
        return false;
      }
