@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "@/reducers/productSlice";
 import {
@@ -8,12 +8,14 @@ import {
   ShoppingCart,
   ChevronLeft,
   ChevronRight,
+  Check,
 } from "lucide-react";
 import { addToCartAndSave, removeFromCartAndSave } from "@/reducers/cartSlice";
 import toast, { Toaster } from "react-hot-toast";
 import { useSwipeable } from "react-swipeable";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { RotatingLines } from 'react-loader-spinner';
 import { addToWishlist, removeFromWishlist } from "@/reducers/wishListSlice";
 function ProductPage() {
   const { id } = useParams();
@@ -25,23 +27,18 @@ function ProductPage() {
   const { items } = useSelector((state) => state.cart);
   const { wishlist } = useSelector((state) => state.wishlist);
 
-//  const isInWishlist = wishlist.some((item) => item.id === product?.id);
+ const isInWishlist = wishlist.some((item) => item.id === product?.id);
 
-//  const handleAddToWishlist = () => {
-//    if (user) {
-//      dispatch(addToWishlist({ userId: user.uid, product }));
-//    } else {
-//      toast.error("Please log in to add items to your wishlist.");
-//    }
-//  };
-
-//  const handleRemoveFromWishlist = () => {
-//    if (user) {
-//      dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
-//    } else {
-//      toast.error("Please log in to remove items from your wishlist.");
-//    }
-//  };
+const handleWishlistToggle = () => {
+  if (!user) return toast.error("Please log in to manage your wishlist.");
+  if (isInWishlist) {
+    dispatch(removeFromWishlist({ userId: user.uid, productId: product.id }));
+    toast.success(`Removed from wishlist.`);
+  } else {
+    dispatch(addToWishlist({ userId: user.uid, product }));
+    toast.success(`Added to wishlist.`);
+  }
+};
   useEffect(() => {
     if (!product || product.id !== id) {
       dispatch(fetchProductById(id));
@@ -74,7 +71,7 @@ function ProductPage() {
     trackMouse: true,
   });
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = () => {
     if (!product?.price) {
       toast.error("Product data is invalid.");
       return;
@@ -83,34 +80,28 @@ function ProductPage() {
     if (!selectedVariant && product.variants?.length > 0) {
       toast.error("Please select a size");
       return;
-    }
+    }  
 
-    if (user) {
-      dispatch(
-        addToCartAndSave(user.uid, {
-          ...product,
-          selectedVariant,
-        })
-      );
-      toast.success(`${product.name} (${selectedVariant}) added to cart`);
-    } else {
-      toast.error("Please sign up or login to add items to the cart.");
-    }
+    dispatch(addToCartAndSave(user?.uid, product));
+    toast.success(`Added to cart.`);
   };
 
-  const handleRemoveFromCart = (productId) => {
-    if (!user) {
-      toast.error("Please log in to modify your cart.");
-      return;
-    }
-    dispatch(removeFromCartAndSave(user.uid, productId));
-    toast.success("Item removed from cart");
+  const handleRemoveFromCart = () => {
+    dispatch(removeFromCartAndSave(user?.uid, product.id));
+    toast.success(`Removed from cart.`);
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+        <RotatingLines height="50"
+          width="50"
+          strokeWidth="5"
+          animationDuration="0.75"
+          strokeColor="#848884" 
+          ariaLabel="rotating-lines-loading"
+          visible={true}
+         />
       </div>
     );
   }
@@ -134,7 +125,7 @@ function ProductPage() {
   const isInCart = items.some((item) => item.id === product.id);
 
   return (
-    <div className="container mx-auto px-4 py-8 lg:mx-16">
+    <div className="container mt-24 mx-auto px-4 py-8 lg:mx-16">
       <Toaster position="top-right" reverseOrder={false} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
         {/* Product Images */}
@@ -186,10 +177,7 @@ function ProductPage() {
 
         {/* Product Info */}
         <div>
-          <h1 className="text-3xl font-bold mb-4 capitalize">{product.name}</h1>
-          <p className="text-2xl font-bold text-gray-900 mb-6">
-            ₦{product.price.toLocaleString()}.00
-          </p>
+          <h1 className="text-lg font-bold mb-4 capitalize">{product.name}</h1>
 
           <p className="text-gray-600 mb-8">{product.description}</p>
 
@@ -225,7 +213,7 @@ function ProductPage() {
 
           {/* Specifications */}
           <div className="border-t pt-8">
-            <h2 className="text-xl font-bold mb-4">Specifications</h2>
+            <h2 className="text-lg font-bold mb-4">Specifications</h2>
             <dl className="grid grid-cols-1 gap-4">
               {product.specifications &&
                 Object.entries(product.specifications).map(([key, value]) => (
@@ -236,74 +224,74 @@ function ProductPage() {
                 ))}
             </dl>
           </div>
+          {/* link to shipping policy page */}
+          <p className="text-sm font-bold mb-4 capitalize">Price</p>
+          <p className="text-xl text-gray-900 mb-6">
+            ₦{product.price.toLocaleString()}.00
+          </p>
+          <div>
+            <h2 className="text-sm mb-4">
+              <Link to={`/shipping-policy`} className="text-gray-600 underline">
+                shipping
+              </Link>
+              &nbsp;calculated at checkout
+            </h2>
+          </div>
 
           {/* Actions */}
           <div className="flex space-x-4 mb-8 mt-8">
-            {user ? (
-              isInCart ? (
-                <Button
-                  className="flex-1 bg-gray-900 text-white hover:bg-gray-800"
-                  onClick={() => handleRemoveFromCart(product.id)}
-                >
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  Remove from Cart
-                </Button>
-              ) : (
-                <Button
-                  className="flex-1 bg-gray-900 text-white hover:bg-gray-800"
-                  onClick={() => handleAddToCart(product)}
-                  disabled={product.variants?.length > 0 && !selectedVariant}
-                >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  Add to Cart
-                </Button>
-              )
+            {isInCart ? (
+              <Button
+                className="flex-1 bg-gray-900 text-white hover:bg-gray-800"
+                onClick={() => handleRemoveFromCart(product.id)}
+              >
+                <ShoppingCart className="w-5 h-5 mr-2" />
+                Remove from Cart
+              </Button>
             ) : (
               <Button
                 className="flex-1 bg-gray-900 text-white hover:bg-gray-800"
-                onClick={() =>
-                  toast.error("Please login to add items to the cart.")
-                }
+                onClick={handleAddToCart}
+                disabled={product.variants?.length > 0 && !selectedVariant}
               >
                 <ShoppingCart className="h-4 w-4 mr-2" />
                 Add to Cart
               </Button>
             )}
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => {
-                if (!user) {
-                  toast.error("Please login to add items to wishlist");
-                  return;
-                }
-                const isInWishlist = wishlist.some(
-                  (item) => item.id === product.id
-                );
-                if (isInWishlist) {
-                  dispatch(
-                    removeFromWishlist({
-                      userId: user.uid,
-                      productId: product.id,
-                    })
-                  );
-                } else {
-                  dispatch(addToWishlist({ userId: user.uid, product }));
-                }
-              }}
-            >
-              <Heart
-                className={cn(
-                  "w-5 h-5",
-                  wishlist.some((item) => item.id === product.id)
-                    ? "fill-red-500 text-red-500"
-                    : ""
-                )}
-              />
-            </Button>
+            {/* Wishlist and Share buttons */}
+            {user && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleWishlistToggle}
+              >
+                <Heart
+                  className={cn(
+                    "w-5 h-5",
+                    wishlist.some((item) => item.id === product.id)
+                      ? "fill-red-500 text-red-500"
+                      : ""
+                  )}
+                />
+              </Button>
+            )}
+
             <Button variant="outline" size="icon">
               <Share2 className="w-5 h-5" />
             </Button>
+          </div>
+          <div>
+            <div className="flex items-center space-x-8 text-gray-700">
+              <Check className="w-5 h-5 text-green-500" />
+              <p className="text-xs text-gray-500">
+                Pickup available at our &nbsp;
+                <Link to={`/contact`} className="text-gray-600 underline">
+                  store
+                </Link>
+                &nbsp; in Enugu, Nigeria. <br />
+                Usually available in 24 hours.
+              </p>
+            </div>
           </div>
         </div>
       </div>
